@@ -83,7 +83,11 @@ async function blockProfileInPage(target) {
       ].filter(visible);
       const moreControl = controls.find((item) => /more|更多/i.test(`${item.getAttribute("aria-label") || ""} ${item.innerText || ""}`));
       if (moreControl) return moreControl;
-      if (controls.length === 1) return controls[0];
+      const menuControl = controls.find((item) => (
+        item.getAttribute("aria-haspopup") === "menu"
+        && !/follow|关注|正在关注|unfollow|取关/i.test(`${item.getAttribute("aria-label") || ""} ${item.innerText || ""}`)
+      ));
+      if (menuControl) return menuControl;
     }
     return [...document.querySelectorAll('[data-testid="userActions"] button[aria-label], [data-testid="userActions"] [role="button"][aria-label]')]
       .filter(visible)
