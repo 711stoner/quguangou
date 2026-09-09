@@ -1,0 +1,144 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #251c17;
+  background: #fffaf5;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  width: 390px;
+  min-height: 520px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(255, 166, 65, .18), transparent 34%),
+    #fffaf5;
+}
+
+button, textarea { font: inherit; }
+
+.shell { padding: 20px; }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.brand img { width: 48px; height: 48px; }
+.brand h1 { margin: 0; font-size: 23px; letter-spacing: .04em; }
+.brand p { margin: 3px 0 0; color: #76665c; font-size: 13px; }
+
+label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 700; }
+
+textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 164px;
+  padding: 12px;
+  border: 1px solid #decfc4;
+  border-radius: 12px;
+  outline: none;
+  color: #251c17;
+  background: rgba(255, 255, 255, .82);
+  line-height: 1.55;
+}
+
+textarea:focus { border-color: #e97718; box-shadow: 0 0 0 3px rgba(233, 119, 24, .12); }
+
+.hint, .warning { color: #826f62; font-size: 12px; line-height: 1.5; }
+.hint { margin: 8px 0 16px; }
+.warning { margin: 10px 2px 0; }
+
+button {
+  border: 0;
+  border-radius: 11px;
+  padding: 11px 14px;
+  cursor: pointer;
+  font-weight: 750;
+}
+
+button:disabled { cursor: not-allowed; opacity: .45; }
+.primary { width: 100%; color: #fff; background: #ef7d21; }
+.primary:hover:not(:disabled) { background: #d9650f; }
+.danger { width: 100%; color: #fff; background: #bd302a; }
+.danger:hover:not(:disabled) { background: #a52520; }
+.secondary { width: 100%; color: #563f31; background: #eee2d8; }
+.link-button { padding: 4px; color: #b45112; background: transparent; font-size: 12px; }
+
+.section-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.section-title h2 { margin: 0; font-size: 16px; }
+.summary { margin-bottom: 10px; color: #5e4a3e; font-size: 13px; font-weight: 700; }
+.version { color: #9a7a65; font-size: 11px; }
+.description { margin: 0 0 12px; color: #6f5c50; font-size: 12px; line-height: 1.55; }
+
+.target-list, .result-list {
+  max-height: 230px;
+  overflow: auto;
+  border: 1px solid #e5d9cf;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .75);
+}
+
+.target-row, .result-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 11px;
+  border-bottom: 1px solid #eee5de;
+  font-size: 13px;
+}
+
+.target-row:last-child, .result-row:last-child { border-bottom: 0; }
+.index { display: grid; place-items: center; width: 21px; height: 21px; border-radius: 50%; color: #99500f; background: #ffecd7; font-size: 11px; }
+.issues { margin: 8px 0; color: #9b4938; font-size: 12px; }
+.issues:empty { display: none; }
+.issues p { margin: 4px 0; }
+
+.confirm-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 14px 0;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.confirm-row input { margin-top: 2px; accent-color: #bd302a; }
+.progress-track { height: 9px; overflow: hidden; border-radius: 99px; background: #eadfd6; }
+#progressBar { width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #ef7d21, #d84a2f); transition: width .25s ease; }
+.progress-text { margin: 10px 0; color: #6c584b; font-size: 12px; }
+.result-list { margin-bottom: 12px; }
+.result-row { justify-content: space-between; }
+.result-row.blocked span:last-child { color: #19804c; }
+.result-row.already_blocked span:last-child { color: #7b6b61; }
+.result-row.failed span:last-child { color: #b72925; }
+
+.toast {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  color: #fff;
+  background: rgba(43, 33, 27, .94);
+  box-shadow: 0 8px 28px rgba(44, 24, 14, .18);
+  font-size: 13px;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #eadfd6;
+  color: #9a877a;
+  font-size: 11px;
+}
+
+footer a { color: #a8541c; text-decoration: none; }
+
+.hidden { display: none !important; }

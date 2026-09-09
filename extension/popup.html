@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>取关狗</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="brand">
+        <img src="assets/logo.svg" alt="" />
+        <div>
+          <h1>取关狗</h1>
+          <p>批量拉黑 X 账号</p>
+        </div>
+      </header>
+
+      <section id="blocklistView">
+        <div class="section-title">
+          <h2>扩展内置名单</h2>
+          <span id="blocklistVersion" class="version"></span>
+        </div>
+        <p id="blocklistDescription" class="description"></p>
+        <div id="blocklistSummary" class="summary">正在读取名单…</div>
+        <div id="targetList" class="target-list"></div>
+        <div id="issueList" class="issues"></div>
+        <button id="startButton" class="danger" disabled>一键拉黑全部账号</button>
+        <p class="warning">点击按钮即表示确认执行。请先在 Chrome 登录 X；执行时会打开一个后台标签页。</p>
+      </section>
+
+      <section id="progressView" class="hidden">
+        <div class="section-title"><h2 id="progressTitle">正在执行</h2></div>
+        <div class="progress-track"><div id="progressBar"></div></div>
+        <p id="progressText" class="progress-text"></p>
+        <div id="resultList" class="result-list"></div>
+        <button id="cancelButton" class="secondary">停止任务</button>
+        <button id="newTaskButton" class="primary hidden">新建任务</button>
+      </section>
+
+      <div id="toast" class="toast hidden"></div>
+      <footer>
+        <span>非 X 官方产品</span>
+        <a href="privacy.html" target="_blank">隐私说明</a>
+      </footer>
+    </main>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
