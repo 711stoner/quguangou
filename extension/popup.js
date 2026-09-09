@@ -2,6 +2,7 @@ const $ = (selector) => document.querySelector(selector);
 const blocklistView = $("#blocklistView");
 const progressView = $("#progressView");
 let blocklist = null;
+let currentJob = null;
 
 function showOnly(view) {
   [blocklistView, progressView].forEach((item) => item.classList.toggle("hidden", item !== view));
@@ -38,6 +39,7 @@ function renderBlocklist() {
 
 function renderJob(job) {
   if (!job) return;
+  currentJob = job;
   showOnly(progressView);
   const done = job.results.length;
   const total = job.targets.length;
@@ -48,6 +50,7 @@ function renderJob(job) {
   $("#progressText").textContent = running
     ? `${done} / ${total}${job.currentTarget ? ` · 正在处理 ${job.currentTarget.label}` : ""}`
     : `${done} / ${total}`;
+  if (job.pauseReason) $("#progressText").textContent += ` · ${job.pauseReason}${job.resumeAt ? `（可继续时间：${new Date(job.resumeAt).toLocaleString()}）` : ""}`;
 
   const statusLabel = { blocked: "已拉黑", already_blocked: "已拉黑过", failed: "失败" };
   $("#resultList").innerHTML = job.results.map((result) => `
@@ -58,6 +61,7 @@ function renderJob(job) {
   `).join("");
   $("#cancelButton").classList.toggle("hidden", !running);
   $("#newTaskButton").classList.toggle("hidden", running);
+  $("#newTaskButton").textContent = done < total ? "继续剩余账号" : "返回名单";
 }
 
 $("#startButton").addEventListener("click", async () => {
@@ -78,6 +82,12 @@ $("#cancelButton").addEventListener("click", async () => {
 });
 
 $("#newTaskButton").addEventListener("click", async () => {
+  if (currentJob && currentJob.currentIndex < currentJob.targets.length) {
+    const response = await chrome.runtime.sendMessage({ type: "START_BUNDLED_JOB" });
+    if (!response?.ok) return toast(response?.error || "无法继续任务");
+    renderJob(response.job);
+    return;
+  }
   await chrome.storage.local.remove("quguangouJob");
   renderBlocklist();
 });

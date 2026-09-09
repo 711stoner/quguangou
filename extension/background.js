@@ -1,4 +1,5 @@
 import { parseAccountList } from "./lib/accounts.js";
+import { reserveAttempt } from "./lib/pacing.js";
 
 const STORAGE_KEY = "quguangouJob";
 let activeRun = false;
@@ -162,6 +163,20 @@ async function runJob() {
     while (job.currentIndex < job.targets.length) {
       job = await getJob();
       if (!job || job.status !== "running") break;
+      const quota = (await chrome.storage.local.get("quguangouQuota")).quguangouQuota || {};
+      const reservation = reserveAttempt(quota);
+      if (!reservation.allowed) {
+        if (quota.cooldownUntil > Date.now()) {
+          job.status = "paused";
+          job.pauseReason = "本批已尝试 20 个账号，冷却结束后请手动继续";
+          job.resumeAt = quota.cooldownUntil;
+          await setJob(job);
+          break;
+        }
+        await sleep(Math.min(1000, reservation.waitUntil - Date.now()));
+        continue;
+      }
+      await chrome.storage.local.set({ quguangouQuota: reservation.state });
       const target = job.targets[job.currentIndex];
       job.currentTarget = target;
       await setJob(job);
@@ -186,6 +201,20 @@ async function runJob() {
       job.results.push({ ...target, ...outcome, finishedAt: new Date().toISOString() });
       job.currentIndex += 1;
       job.currentTarget = null;
+      if (reservation.state.cooldownUntil) {
+        const quota = reservation.state;
+        quota.cooldownUntil = Date.now() + 3_600_000;
+        await chrome.storage.local.set({ quguangouQuota: quota });
+        if (job.currentIndex < job.targets.length) {
+          job.status = "paused";
+          job.resumeAt = quota.cooldownUntil;
+          job.pauseReason = "本批已尝试 20 个账号，请冷却一小时后手动继续";
+        }
+      }
+      if (outcome.status === "failed" && job.currentIndex < job.targets.length) {
+        job.status = "paused";
+        job.pauseReason = "出现失败，已暂停。请先检查失败原因，再决定是否继续剩余账号";
+      }
       await setJob(job);
       await sleep(900);
     }
@@ -219,8 +248,22 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message?.type === "START_BUNDLED_JOB") {
     (async () => {
       const existing = await getJob();
-      if (existing?.status === "running") {
+      if (activeRun || existing?.status === "running") {
         sendResponse({ ok: false, error: "已有任务正在执行" });
+        return;
+      }
+      const quota = (await chrome.storage.local.get("quguangouQuota")).quguangouQuota || {};
+      if (quota.cooldownUntil > Date.now()) {
+        sendResponse({ ok: false, error: `冷却中，请在 ${new Date(quota.cooldownUntil).toLocaleString()} 后继续` });
+        return;
+      }
+      if (existing && ["paused", "cancelled"].includes(existing.status) && existing.currentIndex < existing.targets.length) {
+        existing.status = "running";
+        existing.resumeAt = null;
+        existing.pauseReason = null;
+        await setJob(existing);
+        sendResponse({ ok: true, job: existing });
+        void runJob();
         return;
       }
       const blocklist = await getBundledBlocklist();
