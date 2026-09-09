@@ -75,15 +75,21 @@ async function blockProfileInPage(target) {
   if (unavailablePattern.test(pageText())) return { status: "failed", reason: "账号不存在、已停用或无法访问" };
 
   const actions = await waitFor(() => {
-    const candidates = [...document.querySelectorAll('[data-testid="userActions"], button[aria-label*="More"], button[aria-label*="更多"]')];
+    const candidates = [
+      ...document.querySelectorAll('button[data-testid="userActions"], [data-testid="userActions"] button, [data-testid="userActions"]'),
+      ...document.querySelectorAll('button[aria-label*="More"], button[aria-label*="更多"], button[aria-label*="更多操作"]')
+    ];
     return candidates.find(visible);
   });
   if (!actions) return { status: "failed", reason: "找不到用户操作菜单，X 页面结构可能已变化" };
-  actions.click();
+  (actions.closest('button, [role="button"]') || actions.querySelector('button, [role="button"]') || actions).click();
 
-  const menu = await waitFor(() => [...document.querySelectorAll('[role="menu"]')].find(visible), 8_000);
-  if (!menu) return { status: "failed", reason: "用户操作菜单未打开" };
-  const menuItems = [...menu.querySelectorAll('[role="menuitem"], [data-testid="Dropdown"]')].filter(visible);
+  const menu = await waitFor(() => {
+    const menus = [...document.querySelectorAll('[role="menu"], [data-testid="Dropdown"]')].filter(visible);
+    return menus.find((item) => item.querySelector('[role="menuitem"], [role="button"], button')) || menus[0] || null;
+  }, 8_000);
+  if (!menu) return { status: "failed", reason: "用户操作菜单未打开；请确认该账号主页已完整加载" };
+  const menuItems = [...menu.querySelectorAll('[role="menuitem"], [role="button"], button')].filter(visible);
   const alreadyBlocked = menuItems.find((item) => unblockPattern.test(item.innerText.trim()));
   if (alreadyBlocked) return { status: "already_blocked", reason: "该账号已经被拉黑" };
 
@@ -91,7 +97,10 @@ async function blockProfileInPage(target) {
     const text = item.innerText.trim();
     return blockPattern.test(text) && !reportPattern.test(text);
   });
-  if (!blockItem) return { status: "failed", reason: "菜单中找不到“拉黑”操作" };
+  if (!blockItem) {
+    const labels = menuItems.map((item) => item.innerText.trim()).filter(Boolean).slice(0, 8).join("、");
+    return { status: "failed", reason: `菜单中找不到“拉黑”操作${labels ? `（当前菜单：${labels}）` : ""}` };
+  }
   blockItem.click();
 
   const confirm = await waitFor(() => {

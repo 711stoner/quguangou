@@ -52,8 +52,8 @@ function renderJob(job) {
   const statusLabel = { blocked: "已拉黑", already_blocked: "已拉黑过", failed: "失败" };
   $("#resultList").innerHTML = job.results.map((result) => `
     <div class="result-row ${escapeHtml(result.status)}">
-      <span>${escapeHtml(result.label)}</span>
-      <span title="${escapeHtml(result.reason)}">${escapeHtml(statusLabel[result.status] || result.status)}</span>
+      <div><strong>${escapeHtml(result.label)}</strong>${result.status === "failed" ? `<small>${escapeHtml(result.reason || "未返回失败原因")}</small>` : ""}</div>
+      <span>${escapeHtml(statusLabel[result.status] || result.status)}</span>
     </div>
   `).join("");
   $("#cancelButton").classList.toggle("hidden", !running);
