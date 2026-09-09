@@ -12,6 +12,7 @@
     <title>取关狗｜更省心地管理 X 体验</title>
     <link rel="icon" href="assets/icon-32.png" sizes="32x32" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="guestbook.css" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -115,14 +116,23 @@
         <div class="section-heading reveal">
           <span class="kicker">GUESTBOOK</span>
           <h2>说说你的想法</h2>
-          <p>留言公开保存在 GitHub。需要登录 GitHub 才能发布，我们不会另行收集你的账号信息。</p>
+          <p>在这里写下内容，提交时会跳转到 GitHub 供你确认。留言公开保存在 GitHub，我们不会另行收集你的账号信息。</p>
         </div>
-        <div class="guestbook-actions reveal">
-          <a class="button primary" id="leaveMessage" href="https://github.com/711stoner/quguangou/issues/1" target="_blank" rel="noreferrer">去 GitHub 留言</a>
-          <button class="button quiet" id="refreshComments" type="button">刷新留言</button>
-        </div>
-        <div id="comments" class="comments" aria-live="polite">
-          <div class="comment-status">正在读取公开留言…</div>
+        <div class="guestbook-layout reveal">
+          <form id="messageForm" class="message-form">
+            <label for="messageTitle">留言标题</label>
+            <input id="messageTitle" name="title" maxlength="80" required placeholder="例如：一个功能建议" />
+            <label for="messageBody">留言内容</label>
+            <textarea id="messageBody" name="body" rows="6" maxlength="2000" required placeholder="写下建议、使用反馈、名单纠错或申诉…"></textarea>
+            <button class="button primary" type="submit">前往 GitHub 确认发布</button>
+            <small>发布前你可以在 GitHub 再次检查和修改内容。</small>
+          </form>
+          <aside class="message-aside">
+            <span class="kicker">PUBLIC & OPEN</span>
+            <h3>每条留言都可以被看见</h3>
+            <p>留言以公开 GitHub Issue 保存。请勿提交密码、Cookie、访问令牌或其他敏感信息。</p>
+            <a class="button quiet" href="https://github.com/711stoner/quguangou/issues?q=is%3Aissue+label%3A%E7%95%99%E8%A8%80" target="_blank" rel="noreferrer">查看全部留言</a>
+          </aside>
         </div>
       </section>
     </main>

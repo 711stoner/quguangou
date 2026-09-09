@@ -1,0 +1,58 @@
+.guestbook-layout {
+  display: grid;
+  grid-template-columns: 1.25fr .75fr;
+  gap: 18px;
+  margin-top: 34px;
+}
+
+.message-form,
+.message-aside {
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: #fff;
+}
+
+.message-form {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.message-form label {
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.message-form input,
+.message-form textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #decfc4;
+  border-radius: 11px;
+  outline: none;
+  color: var(--ink);
+  background: #fffcf9;
+  font: inherit;
+  font-size: 14px;
+}
+
+.message-form textarea { resize: vertical; }
+
+.message-form input:focus,
+.message-form textarea:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(247, 120, 35, .12);
+}
+
+.message-form .button { margin-top: 8px; }
+.message-form small { color: #988274; }
+.message-aside { background: linear-gradient(145deg, #fff2e4, #fffaf5); }
+.message-aside h3 { margin: 17px 0 10px; font-size: 25px; }
+.message-aside p { color: var(--muted); font-size: 14px; line-height: 1.7; }
+.message-aside .button { margin-top: 14px; }
+
+@media (max-width: 760px) {
+  .guestbook-layout { grid-template-columns: 1fr; }
+}
