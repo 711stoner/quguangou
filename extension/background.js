@@ -75,33 +75,54 @@ async function blockProfileInPage(target) {
   if (unavailablePattern.test(pageText())) return { status: "failed", reason: "账号不存在、已停用或无法访问" };
 
   const actions = await waitFor(() => {
-    const candidates = [
-      ...document.querySelectorAll('button[data-testid="userActions"], [data-testid="userActions"] button, [data-testid="userActions"]'),
-      ...document.querySelectorAll('button[aria-label*="More"], button[aria-label*="更多"], button[aria-label*="更多操作"]')
-    ];
-    return candidates.find(visible);
+    const profileActions = [...document.querySelectorAll('[data-testid="userActions"]')].filter(visible);
+    for (const container of profileActions) {
+      const controls = [
+        ...container.querySelectorAll('button, [role="button"]'),
+        ...(container.matches('button, [role="button"]') ? [container] : [])
+      ].filter(visible);
+      const moreControl = controls.find((item) => /more|更多/i.test(`${item.getAttribute("aria-label") || ""} ${item.innerText || ""}`));
+      if (moreControl) return moreControl;
+      if (controls.length === 1) return controls[0];
+    }
+    return [...document.querySelectorAll('[data-testid="userActions"] button[aria-label], [data-testid="userActions"] [role="button"][aria-label]')]
+      .filter(visible)
+      .find((item) => /more|更多/i.test(item.getAttribute("aria-label") || "")) || null;
   });
   if (!actions) return { status: "failed", reason: "找不到用户操作菜单，X 页面结构可能已变化" };
-  (actions.closest('button, [role="button"]') || actions.querySelector('button, [role="button"]') || actions).click();
+  actions.click();
+  await sleepInPage(350);
 
-  const menu = await waitFor(() => {
+  const directAction = await waitFor(() => {
+    const candidates = [...document.querySelectorAll('[data-testid="block"], [data-testid="unblock"]')].filter(visible);
+    return candidates.find((item) => /unblock|取消拉黑|解除封鎖|ブロック解除|차단 해제/i.test(`${item.innerText} ${item.getAttribute("aria-label") || ""}`))
+      || candidates.find((item) => /block|拉黑|封鎖|ブロック|차단/i.test(`${item.innerText} ${item.getAttribute("aria-label") || ""}`))
+      || null;
+  }, 2_000);
+  if (directAction) {
+    const text = `${directAction.innerText} ${directAction.getAttribute("aria-label") || ""}`;
+    if (unblockPattern.test(text)) return { status: "already_blocked", reason: "该账号已经被拉黑" };
+    directAction.click();
+  }
+
+  const menu = directAction ? null : await waitFor(() => {
     const menus = [...document.querySelectorAll('[role="menu"], [data-testid="Dropdown"]')].filter(visible);
     return menus.find((item) => item.querySelector('[role="menuitem"], [role="button"], button')) || menus[0] || null;
   }, 8_000);
-  if (!menu) return { status: "failed", reason: "用户操作菜单未打开；请确认该账号主页已完整加载" };
-  const menuItems = [...menu.querySelectorAll('[role="menuitem"], [role="button"], button')].filter(visible);
-  const alreadyBlocked = menuItems.find((item) => unblockPattern.test(item.innerText.trim()));
+  if (!directAction && !menu) return { status: "failed", reason: "资料页的“更多操作”菜单未打开；未点击左侧导航菜单" };
+  const menuItems = menu ? [...menu.querySelectorAll('[role="menuitem"], [role="button"], button')].filter(visible) : [];
+  const alreadyBlocked = menuItems.find((item) => unblockPattern.test(`${item.innerText.trim()} ${item.getAttribute("aria-label") || ""}`));
   if (alreadyBlocked) return { status: "already_blocked", reason: "该账号已经被拉黑" };
 
-  const blockItem = menuItems.find((item) => {
-    const text = item.innerText.trim();
+  const blockItem = directAction || menuItems.find((item) => {
+    const text = `${item.innerText.trim()} ${item.getAttribute("aria-label") || ""}`;
     return blockPattern.test(text) && !reportPattern.test(text);
   });
   if (!blockItem) {
     const labels = menuItems.map((item) => item.innerText.trim()).filter(Boolean).slice(0, 8).join("、");
     return { status: "failed", reason: `菜单中找不到“拉黑”操作${labels ? `（当前菜单：${labels}）` : ""}` };
   }
-  blockItem.click();
+  if (!directAction) blockItem.click();
 
   const confirm = await waitFor(() => {
     const byTestId = document.querySelector('[data-testid="confirmationSheetConfirm"]');

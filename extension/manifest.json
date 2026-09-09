@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "取关狗",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "查看经用户提交证据形成的 X 单方面取关名单，并在确认后依次拉黑。",
   "permissions": ["storage", "scripting"],
   "host_permissions": [
