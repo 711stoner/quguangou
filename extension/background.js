@@ -1,4 +1,4 @@
-import { parseAccountList } from "./lib/accounts.js";
+import { parseAccountList, parseAccountReference } from "./lib/accounts.js";
 import { reserveAttempt } from "./lib/pacing.js";
 
 const STORAGE_KEY = "quguangouJob";
@@ -7,7 +7,13 @@ let activeRun = false;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function getJob() {
-  return (await chrome.storage.local.get(STORAGE_KEY))[STORAGE_KEY] ?? null;
+  const job = (await chrome.storage.local.get(STORAGE_KEY))[STORAGE_KEY] ?? null;
+  // Repair the numeric handle in saved bundled jobs without rewriting historical results.
+  if (job?.blocklistVersion === "2026.09.09.1") {
+    job.targets = job.targets.map((target, index) => index >= job.currentIndex && target.key === "id:665162"
+      ? parseAccountReference("@665162") : target);
+  }
+  return job;
 }
 
 async function setJob(job) {
@@ -211,9 +217,12 @@ async function runJob() {
           job.pauseReason = "本批已尝试 20 个账号，请冷却一小时后手动继续";
         }
       }
-      if (outcome.status === "failed" && job.currentIndex < job.targets.length) {
+      if (outcome.status === "failed") {
         job.status = "paused";
-        job.pauseReason = "出现失败，已暂停。请先检查失败原因，再决定是否继续剩余账号";
+        job.pauseReason = "出现失败，已暂停；该账号页面已保留在浏览器标签页中。请先检查原因，再决定是否继续剩余账号";
+        // Detach the diagnostic tab so cleanup and subsequent runs cannot close or reuse it.
+        job.retainedTabId = job.workerTabId;
+        job.workerTabId = null;
       }
       await setJob(job);
       await sleep(900);

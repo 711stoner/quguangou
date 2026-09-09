@@ -15,3 +15,9 @@ test("deduplicates case-insensitively and reports invalid input", () => {
   assert.equal(result.duplicates.length, 1);
   assert.equal(result.invalid.length, 1);
 });
+
+test("numeric handles are distinct from numeric user IDs", () => {
+  assert.equal(parseAccountReference("@665162").url, "https://x.com/665162");
+  assert.equal(parseAccountReference("https://x.com/665162").label, "@665162");
+  assert.equal(parseAccountReference("665162").url, "https://x.com/i/user/665162");
+});
