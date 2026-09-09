@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="取关狗是一款帮助 X 用户查看内置名单并主动批量拉黑账号的 Chrome 扩展。" />
+    <meta name="theme-color" content="#f77823" />
+    <meta property="og:title" content="取关狗｜更省心地管理 X 体验" />
+    <meta property="og:description" content="登录自己的 X 账号，查看名单后一次点击，依次完成拉黑。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/social-card.png" />
+    <title>取关狗｜更省心地管理 X 体验</title>
+    <link rel="icon" href="assets/icon-32.png" sizes="32x32" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <header class="site-header">
+      <a class="wordmark" href="#top" aria-label="取关狗首页">
+        <img src="assets/logo.svg" alt="" />
+        <span>取关狗</span>
+      </a>
+      <nav aria-label="主导航">
+        <a href="#guide">怎么用</a>
+        <a href="#story">为什么做</a>
+        <a href="#principles">名单原则</a>
+        <a href="#guestbook">留言</a>
+      </nav>
+      <a class="header-cta" href="#install">获取扩展</a>
+    </header>
+
+    <main id="top">
+      <section class="hero section">
+        <div class="hero-copy reveal">
+          <div class="eyebrow">为 X 用户制作的 Chrome 扩展</div>
+          <h1>把注意力，<br /><em>还给自己。</em></h1>
+          <p class="hero-lead">登录你自己的 X 账号，查看扩展内置名单，然后一次点击，依次完成拉黑。没有远程服务器，不读取密码。</p>
+          <div class="hero-actions" id="install">
+            <span class="button primary disabled" aria-disabled="true">Chrome 商店上架准备中</span>
+            <a class="button quiet" href="https://github.com/711stoner/quguangou" target="_blank" rel="noreferrer">查看 GitHub</a>
+          </div>
+          <div class="trust-row">
+            <span>✓ 用户主动触发</span>
+            <span>✓ 数据仅存本地</span>
+            <span>✓ 随时停止任务</span>
+          </div>
+        </div>
+
+        <div class="product-stage reveal" aria-label="扩展界面示意">
+          <div class="orbit orbit-one"></div>
+          <div class="orbit orbit-two"></div>
+          <article class="extension-card">
+            <div class="extension-brand">
+              <img src="assets/logo.svg" alt="" />
+              <div><strong>取关狗</strong><small>批量拉黑 X 账号</small></div>
+            </div>
+            <div class="panel-heading"><strong>扩展内置名单</strong><span>版本 2026-09</span></div>
+            <p>执行前可以查看完整账号清单。</p>
+            <div class="count-line"><strong>名单内容由发布者维护</strong></div>
+            <div class="fake-list">
+              <div><i>1</i><span>清晰展示目标账号</span></div>
+              <div><i>2</i><span>逐项返回处理结果</span></div>
+              <div><i>3</i><span>任务中途可以停止</span></div>
+            </div>
+            <div class="block-button">一键拉黑全部账号</div>
+            <small class="microcopy">点击按钮即表示确认执行。</small>
+          </article>
+        </div>
+      </section>
+
+      <section class="section guide" id="guide">
+        <div class="section-heading reveal">
+          <span class="kicker">HOW IT WORKS</span>
+          <h2>三步，处理完整名单</h2>
+          <p>不要求 X API，也不需要把账号密码交给扩展。</p>
+        </div>
+        <div class="steps">
+          <article class="step reveal"><span>01</span><h3>登录自己的账号</h3><p>在 Chrome 中正常登录 x.com。登录过程完全由 X 处理。</p></article>
+          <article class="step reveal"><span>02</span><h3>查看内置名单</h3><p>打开扩展，先查看当前名单版本、账号数量和完整目标。</p></article>
+          <article class="step reveal"><span>03</span><h3>主动确认执行</h3><p>点击按钮后，扩展按顺序处理；进度可见，也可以随时停止。</p></article>
+        </div>
+      </section>
+
+      <section class="section story" id="story">
+        <div class="story-card reveal">
+          <div class="story-mark">“</div>
+          <div>
+            <span class="kicker">ORIGIN</span>
+            <h2>为什么会有取关狗</h2>
+            <p>社交网络本来应该服务于交流，但重复出现的骚扰、垃圾信息和恶意互动，会一点点消耗注意力。手动逐个查找和拉黑既慢，也容易遗漏。</p>
+            <p>取关狗因此诞生：把一份经过维护的账号名单交给工具处理，同时把最终决定保留给用户。它不会悄悄运行，也不会替用户登录；每次任务都从一次清楚的点击开始。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section principles" id="principles">
+        <div class="section-heading reveal">
+          <span class="kicker">TRANSPARENCY</span>
+          <h2>名单不是黑箱</h2>
+          <p>名单的维护应当可解释、可复核，也允许被纠正。</p>
+        </div>
+        <div class="principle-grid">
+          <article class="principle reveal"><div>透明</div><h3>公开版本与标准</h3><p>扩展展示名单版本和完整账号。更新随扩展版本发布，不进行静默远程替换。</p></article>
+          <article class="principle reveal"><div>克制</div><h3>只为明确目的服务</h3><p>名单不应基于种族、宗教、性别等受保护特征，也不应用来组织骚扰。</p></article>
+          <article class="principle reveal"><div>纠错</div><h3>提供反馈与申诉</h3><p>如认为账号被错误收录，可以通过公开留言区或联系邮箱说明情况。</p></article>
+        </div>
+        <div class="contact-strip reveal">
+          <span>名单建议、纠错或申诉</span>
+          <a href="mailto:wuhuwang65@gmail.com">wuhuwang65@gmail.com</a>
+        </div>
+      </section>
+
+      <section class="section guestbook" id="guestbook">
+        <div class="section-heading reveal">
+          <span class="kicker">GUESTBOOK</span>
+          <h2>说说你的想法</h2>
+          <p>留言公开保存在 GitHub。需要登录 GitHub 才能发布，我们不会另行收集你的账号信息。</p>
+        </div>
+        <div class="guestbook-actions reveal">
+          <a class="button primary" id="leaveMessage" href="https://github.com/711stoner/quguangou/issues/1" target="_blank" rel="noreferrer">去 GitHub 留言</a>
+          <button class="button quiet" id="refreshComments" type="button">刷新留言</button>
+        </div>
+        <div id="comments" class="comments" aria-live="polite">
+          <div class="comment-status">正在读取公开留言…</div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div><strong>取关狗</strong><span>非 X Corp. 官方产品，与 X Corp. 无隶属或认可关系。</span></div>
+      <div class="footer-links"><a href="privacy.html">隐私政策</a><a href="https://github.com/711stoner/quguangou/issues" target="_blank" rel="noreferrer">问题反馈</a><span>© <span id="year"></span> siyiwang</span></div>
+    </footer>
+    <script src="app.js" defer></script>
+  </body>
+</html>
