@@ -1,26 +1,20 @@
-const downloadStorageKey = "quguangouDeviceDownloadCount:v0.2.6";
-const downloadCountElement = document.querySelector("#deviceDownloadCount");
+const downloadCountElement = document.querySelector("#totalDownloadCount");
 
-function readDeviceDownloadCount() {
-  const rawValue = window.localStorage.getItem(downloadStorageKey);
-  const count = Number.parseInt(rawValue || "0", 10);
-  return Number.isFinite(count) && count > 0 ? count : 0;
-}
-
-function renderDeviceDownloadCount() {
+async function renderTotalDownloadCount() {
   if (!downloadCountElement) return;
-  downloadCountElement.textContent = String(readDeviceDownloadCount());
+  try {
+    const response = await fetch("https://api.github.com/repos/711stoner/quguangou/releases/tags/v0.2.6");
+    if (!response.ok) throw new Error("download count unavailable");
+    const release = await response.json();
+    const asset = release.assets.find((item) => item.name === "quguangou-chrome-v0.2.6.zip");
+    const count = asset ? asset.download_count : 0;
+    downloadCountElement.textContent = count.toLocaleString("zh-CN");
+  } catch {
+    downloadCountElement.textContent = "暂时无法读取";
+  }
 }
 
-document.querySelectorAll(".download-link").forEach((link) => {
-  link.addEventListener("click", () => {
-    const nextCount = readDeviceDownloadCount() + 1;
-    window.localStorage.setItem(downloadStorageKey, String(nextCount));
-    renderDeviceDownloadCount();
-  });
-});
-
-renderDeviceDownloadCount();
+renderTotalDownloadCount();
 
 const messageForm = document.querySelector("#messageForm");
 if (messageForm) {
