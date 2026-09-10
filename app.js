@@ -20,12 +20,10 @@ const messageForm = document.querySelector("#messageForm");
 if (messageForm) {
   messageForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    const title = document.querySelector("#messageTitle").value.trim();
-    const body = document.querySelector("#messageBody").value.trim();
-    if (!title || !body) return;
-    const subject = encodeURIComponent(`取关狗留言：${title}`);
-    const mailBody = encodeURIComponent(`${body}\n\n---\n来自取关狗官网留言页`);
-    window.location.href = `mailto:wuhuwang65@gmail.com?subject=${subject}&body=${mailBody}`;
+    const messageStatus = document.querySelector("#messageStatus");
+    if (messageStatus) {
+      messageStatus.textContent = "X 留言入口正在准备中。你的内容可以先保留在这里，等链接补上后再提交。";
+    }
   });
 }
 
