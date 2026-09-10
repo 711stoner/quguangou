@@ -103,6 +103,10 @@
           <article class="step reveal"><span>02</span><h3>查看内置名单</h3><p>打开扩展，先查看当前名单版本、账号数量和完整目标。</p></article>
           <article class="step reveal"><span>03</span><h3>主动确认执行</h3><p>点击按钮后，扩展按顺序处理；进度可见，也可以随时停止。</p></article>
         </div>
+        <div class="contact-strip reveal">
+          <span><strong>浏览器兼容说明：</strong>取关狗目前按 Chrome 扩展开发。Chrome 可以直接使用；Microsoft Edge、Brave 等 Chromium 浏览器通常也可以手动加载或从 Chrome 插件市场安装。Firefox、Safari 不能直接使用当前 ZIP，需要单独适配后再发布对应版本。</span>
+          <a href="#manual-install">查看安装方法</a>
+        </div>
       </section>
 
       <section class="section story" id="story">
@@ -147,7 +151,7 @@
         <div class="section-heading reveal">
           <span class="kicker">GUESTBOOK</span>
           <h2>说说你的想法</h2>
-          <p>在这里写下内容，提交时会跳转到 GitHub 供你确认。留言公开保存在 GitHub，我们不会另行收集你的账号信息。</p>
+          <p>无需注册 GitHub。在这里写下内容，提交时会打开你的邮箱应用，收件人自动填好为开发者邮箱。发送前你仍然可以检查和修改内容。</p>
         </div>
         <div class="guestbook-layout reveal">
           <form id="messageForm" class="message-form">
@@ -155,14 +159,14 @@
             <input id="messageTitle" name="title" maxlength="80" required placeholder="例如：一个功能建议" />
             <label for="messageBody">留言内容</label>
             <textarea id="messageBody" name="body" rows="6" maxlength="2000" required placeholder="写下建议、使用反馈、名单纠错或申诉…"></textarea>
-            <button class="button primary" type="submit">前往 GitHub 确认发布</button>
-            <small>发布前你可以在 GitHub 再次检查和修改内容。</small>
+            <button class="button primary" type="submit">打开邮箱发送留言</button>
+            <small>无需注册账号。请勿提交密码、Cookie、访问令牌或其他敏感信息。</small>
           </form>
           <aside class="message-aside">
-            <span class="kicker">PUBLIC & OPEN</span>
-            <h3>每条留言都可以被看见</h3>
-            <p>留言以公开 GitHub Issue 保存。请勿提交密码、Cookie、访问令牌或其他敏感信息。</p>
-            <a class="button quiet" href="https://github.com/711stoner/quguangou/issues?q=is%3Aissue+label%3A%E7%95%99%E8%A8%80" target="_blank" rel="noreferrer">查看全部留言</a>
+            <span class="kicker">NO SIGNUP</span>
+            <h3>用邮件提交反馈</h3>
+            <p>你可以提交名单线索、使用反馈、名单纠错或申诉说明。涉及名单新增时，请附上能够说明情况的截图证据；涉及解除拉黑时，请说明理由并提供补充材料。</p>
+            <a class="button quiet" href="mailto:wuhuwang65@gmail.com">直接发邮件</a>
           </aside>
         </div>
       </section>

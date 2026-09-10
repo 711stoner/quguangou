@@ -29,12 +29,9 @@ if (messageForm) {
     const title = document.querySelector("#messageTitle").value.trim();
     const body = document.querySelector("#messageBody").value.trim();
     if (!title || !body) return;
-    const params = new URLSearchParams({
-      labels: "留言",
-      title: `[留言] ${title}`,
-      body: `${body}\n\n---\n来自取关狗官网留言页`
-    });
-    window.open(`https://github.com/711stoner/quguangou/issues/new?${params}`, "_blank", "noopener,noreferrer");
+    const subject = encodeURIComponent(`取关狗留言：${title}`);
+    const mailBody = encodeURIComponent(`${body}\n\n---\n来自取关狗官网留言页`);
+    window.location.href = `mailto:wuhuwang65@gmail.com?subject=${subject}&body=${mailBody}`;
   });
 }
 
