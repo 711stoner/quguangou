@@ -9,6 +9,7 @@ test('twenty attempts require a full cooldown; persisted quota survives task cha
     assert.equal(result.allowed, true);
     state = JSON.parse(JSON.stringify(result.state));
   }
+  assert.equal(state.cooldownUntil, 19 * 15_000 + 1_800_000);
   assert.equal(reserveAttempt(state, state.cooldownUntil - 1).allowed, false);
   const next = reserveAttempt(state, state.cooldownUntil);
   assert.equal(next.allowed, true);

@@ -6,6 +6,6 @@ export function reserveAttempt(state = {}, now = Date.now()) {
   return { allowed: true, state: {
     count: used,
     nextAt: now + 15_000,
-    cooldownUntil: used >= 20 ? now + 3_600_000 : 0
+    cooldownUntil: used >= 20 ? now + 1_800_000 : 0
   } };
 }

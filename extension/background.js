@@ -209,12 +209,12 @@ async function runJob() {
       job.currentTarget = null;
       if (reservation.state.cooldownUntil) {
         const quota = reservation.state;
-        quota.cooldownUntil = Date.now() + 3_600_000;
+        quota.cooldownUntil = Date.now() + 1_800_000;
         await chrome.storage.local.set({ quguangouQuota: quota });
         if (job.currentIndex < job.targets.length) {
           job.status = "paused";
           job.resumeAt = quota.cooldownUntil;
-          job.pauseReason = "本批已尝试 20 个账号，请冷却一小时后手动继续";
+          job.pauseReason = "本批已尝试 20 个账号，请冷却半小时后手动继续";
         }
       }
       if (outcome.status === "failed") {
