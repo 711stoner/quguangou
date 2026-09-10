@@ -3,10 +3,10 @@ const downloadCountElement = document.querySelector("#totalDownloadCount");
 async function renderTotalDownloadCount() {
   if (!downloadCountElement) return;
   try {
-    const response = await fetch("https://api.github.com/repos/711stoner/quguangou/releases/tags/v0.2.6");
+    const response = await fetch("https://api.github.com/repos/711stoner/quguangou/releases/tags/v0.2.7");
     if (!response.ok) throw new Error("download count unavailable");
     const release = await response.json();
-    const asset = release.assets.find((item) => item.name === "quguangou-chrome-v0.2.6.zip");
+    const asset = release.assets.find((item) => item.name === "quguangou-chrome-v0.2.7.zip");
     const count = asset ? asset.download_count : 0;
     downloadCountElement.textContent = count.toLocaleString("zh-CN");
   } catch {

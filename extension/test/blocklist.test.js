@@ -11,6 +11,7 @@ test("bundled blocklist has the expected shape", async () => {
   assert.ok(Array.isArray(payload.accounts));
   assert.ok(payload.accounts.every((account) => typeof account === "string"));
   const parsed = parseAccountList(payload.accounts.join("\n"));
-  assert.ok(parsed.targets.some(target => target.label === "@665162" && target.url === "https://x.com/665162"));
-  assert.ok(!parsed.targets.some(target => target.key === "id:665162"));
+  assert.equal(parsed.invalid.length, 0);
+  assert.equal(parsed.duplicates.length, 0);
+  assert.equal(parsed.targets.length, payload.accounts.length);
 });
