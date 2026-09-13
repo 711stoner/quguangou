@@ -77,7 +77,7 @@ async function blockProfileInPage(target) {
 
   await waitFor(() => document.body, 10_000);
   if (/\/i\/flow\/login/.test(location.pathname) || loginPattern.test(pageText())) {
-    return { status: "failed", reason: "Chrome 中尚未登录 X" };
+    return { status: "failed", reason: "当前浏览器中尚未登录 X" };
   }
   if (unavailablePattern.test(pageText())) return { status: "failed", reason: "账号不存在、已停用或无法访问" };
 

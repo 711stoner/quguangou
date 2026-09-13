@@ -47,10 +47,13 @@
 .deal-poster-button { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-radius: 13px; color: #321b0f; background: #fff; text-decoration: none; font-size: 14px; font-weight: 850; transition: transform .2s ease, background .2s ease; }
 .deal-poster-button:hover { background: #fff3e8; transform: translateY(-2px); }
 .deal-poster-button span { font-size: 18px; }
+.github-link { display: inline-flex; align-items: center; gap: 7px; }
+.github-link svg { width: 19px; height: 19px; flex: 0 0 auto; }
 @media (max-width: 760px) {
   .deal-poster { align-items: stretch; flex-direction: column; gap: 28px; width: calc(100% - 28px); padding: 36px 26px; }
   .deal-poster::before { right: -25px; bottom: -70px; font-size: 240px; }
   .deal-poster-action { flex-basis: auto; }
   .deal-poster h2 { font-size: 36px; }
   .deal-poster-price { display: none; }
+  .github-link { overflow-wrap: anywhere; }
 }

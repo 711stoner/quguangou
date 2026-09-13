@@ -8,8 +8,8 @@ function showOnly(view) {
   [blocklistView, progressView].forEach((item) => item.classList.toggle("hidden", item !== view));
 }
 
-function escapeHtml(value) {
-  return String(value).replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]);
+function clear(element) {
+  element.replaceChildren();
 }
 
 function toast(message) {
@@ -25,14 +25,30 @@ function renderBlocklist() {
   $("#blocklistSummary").textContent = blocklist.targets.length
     ? `名单内共 ${blocklist.targets.length} 个账号`
     : "内置名单目前为空";
-  $("#targetList").innerHTML = blocklist.targets.map((target, index) => `
-    <div class="target-row"><span class="index">${index + 1}</span><span>${escapeHtml(target.label)}</span></div>
-  `).join("");
+  const targetList = $("#targetList");
+  clear(targetList);
+  blocklist.targets.forEach((target, index) => {
+    const row = document.createElement("div");
+    row.className = "target-row";
+    const number = document.createElement("span");
+    number.className = "index";
+    number.textContent = index + 1;
+    const label = document.createElement("span");
+    label.textContent = target.label;
+    row.append(number, label);
+    targetList.append(row);
+  });
 
   const issues = [];
   if (blocklist.duplicates.length) issues.push(`名单中已自动移除 ${blocklist.duplicates.length} 个重复项`);
   for (const item of blocklist.invalid) issues.push(`${item.raw || "空白项"}：${item.error}`);
-  $("#issueList").innerHTML = issues.map((issue) => `<p>${escapeHtml(issue)}</p>`).join("");
+  const issueList = $("#issueList");
+  clear(issueList);
+  issues.forEach((issue) => {
+    const paragraph = document.createElement("p");
+    paragraph.textContent = issue;
+    issueList.append(paragraph);
+  });
   $("#startButton").disabled = blocklist.targets.length === 0;
   showOnly(blocklistView);
 }
@@ -53,12 +69,25 @@ function renderJob(job) {
   if (job.pauseReason) $("#progressText").textContent += ` · ${job.pauseReason}${job.resumeAt ? `（可继续时间：${new Date(job.resumeAt).toLocaleString()}）` : ""}`;
 
   const statusLabel = { blocked: "已拉黑", already_blocked: "已拉黑过", failed: "失败" };
-  $("#resultList").innerHTML = job.results.map((result) => `
-    <div class="result-row ${escapeHtml(result.status)}">
-      <div><strong>${escapeHtml(result.label)}</strong>${result.status === "failed" ? `<small>${escapeHtml(result.reason || "未返回失败原因")}</small>` : ""}</div>
-      <span>${escapeHtml(statusLabel[result.status] || result.status)}</span>
-    </div>
-  `).join("");
+  const resultList = $("#resultList");
+  clear(resultList);
+  job.results.forEach((result) => {
+    const row = document.createElement("div");
+    row.classList.add("result-row", result.status);
+    const detail = document.createElement("div");
+    const label = document.createElement("strong");
+    label.textContent = result.label;
+    detail.append(label);
+    if (result.status === "failed") {
+      const reason = document.createElement("small");
+      reason.textContent = result.reason || "未返回失败原因";
+      detail.append(reason);
+    }
+    const status = document.createElement("span");
+    status.textContent = statusLabel[result.status] || result.status;
+    row.append(detail, status);
+    resultList.append(row);
+  });
   $("#cancelButton").classList.toggle("hidden", !running);
   $("#newTaskButton").classList.toggle("hidden", running);
   $("#newTaskButton").textContent = done < total ? "继续剩余账号" : "返回名单";

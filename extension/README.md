@@ -7,7 +7,7 @@
 1. 在 Chrome 地址栏打开 `chrome://extensions`。
 2. 打开右上角“开发者模式”。
 3. 点击“加载已解压的扩展程序”。
-4. 选择本项目文件夹 `quguangou-chrome`。
+4. 选择本项目中的 `extension` 文件夹。
 5. 先在 Chrome 中登录 `x.com`，再点击工具栏里的“取关狗”。
 
 ## 内置名单

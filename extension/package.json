@@ -1,9 +1,12 @@
 {
   "name": "quguangou-chrome",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "build": "node scripts/build-browser-packages.mjs",
+    "build:edge": "node scripts/build-browser-packages.mjs edge",
+    "build:firefox": "node scripts/build-browser-packages.mjs firefox"
   }
 }
