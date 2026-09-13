@@ -4,11 +4,13 @@ const DOWNLOAD_COUNT_BASELINE = 60;
 async function renderTotalDownloadCount() {
   if (!downloadCountElement) return;
   try {
-    const response = await fetch("https://api.github.com/repos/711stoner/quguangou/releases/tags/v0.2.12");
+    const response = await fetch("https://api.github.com/repos/711stoner/quguangou/releases?per_page=100");
     if (!response.ok) throw new Error("download count unavailable");
-    const release = await response.json();
-    const asset = release.assets.find((item) => item.name === "quguangou-chrome-v0.2.12.zip");
-    const count = DOWNLOAD_COUNT_BASELINE + (asset ? asset.download_count : 0);
+    const releases = await response.json();
+    const releaseDownloads = releases.flatMap((release) => release.assets)
+      .filter((asset) => /^quguangou-chrome-v[\d.]+\.zip$/.test(asset.name))
+      .reduce((total, asset) => total + asset.download_count, 0);
+    const count = DOWNLOAD_COUNT_BASELINE + releaseDownloads;
     downloadCountElement.textContent = count.toLocaleString("zh-CN");
   } catch {
     downloadCountElement.textContent = DOWNLOAD_COUNT_BASELINE.toLocaleString("zh-CN");
