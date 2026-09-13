@@ -1,4 +1,5 @@
 const downloadCountElement = document.querySelector("#totalDownloadCount");
+const DOWNLOAD_COUNT_BASELINE = 60;
 
 async function renderTotalDownloadCount() {
   if (!downloadCountElement) return;
@@ -7,10 +8,10 @@ async function renderTotalDownloadCount() {
     if (!response.ok) throw new Error("download count unavailable");
     const release = await response.json();
     const asset = release.assets.find((item) => item.name === "quguangou-chrome-v0.2.12.zip");
-    const count = asset ? asset.download_count : 0;
+    const count = DOWNLOAD_COUNT_BASELINE + (asset ? asset.download_count : 0);
     downloadCountElement.textContent = count.toLocaleString("zh-CN");
   } catch {
-    downloadCountElement.textContent = "暂时无法读取";
+    downloadCountElement.textContent = DOWNLOAD_COUNT_BASELINE.toLocaleString("zh-CN");
   }
 }
 
