@@ -7,11 +7,11 @@ import { fileURLToPath } from "node:url";
 const execFileAsync = promisify(execFile);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dist = path.join(root, "dist");
-const supported = ["edge", "firefox"];
+const supported = ["chrome", "edge", "firefox"];
 const requested = process.argv[2] ? [process.argv[2]] : supported;
 
 if (requested.some((browser) => !supported.includes(browser))) {
-  throw new Error(`未知浏览器：${process.argv[2]}（可选 edge 或 firefox）`);
+  throw new Error(`未知浏览器：${process.argv[2]}（可选 chrome、edge 或 firefox）`);
 }
 
 const runtimeEntries = [
@@ -35,7 +35,10 @@ for (const browser of requested) {
   for (const entry of runtimeEntries) {
     await cp(path.join(root, entry), path.join(target, entry), { recursive: true });
   }
-  const manifest = await readFile(path.join(root, "manifests", `${browser}.json`), "utf8");
+  const manifestPath = browser === "chrome"
+    ? path.join(root, "manifest.json")
+    : path.join(root, "manifests", `${browser}.json`);
+  const manifest = await readFile(manifestPath, "utf8");
   await writeFile(path.join(target, "manifest.json"), manifest);
   const { version } = JSON.parse(manifest);
   const archive = path.join(dist, `quguangou-${browser}-v${version}.zip`);

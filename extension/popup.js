@@ -22,9 +22,14 @@ function toast(message) {
 function renderBlocklist() {
   $("#blocklistVersion").textContent = `版本 ${blocklist.version}`;
   $("#blocklistDescription").textContent = blocklist.description || "以下账号由扩展发布者预置。";
+  const sourceLabel = {
+    remote: "在线最新名单",
+    cache: "上次在线缓存",
+    bundled: "本地备用名单"
+  }[blocklist.source] || "社区名单";
   $("#blocklistSummary").textContent = blocklist.targets.length
-    ? `名单内共 ${blocklist.targets.length} 个账号`
-    : "内置名单目前为空";
+    ? `名单内共 ${blocklist.targets.length} 个账号 · ${sourceLabel}`
+    : `当前名单为空 · ${sourceLabel}`;
   const targetList = $("#targetList");
   clear(targetList);
   blocklist.targets.forEach((target, index) => {
@@ -40,6 +45,9 @@ function renderBlocklist() {
   });
 
   const issues = [];
+  if (blocklist.source !== "remote" && blocklist.remoteError) {
+    issues.push(`在线名单暂时不可用，当前使用${blocklist.source === "cache" ? "上次在线缓存" : "本地备用名单"}`);
+  }
   if (blocklist.duplicates.length) issues.push(`名单中已自动移除 ${blocklist.duplicates.length} 个重复项`);
   for (const item of blocklist.invalid) issues.push(`${item.raw || "空白项"}：${item.error}`);
   const issueList = $("#issueList");
@@ -130,7 +138,7 @@ async function initialize() {
     chrome.runtime.sendMessage({ type: "GET_JOB" }),
     chrome.runtime.sendMessage({ type: "GET_BLOCKLIST" })
   ]);
-  if (!blocklistResponse?.ok) throw new Error(blocklistResponse?.error || "无法读取扩展内置名单");
+  if (!blocklistResponse?.ok) throw new Error(blocklistResponse?.error || "无法读取社区名单");
   blocklist = blocklistResponse.blocklist;
   if (jobResponse?.job) renderJob(jobResponse.job);
   else renderBlocklist();

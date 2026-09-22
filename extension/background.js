@@ -2,6 +2,9 @@ import { parseAccountList, parseAccountReference } from "./lib/accounts.js";
 import { reserveAttempt } from "./lib/pacing.js";
 
 const STORAGE_KEY = "quguangouJob";
+const BLOCKLIST_CACHE_KEY = "quguangouBlocklistCache";
+const REMOTE_BLOCKLIST_URL = "https://711stoner.github.io/quguangou/extension/data/blocklist.json";
+const REMOTE_BLOCKLIST_TIMEOUT_MS = 6000;
 let activeRun = false;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -21,18 +24,77 @@ async function setJob(job) {
   chrome.runtime.sendMessage({ type: "JOB_UPDATED", job }).catch(() => {});
 }
 
-async function getBundledBlocklist() {
-  const response = await fetch(chrome.runtime.getURL("data/blocklist.json"));
-  if (!response.ok) throw new Error("无法读取扩展内置名单");
-  const payload = await response.json();
-  if (!Array.isArray(payload.accounts)) throw new Error("内置名单格式错误：accounts 必须是数组");
+function normalizeBlocklist(payload, source, fetchedAt = null) {
+  if (!payload || typeof payload !== "object") throw new Error("名单格式错误");
+  if (!Array.isArray(payload.accounts)) throw new Error("名单格式错误：accounts 必须是数组");
+  if (!payload.accounts.every((account) => typeof account === "string")) {
+    throw new Error("名单格式错误：accounts 只能包含字符串");
+  }
   const parsed = parseAccountList(payload.accounts.join("\n"), 1000);
   return {
     version: payload.version || "未标注",
     updatedAt: payload.updated_at || null,
     description: payload.description || "",
+    reviewNote: payload.review_note || "",
+    source,
+    fetchedAt,
     ...parsed
   };
+}
+
+async function getRemoteBlocklist() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REMOTE_BLOCKLIST_TIMEOUT_MS);
+  try {
+    const response = await fetch(`${REMOTE_BLOCKLIST_URL}?t=${Date.now()}`, {
+      cache: "no-store",
+      credentials: "omit",
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error(`在线名单请求失败（HTTP ${response.status}）`);
+    const payload = await response.json();
+    const fetchedAt = new Date().toISOString();
+    const blocklist = normalizeBlocklist(payload, "remote", fetchedAt);
+    await chrome.storage.local.set({
+      [BLOCKLIST_CACHE_KEY]: { payload, fetchedAt }
+    });
+    return blocklist;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function getCachedBlocklist() {
+  const cached = (await chrome.storage.local.get(BLOCKLIST_CACHE_KEY))[BLOCKLIST_CACHE_KEY];
+  if (!cached?.payload) return null;
+  try {
+    return normalizeBlocklist(cached.payload, "cache", cached.fetchedAt || null);
+  } catch {
+    await chrome.storage.local.remove(BLOCKLIST_CACHE_KEY);
+    return null;
+  }
+}
+
+async function getBundledBlocklist() {
+  const response = await fetch(chrome.runtime.getURL("data/blocklist.json"));
+  if (!response.ok) throw new Error("无法读取扩展内置名单");
+  return normalizeBlocklist(await response.json(), "bundled");
+}
+
+async function getBlocklist() {
+  try {
+    return await getRemoteBlocklist();
+  } catch (error) {
+    const cached = await getCachedBlocklist();
+    if (cached) return { ...cached, remoteError: error.message || String(error) };
+    const bundled = await getBundledBlocklist();
+    return { ...bundled, remoteError: error.message || String(error) };
+  }
+}
+
+async function getBlocklistForJob() {
+  const cached = await getCachedBlocklist();
+  return cached || getBundledBlocklist();
 }
 
 async function waitForTabComplete(tabId, timeoutMs = 35_000) {
@@ -249,7 +311,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     return true;
   }
   if (message?.type === "GET_BLOCKLIST") {
-    getBundledBlocklist()
+    getBlocklist()
       .then((blocklist) => sendResponse({ ok: true, blocklist }))
       .catch((error) => sendResponse({ ok: false, error: error.message }));
     return true;
@@ -275,15 +337,16 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         void runJob();
         return;
       }
-      const blocklist = await getBundledBlocklist();
+      const blocklist = await getBlocklistForJob();
       if (!blocklist.targets.length) {
-        sendResponse({ ok: false, error: "扩展内置名单目前为空" });
+        sendResponse({ ok: false, error: "当前名单为空" });
         return;
       }
       const job = {
         id: crypto.randomUUID(),
         status: "running",
         blocklistVersion: blocklist.version,
+        blocklistSource: blocklist.source,
         targets: blocklist.targets,
         results: [],
         currentIndex: 0,
