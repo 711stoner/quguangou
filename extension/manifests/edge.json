@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "取关狗",
   "version": "0.2.13",
-  "description": "查看经用户提交证据形成的 X 单方面取关名单，并在确认后依次拉黑。",
+  "description": "不是取关检测器。整理 X 中文社区公开曝光、互关帖线索和用户投稿形成的取关名单，确认后可一键依次拉黑。",
   "permissions": ["storage", "scripting"],
   "host_permissions": ["https://x.com/*"],
   "icons": {

@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="取关狗是一款帮助 X 用户查看内置名单并主动批量拉黑账号的 Chrome 扩展。" />
+    <meta name="description" content="取关狗不是取关检测器。它整理 X 中文社区公开曝光、互关帖异常关注比例线索和用户私信投稿，经人工核对后形成社区取关名单，用户确认后可一键依次拉黑名单账号。" />
     <meta name="theme-color" content="#f77823" />
-    <meta property="og:title" content="取关狗｜更省心地管理 X 体验" />
-    <meta property="og:description" content="登录自己的 X 账号，查看名单后一次点击，依次完成拉黑。" />
+    <meta property="og:title" content="取关狗｜X 中文社区取关名单与一键拉黑工具" />
+    <meta property="og:description" content="不是查谁取关了你，而是整理社区取关记录，帮你一键处理名单中的账号。" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="assets/social-card.png" />
-    <title>取关狗｜更省心地管理 X 体验</title>
+    <title>取关狗｜X 中文社区取关名单与一键拉黑工具</title>
     <link rel="icon" href="assets/icon-32.png" sizes="32x32" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="poster.css" />
@@ -35,14 +35,14 @@
     <main id="top">
       <section class="hero section">
         <div class="hero-copy reveal">
-          <div class="eyebrow">为 X 用户制作的 Chrome 扩展</div>
-          <h1>互关之后，<br /><em>信任也该被看见。</em></h1>
-          <p class="hero-lead">取关狗整理经用户提交截图、复核后收录的单方面取关线索。登录自己的 X 账号，先查看内置名单；确认后，再由你主动选择是否依次拉黑。所有操作仅在本地浏览器完成，不读取密码，也不上传账号数据。</p>
+          <div class="eyebrow">X 中文社区取关名单 · 浏览器扩展</div>
+          <h1>不是查谁取关了你，<br /><em>而是先把有记录的人拦在外面。</em></h1>
+          <p class="hero-lead"><strong>取关狗不是取关检测器。</strong>它不会扫描你的关注列表，也不会告诉你“刚刚谁取关了你”。我们整理 X 中文社区里的公开曝光、互关帖异常关注比例线索和用户私信投稿，经人工核对后形成社区名单；你确认后，可以一键依次拉黑名单中的账号。名单来自整个 X 中文社区，不只限于你主页当前关注的人。</p>
           <div class="hero-actions" id="install">
             <a class="button primary download-link" href="https://github.com/711stoner/quguangou/releases/download/v0.2.13/quguangou-chrome-v0.2.13.zip">下载 Chrome 扩展 v0.2.13</a>
             <a class="button quiet" href="#manual-install">查看安装方法</a>
           </div>
-          <p class="download-counter" style="max-width:600px;margin:12px 0 0;color:#8b7466;font-size:12px;line-height:1.6;">累计下载 <strong id="totalDownloadCount">读取中</strong> 次。<strong>暂时只支持 Google Chrome，其他浏览器版本正在适配、上架中。</strong> Chrome 插件市场版本仍在上传中，请先下载 ZIP 手动安装使用。</p>
+          <p class="download-counter" style="max-width:600px;margin:12px 0 0;color:#8b7466;font-size:12px;line-height:1.6;">累计下载 <strong id="totalDownloadCount">读取中</strong> 次。<strong>Firefox 版本已通过 Mozilla 审核。</strong> 当前页面下载按钮仍提供 Chrome ZIP 手动安装包；请根据浏览器使用对应版本。</p>
           <p class="usage-risk" style="max-width:600px;margin:16px 0 0;color:#766154;font-size:13px;line-height:1.7;">* 使用风险提示：本扩展并非 X 官方产品。扩展会在用户主动点击后，以接近人工逐个访问主页、打开菜单、确认拉黑的节奏执行；每批最多尝试 20 个账号，冷却半小时后需由用户手动继续。该节奏设计是为了避免短时间内集中操作，并不代表获得平台许可，也不能保证账号安全。<a href="https://help.x.com/en/rules-and-policies/x-automation" target="_blank" rel="noopener noreferrer">X 自动化规则</a>禁止非 API 自动化方式，使用可能导致账号受限、暂停或永久停用。请阅读平台规则，自行审慎评估并决定是否使用；如不接受风险，请勿使用。开发者不承诺操作成功、账号安全或可恢复，也无法控制或撤销平台处置。本提示不免除开发者依法应承担的责任。</p>
           <div class="trust-row">
             <span>✓ 用户主动触发</span>
@@ -57,15 +57,15 @@
           <article class="extension-card">
             <div class="extension-brand">
               <img src="assets/logo.svg" alt="" />
-              <div><strong>取关狗</strong><small>批量拉黑 X 账号</small></div>
+              <div><strong>取关狗</strong><small>社区取关名单 · 非取关检测</small></div>
             </div>
-            <div class="panel-heading"><strong>扩展内置名单</strong><span>版本 2026-09</span></div>
-            <p>执行前可以查看完整账号清单。</p>
-            <div class="count-line"><strong>名单内容由发布者维护</strong></div>
+            <div class="panel-heading"><strong>X 中文社区名单</strong><span>版本 2026-09</span></div>
+            <p>名单线索来自公开曝光、互关帖和用户投稿，执行前可查看完整账号清单。</p>
+            <div class="count-line"><strong>名单来自整个 X 中文社区</strong></div>
             <div class="fake-list">
-              <div><i>1</i><span>清晰展示目标账号</span></div>
-              <div><i>2</i><span>逐项返回处理结果</span></div>
-              <div><i>3</i><span>任务中途可以停止</span></div>
+              <div><i>1</i><span>公开曝光的互关后取关记录</span></div>
+              <div><i>2</i><span>互关帖中的异常关注比例线索</span></div>
+              <div><i>3</i><span>用户私信投稿与截图证据</span></div>
             </div>
             <div class="block-button">一键拉黑全部账号</div>
             <small class="microcopy">点击按钮即表示确认执行。</small>
@@ -97,15 +97,15 @@
         <div class="section-heading reveal">
           <span class="kicker">HOW IT WORKS</span>
           <h2>安装完成后，三步开始使用</h2>
-          <p>不要求 X API，也不需要把账号密码交给扩展。</p>
+          <p>不扫描你的粉丝或关注历史，不要求 X API，也不需要把账号密码交给扩展。</p>
         </div>
         <div class="steps">
           <article class="step reveal"><span>01</span><h3>登录自己的账号</h3><p>在 Chrome 中正常登录 x.com。登录过程完全由 X 处理。</p></article>
-          <article class="step reveal"><span>02</span><h3>查看内置名单</h3><p>打开扩展，先查看当前名单版本、账号数量和完整目标。</p></article>
+          <article class="step reveal"><span>02</span><h3>查看社区名单</h3><p>打开扩展，可查看当前名单版本、账号数量和完整目标。这里不是你的个人取关检测结果，而是从整个 X 中文社区整理出的名单。</p></article>
           <article class="step reveal"><span>03</span><h3>主动确认执行</h3><p>点击按钮后，扩展按顺序处理；进度可见，也可以随时停止。</p></article>
         </div>
         <div class="contact-strip reveal">
-          <span><strong>浏览器兼容说明：</strong>取关狗暂时只正式支持 Google Chrome。Microsoft Edge、Firefox、Safari、Brave 等其他浏览器版本正在适配、测试和上架中，请勿在其他浏览器中安装当前 ZIP。</span>
+          <span><strong>浏览器兼容说明：</strong>Firefox 版本已通过 Mozilla 审核；当前页面提供的 ZIP 仍是 Chrome 手动安装包。不同浏览器请使用对应版本，不要把 Chrome ZIP 直接安装到 Firefox。</span>
           <a href="#manual-install">查看安装方法</a>
         </div>
       </section>
@@ -116,8 +116,9 @@
           <div>
             <span class="kicker">ORIGIN</span>
             <h2>为什么会有取关狗</h2>
-            <p>新人账号做冷启动时，“互相关注”是一种常见的连接方式。双方基于约定彼此关注，建立最初的互动和信任；但也有人在获得关注后单方面取消关注，并且不作任何说明。这种行为会增加新人维护关系的成本，也会损害互关双方的信任。</p>
-            <p>取关狗因此诞生。我们收集由用户主动提交、并附有相关截图证据的单方面取关记录，在审核和整理后形成名单，提供给有需要的用户查看。用户可以根据自己的判断，一次点击依次拉黑名单中的账号，减少重复核对和手动处理的时间。</p>
+            <p>取关狗解决的不是“谁刚刚取关了我”。我们不读取你的关注历史，也不做个人取关检测。项目关注的是 X 中文社区里已经公开出现、或由社区用户提交的互关后取关线索。</p>
+            <p>名单主要来自三类来源：第一，X 中文社区公开帖子中对“互关后取关”的曝光记录；第二，在互关帖下主动留言、但主页关注与粉丝比例明显异常的账号线索，例如关注约 1000 人、粉丝约 3000 人——这类比例只作为待核对线索，不单独认定取关行为；第三，用户通过私信或公开入口投稿“互关后又取关我”的账号，并提供截图、时间线等材料。线索经人工整理和复核后才进入名单。</p>
+            <p>名单来自整个 X 中文社区，并不只包含你当前关注的人。安装扩展后，你可以先查看名单，再根据自己的判断，一键依次拉黑其中账号，减少逐个搜索和处理的时间。</p>
             <p>名单不是对任何账号作违法或恶意定性，也不代替用户作决定。被收录账号如认为信息有误、存在合理原因或已经解决争议，可以通过网站留言公开说明，我们会根据反馈和补充证据进行复核、更正或移除。</p>
           </div>
         </div>
@@ -130,12 +131,12 @@
           <p>名单的维护应当可解释、可复核，也允许被纠正。</p>
         </div>
         <div class="principle-grid">
-          <article class="principle reveal"><div>有据</div><h3>用户提交截图证据</h3><p>名单线索来自用户上传，提交时需要说明账号、时间和经过，并提供能够支持记录的截图。</p></article>
-          <article class="principle reveal"><div>审核</div><h3>不因单方描述直接收录</h3><p>提交内容需要经过整理和复核。无法识别账号、证据不完整或与互关无关的线索不应进入名单。</p></article>
-          <article class="principle reveal"><div>纠错</div><h3>允许公开反馈与申诉</h3><p>被收录账号可以说明原因并提供补充材料。确认有误、争议已解决或不再符合标准时，应更正或移除。</p></article>
+          <article class="principle reveal"><div>公开</div><h3>社区公开曝光</h3><p>收集 X 中文社区公开帖子中“互关后取关”等曝光记录，并保留可核对的账号、帖子或截图信息。</p></article>
+          <article class="principle reveal"><div>线索</div><h3>互关帖异常比例</h3><p>互关帖下主动留言、但主页关注与粉丝比例明显异常的账号可作为待核对线索，例如关注约 1000、粉丝约 3000；不单凭比例认定存在取关行为。</p></article>
+          <article class="principle reveal"><div>投稿</div><h3>接受用户私信投稿</h3><p>用户可提交“互关后又取关我”的账号，并附截图、时间线等材料。被收录账号也可以补充说明，申请复核、更正或移除。</p></article>
         </div>
         <div class="contact-strip reveal">
-          <span><strong>重要说明：</strong>拉黑名单均来自用户提供的相关证据截图，并经过人工整理，不是自动爬虫采集的数据。你可以在评论区提交新的线索；如果你的账号被收录，也可以说明理由并提交补充材料，申请复核、更正或解除拉黑。</span>
+          <span><strong>重要说明：</strong>取关狗不是取关检测器。名单线索来自 X 中文社区公开曝光、互关帖异常比例线索和用户投稿，并经过人工整理与复核；关注/粉丝比例只作为辅助线索，不会单凭比例认定账号存在取关行为。被收录账号可以说明理由并提交补充材料，申请复核、更正或移除。</span>
           <a href="https://x.com/woyongyuangeson/status/2098974760801870134?s=20" target="_blank" rel="noopener noreferrer">前往评论区</a>
         </div>
         <div class="contact-strip reveal">
@@ -143,7 +144,7 @@
           <a href="#manual-install">查看手动安装步骤</a>
         </div>
         <div class="contact-strip reveal">
-          <span>提交单方面取关线索，需要附相关截图证据</span>
+          <span>提交“互关后取关”线索，可附公开帖链接、账号、截图或时间线；也接受私信投稿</span>
           <a href="https://x.com/woyongyuangeson/status/2098974760801870134?s=20" target="_blank" rel="noopener noreferrer">提交名单线索</a>
         </div>
       </section>
