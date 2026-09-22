@@ -25,7 +25,7 @@ a{color:inherit}
 }
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:20px;font-weight:850}
 .brand img{width:38px;height:38px}
-.github{font-size:13px;font-weight:750;text-decoration:none;color:var(--muted)}
+
 .hero{
   display:grid;grid-template-columns:1.25fr .75fr;gap:70px;align-items:center;
   width:min(1080px,calc(100% - 36px));min-height:610px;margin:0 auto;padding:76px 0 70px
@@ -49,7 +49,8 @@ a{color:inherit}
 .browser-card,.source-card{position:relative;padding:24px;border:1px solid var(--line);border-radius:20px;background:var(--card)}
 .browser-card.live{box-shadow:var(--shadow)}
 .browser-name{display:flex;align-items:center;gap:13px}
-.browser-icon{display:grid;place-items:center;width:46px;height:46px;border-radius:13px;background:var(--soft);font-size:14px;font-weight:900;letter-spacing:-.02em}
+.browser-icon{display:grid;place-items:center;width:46px;height:46px;border-radius:13px;background:var(--soft)}
+.browser-icon img{width:28px;height:28px;display:block}
 .browser-name h3{margin:0;font-size:18px}
 .browser-name p{margin:4px 0 0;color:var(--muted);font-size:12px}
 .status{display:inline-flex;margin:22px 0 16px;padding:6px 9px;border-radius:99px;background:#f1ece8;color:#806e63;font-size:11px;font-weight:800}
@@ -71,6 +72,8 @@ a{color:inherit}
 .footer-top>div:first-child span{margin-top:5px;color:var(--muted);font-size:12px}
 .footer-links{display:flex;gap:18px}
 .footer-links a{color:var(--muted);font-size:12px;text-decoration:none}
+.github-footer-link{display:inline-flex;align-items:center;gap:7px}
+.github-footer-link img{width:16px;height:16px;display:block}
 .compliance{margin-top:26px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted)}
 .compliance summary{cursor:pointer;font-size:12px;font-weight:750;color:#6f5f55}
 .compliance-copy{max-width:900px;padding-top:10px}
