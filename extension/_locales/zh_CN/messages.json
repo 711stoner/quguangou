@@ -10,5 +10,9 @@
   "extensionDescription": {
     "message": "不是取关检测器。整理 X 中文社区公开曝光、互关帖线索和用户投稿形成的取关名单，确认后可一键依次拉黑。",
     "description": "扩展简介"
+  },
+  "extensionNameEdge": {
+    "message": "取关狗｜X 中文社区取关名单与批量拉黑工具",
+    "description": "Edge 商店 SEO 扩展名称"
   }
 }
