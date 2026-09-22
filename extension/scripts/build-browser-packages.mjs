@@ -15,6 +15,7 @@ if (requested.some((browser) => !supported.includes(browser))) {
 }
 
 const runtimeEntries = [
+  "_locales",
   "assets",
   "data",
   "lib",
@@ -42,7 +43,16 @@ for (const browser of requested) {
   await writeFile(path.join(target, "manifest.json"), manifest);
   const { version } = JSON.parse(manifest);
   const archive = path.join(dist, `quguangou-${browser}-v${version}.zip`);
-  await rm(archive, { force: true });
-  await execFileAsync("zip", ["-q", "-r", archive, ".", "-x", "*/._*", "._*"], { cwd: target });
+  const { stdout: oldArchives } = await execFileAsync(
+    "find",
+    [dist, "-maxdepth", "1", "-type", "f", "-name", `quguangou-${browser}-v*.zip`, "-print"]
+  );
+  for (const oldArchive of oldArchives.split("\n").filter(Boolean)) {
+    await rm(oldArchive, { force: true });
+  }
+  await execFileAsync("zip", [
+    "-q", "-r", archive, ".",
+    "-x", "*/._*", "._*", ".DS_Store", "*/.DS_Store", "__MACOSX/*"
+  ], { cwd: target });
   console.log(`${browser}: ${archive}`);
 }

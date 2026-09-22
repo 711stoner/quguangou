@@ -10,6 +10,7 @@
 
 - 官网：https://711stoner.github.io/quguangou/
 - 最新下载：https://github.com/711stoner/quguangou/releases/latest
+- 支持项目（Ko-fi）：https://ko-fi.com/wuhuwang
 - 反馈与留言评论区：https://x.com/woyongyuangeson/status/2098974760801870134?s=20
 
 ## 它能做什么
