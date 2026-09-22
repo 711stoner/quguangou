@@ -65,12 +65,6 @@ a{color:inherit}
 .source-action strong,.source-action span{display:block}
 .source-action span{margin-top:5px;color:var(--muted);font-size:13px}
 .source-action a{flex:0 0 auto;padding:11px 16px;border-radius:10px;background:var(--orange);color:#fff;text-decoration:none;font-size:13px;font-weight:850}
-.value-check{padding-top:20px}
-.value-card{display:flex;align-items:center;justify-content:space-between;gap:32px;padding:34px 38px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(135deg,#fff3e7,#fff);box-shadow:0 18px 50px rgba(87,49,23,.08)}
-.value-copy{max-width:680px}
-.value-copy h2{margin:10px 0 10px;font-size:clamp(28px,3vw,40px);letter-spacing:-.035em}
-.value-copy p{margin:0;color:var(--muted);font-size:15px;line-height:1.7}
-.value-action{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 18px;border-radius:12px;background:var(--orange);color:#fff;text-decoration:none;font-size:14px;font-weight:850}
 .site-footer{width:min(1080px,calc(100% - 36px));margin:28px auto 0;padding:28px 0 44px;border-top:1px solid var(--line)}
 .footer-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}
 .footer-top>div:first-child strong,.footer-top>div:first-child span{display:block}
@@ -92,8 +86,6 @@ a{color:inherit}
   .browser-grid,.source-grid{grid-template-columns:1fr}
 }
 @media(max-width:560px){
-  .value-card{align-items:flex-start;flex-direction:column;padding:26px 22px}
-  .value-action{width:100%}
   .topbar,.hero,.section,.site-footer{width:calc(100% - 28px)}
   .hero{padding-top:54px}
   .hero h1{font-size:46px}

@@ -4,8 +4,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 48px;
-  width: min(1160px, calc(100% - 40px));
-  margin: 20px auto 42px;
+  width: min(1080px, calc(100% - 36px));
+  margin: 18px auto 46px;
   padding: 52px 58px;
   overflow: hidden;
   border-radius: 30px;
