@@ -94,7 +94,11 @@ async function getBlocklist() {
 
 async function getBlocklistForJob() {
   const cached = await getCachedBlocklist();
-  return cached || getBundledBlocklist();
+  const fetchedAt = cached?.fetchedAt ? Date.parse(cached.fetchedAt) : NaN;
+  if (cached && Number.isFinite(fetchedAt) && Date.now() - fetchedAt < 5 * 60 * 1000) {
+    return cached;
+  }
+  return getBlocklist();
 }
 
 async function waitForTabComplete(tabId, timeoutMs = 35_000) {
