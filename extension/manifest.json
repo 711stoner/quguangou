@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "__MSG_extensionName__",
-  "version": "0.2.15",
-  "description": "__MSG_extensionDescription__",
+  "name": "__MSG_extensionNameChrome__",
+  "version": "0.2.16",
+  "description": "__MSG_extensionDescriptionChrome__",
   "permissions": [
     "storage",
     "scripting"
