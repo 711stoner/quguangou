@@ -1,0 +1,26 @@
+:root{--bg:#f5f4ef;--ink:#171a18;--muted:#71766f;--line:#cfcfc7;--card:#fff;--accent:#171a18;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI",sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink)}
+.wrap{width:min(860px,calc(100% - 36px));margin:0 auto;padding:28px 0 48px}
+.back{color:var(--muted);text-decoration:none;font-size:13px}
+header{padding:72px 0 42px;border-bottom:1px solid var(--line)}
+.eyebrow{margin:0 0 18px;font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em;color:var(--muted)}
+h1{margin:0;max-width:720px;font-size:clamp(40px,7vw,72px);line-height:1.02;letter-spacing:-.055em}
+.intro{margin:24px 0 0;max-width:560px;color:var(--muted);line-height:1.8}
+form{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:36px 0 42px}
+label{display:grid;gap:8px;font-size:13px;font-weight:600}
+label span{color:var(--muted);font-weight:400}
+.full{grid-column:1/-1}
+select,input,textarea{width:100%;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:13px 14px;font:inherit;outline:none}
+textarea{resize:vertical;min-height:150px}
+select:focus,input:focus,textarea:focus{border-color:var(--ink);box-shadow:0 0 0 2px rgba(23,26,24,.08)}
+.check{display:flex;grid-template-columns:18px 1fr;align-items:start;font-weight:400;color:var(--muted)}
+.check input{width:16px;height:16px;margin:2px 0 0;padding:0}
+.submit-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+button{border:0;border-radius:999px;background:var(--accent);color:#fff;padding:13px 20px;font:600 13px/1 inherit;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
+#formStatus{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
+#formStatus[data-state="success"]{color:#187a46}
+#formStatus[data-state="error"]{color:#b33a33}
+footer{padding-top:22px;border-top:1px solid var(--line);color:var(--muted);font:500 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em}
+@media(max-width:640px){header{padding-top:52px}form{grid-template-columns:1fr}.full{grid-column:auto}}

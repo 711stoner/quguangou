@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="浏览器插件问题反馈与功能建议">
+  <title>插件反馈</title>
+  <link rel="stylesheet" href="plugin-feedback.css">
+</head>
+<body>
+  <main class="wrap">
+    <a class="back" href="./">← 返回</a>
+    <header>
+      <p class="eyebrow">PLUGIN FEEDBACK</p>
+      <h1>反馈问题，<br>或者告诉我你想要什么。</h1>
+      <p class="intro">Bug、功能建议、兼容性问题都可以提交。无需注册。</p>
+    </header>
+    <form id="feedbackForm">
+      <label>插件
+        <select name="plugin" required>
+          <option value="">请选择</option>
+          <option>X 备份</option><option>Threads 备份</option><option>微博备份</option>
+          <option>小红书备份</option><option>知乎备份</option><option>豆瓣备份</option>
+          <option>其他</option>
+        </select>
+      </label>      <label>类型
+        <select name="type" required>
+          <option>Bug / 无法使用</option>
+          <option>功能建议</option>
+          <option>导出或下载问题</option>
+          <option>其他</option>
+        </select>
+      </label>
+      <label class="full">具体情况
+        <textarea name="message" rows="7" maxlength="4000" required placeholder="发生了什么？如果是 Bug，可以写一下浏览器、插件版本和操作步骤。"></textarea>
+      </label>
+      <label class="full">联系方式 <span>可选</span>
+        <input name="contact" maxlength="160" placeholder="微信 / LINE / 邮箱等">
+      </label>
+      <label class="check full">
+        <input type="checkbox" name="privacyConsent" required>
+        <span>我同意仅将以上信息用于处理本次反馈。</span>
+      </label>
+      <div class="full submit-row">
+        <button type="submit">提交反馈 →</button>
+        <p id="formStatus" role="status" tabindex="-1"></p>
+      </div>
+    </form>
+    <footer>ZHANG AN · PLUGIN LAB</footer>
+  </main>
+  <script src="plugin-feedback.js"></script>
+</body>
+</html>
