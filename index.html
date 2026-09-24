@@ -1,156 +1,24 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="取关狗不是取关检测器。它整理 X 中文社区公开曝光、互关帖线索和用户投稿形成的取关名单，帮助用户一键处理有取关记录的账号。" />
-    <meta name="theme-color" content="#f77823" />
-    <meta property="og:title" content="取关狗｜X 中文社区取关名单与一键拉黑工具" />
-    <meta property="og:description" content="不是查谁取关了你，而是整理社区取关记录，帮你一键处理有记录的账号。" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="assets/social-card.png" />
-    <title>取关狗｜X 中文社区取关名单与一键拉黑工具</title>
-    <link rel="icon" href="assets/icon-32.png" sizes="32x32" />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="poster.css" />
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "取关狗",
-        "applicationCategory": "BrowserApplication",
-        "softwareVersion": "0.2.13",
-        "operatingSystem": "Google Chrome, Microsoft Edge, Firefox",
-        "url": "https://711stoner.github.io/quguangou/",
-        "downloadUrl": [
-          "https://chromewebstore.google.com/detail/%E5%8F%96%E5%85%B3%E7%8B%97/ahpjikfghfgekmjcomhcmknlkicloblf",
-          "https://microsoftedge.microsoft.com/addons/detail/%E5%8F%96%E5%85%B3%E7%8B%97/cgolihjabbbgdomlcpbfcffkdinahjgd",
-          "https://addons.mozilla.org/zh-CN/firefox/addon/%E5%8F%96%E5%85%B3%E7%8B%97/"
-        ],
-        "description": "整理 X 中文社区公开曝光、互关帖线索和用户投稿形成的取关名单，帮助用户主动处理名单账号。",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "CNY"
-        }
-      }
-    </script>
-  </head>
-  <body>
-    <header class="topbar">
-      <a class="brand" href="#top" aria-label="取关狗首页">
-        <img src="assets/logo.svg" alt="" />
-        <span>取关狗</span>
-      </a>
-    </header>
-
-    <main id="top">
-      <section class="hero">
-        <div class="hero-copy reveal">
-          <span class="eyebrow">X 中文社区取关名单</span>
-          <h1>不是查谁取关了你。<br /><em>是把有记录的人先拦下来。</em></h1>
-          <p class="lead">取关狗不是取关检测器。它整理 X 中文社区里的取关行为线索，形成社区名单，帮助你一键拉黑名单中的账号。</p>
-          <div class="trust">
-            <span>不扫描你的关注列表</span>
-            <span>不读取粉丝历史</span>
-            <span>名单来自整个 X 中文社区</span>
-          </div>
-        </div>
-        <div class="hero-card reveal">
-          <img src="assets/logo.svg" alt="取关狗" />
-          <strong>社区名单，一键处理</strong>
-          <p>先查看名单，再由你决定是否执行。</p>
-        </div>
-      </section>
-
-      <section class="section browsers" aria-labelledby="browser-title">
-        <div class="section-head reveal">
-          <span class="kicker">浏览器版本</span>
-          <h2 id="browser-title">选择你的浏览器</h2>
-        </div>
-        <div class="browser-grid">
-          <article class="browser-card live reveal">
-            <div class="browser-name"><span class="browser-icon"><img src="assets/firefox.svg" alt="" /></span><div><h3>Firefox</h3><p>桌面版 / Android</p></div></div>
-            <span class="status live-status">已上线 · v0.2.13</span>
-            <a class="browser-action" href="https://addons.mozilla.org/zh-CN/firefox/addon/%E5%8F%96%E5%85%B3%E7%8B%97/" target="_blank" rel="noopener noreferrer">前往 Firefox 安装</a>
-          </article>
-          <article class="browser-card live reveal">
-            <div class="browser-name"><span class="browser-icon"><img src="assets/edge.svg" alt="" /></span><div><h3>Microsoft Edge</h3><p>Edge Add-ons</p></div></div>
-            <span class="status live-status">已上线</span>
-            <a class="browser-action" href="https://microsoftedge.microsoft.com/addons/detail/%E5%8F%96%E5%85%B3%E7%8B%97/cgolihjabbbgdomlcpbfcffkdinahjgd" target="_blank" rel="noopener noreferrer">前往 Edge 安装</a>
-          </article>
-          <article class="browser-card live reveal">
-            <div class="browser-name"><span class="browser-icon"><img src="assets/chrome.svg" alt="" /></span><div><h3>Google Chrome</h3><p>Chrome Web Store</p></div></div>
-            <span class="status live-status">已上线</span>
-            <a class="browser-action" href="https://chromewebstore.google.com/detail/%E5%8F%96%E5%85%B3%E7%8B%97/ahpjikfghfgekmjcomhcmknlkicloblf" target="_blank" rel="noopener noreferrer">前往 Chrome 安装</a>
-          </article>
-        </div>
-      </section>
-
-      <section class="section sources" aria-labelledby="source-title">
-        <div class="section-head reveal">
-          <span class="kicker">名单从哪里来</span>
-          <h2 id="source-title">三类社区线索</h2>
-          <p>名单不是根据你的个人账号自动生成，而是从 X 中文社区持续整理。</p>
-          <p id="blocklistStats" class="blocklist-stats">截至 2026-09-24，社区名单已收录 <strong>105</strong> 个账号。</p>
-        </div>
-        <div class="source-grid">
-          <article class="source-card reveal">
-            <span>01</span>
-            <h3>公开曝光</h3>
-            <p>收集社区公开帖子中“互关后取关”等可核对记录。</p>
-          </article>
-          <article class="source-card reveal">
-            <span>02</span>
-            <h3>互关帖线索</h3>
-            <p>在互关帖里明确表示“互关、交友”的账号，如果主页关注 / 粉丝比例明显异常，例如关注约 1000、粉丝约 3000，会作为重点核对线索。</p>
-          </article>
-          <article class="source-card reveal">
-            <span>03</span>
-            <h3>用户投稿</h3>
-            <p>接受“互关后又取关我”的投稿，可附账号、截图、公开帖或时间线。</p>
-          </article>
-        </div>
-        <div class="source-action reveal">
-          <div>
-            <strong>一起维护取关狗</strong>
-            <span>提交新的取关记录、纠错申诉或补充材料；也欢迎加入「取关狗委员会」，一起整理线索、核对记录和维护名单。</span>
-          </div>
-          <a href="https://x.com/woyongyuangeson/status/2098974760801870134?s=20" target="_blank" rel="noopener noreferrer">提交线索 / 申诉 / 加入共创</a>
-        </div>
-      </section>
-
-      <aside class="deal-poster reveal" aria-labelledby="dealPosterTitle">
-        <div class="deal-poster-copy">
-          <span class="deal-poster-kicker">账号价值测试 · 免费</span>
-          <h2 id="dealPosterTitle">你的账号一条广告，<br /><em>到底值多少钱？</em></h2>
-          <p>根据平台、粉丝规模、互动表现和内容赛道，快速估算一条商单的合理报价区间。</p>
-          <div class="deal-poster-platforms"><span>X</span><span>Threads</span><span>YouTube</span><span>TikTok</span></div>
-        </div>
-        <div class="deal-poster-action">
-          <span class="deal-poster-price"><small>你的商单价值</small><strong>¥ ?</strong></span>
-          <a class="deal-poster-button" href="https://jiedanfadan.com/value-check" target="_blank" rel="noopener noreferrer">免费测一测 <span aria-hidden="true">↗</span></a>
-        </div>
-      </aside>
-    </main>
-
-    <footer class="site-footer">
-      <div class="footer-top">
-        <div><strong>取关狗</strong><span>社区维护的 X 取关名单工具</span></div>
-        <div class="footer-links">
-          <a href="privacy.html">隐私政策</a>
-          <a href="https://x.com/woyongyuangeson/status/2098974760801870134?s=20" target="_blank" rel="noopener noreferrer">反馈</a>
-        </div>
-      </div>
-      <details class="compliance">
-        <summary>合规、隐私与使用风险说明</summary>
-        <div class="compliance-copy">
-          <p>取关狗不是 X Corp. 官方产品，与 X Corp. 无隶属或认可关系。扩展不会读取、请求或保存你的 X 密码，也不会扫描你的粉丝或关注历史。</p>
-          <p>名单来自公开社区线索和用户投稿，经人工整理。关注 / 粉丝比例只用于辅助筛选线索，不单独作为收录依据；被收录账号可以提交补充材料申请复核、更正或移除。</p>
-          <p>拉黑操作仅在用户主动点击后执行。扩展依赖 X 网页界面进行操作，可能受平台规则和页面改版影响；使用前请自行阅读 <a href="https://help.x.com/en/rules-and-policies/x-automation" target="_blank" rel="noopener noreferrer">X 自动化规则</a> 并评估账号风险。</p>
-        </div>
-      </details>
-    </footer>
-    <script src="app.js" defer></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>取关狗已迁移</title>
+  <meta name="robots" content="noindex,follow">
+  <link rel="canonical" href="https://jiedanfadan.com/quguangou/">
+  <meta http-equiv="refresh" content="0;url=https://jiedanfadan.com/quguangou/">
+  <script>location.replace("https://jiedanfadan.com/quguangou/");</script>
+  <style>
+    html,body{height:100%}
+    body{margin:0;display:grid;place-items:center;background:#f5f3ec;color:#242822;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+    main{padding:24px;text-align:center}
+    a{color:inherit;text-underline-offset:4px}
+  </style>
+</head>
+<body>
+  <main>
+    <p>取关狗已迁移</p>
+    <p><a href="https://jiedanfadan.com/quguangou/">如果没有自动跳转，点这里进入新页面</a></p>
+  </main>
+</body>
 </html>
