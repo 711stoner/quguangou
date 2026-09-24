@@ -1,16 +1,45 @@
-<!doctype html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><style>
-*{box-sizing:border-box}html,body{margin:0;width:1280px;height:800px;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#251c17}
-body{padding:72px 82px;background:radial-gradient(circle at 92% 9%,#ffe2ca,transparent 29%),linear-gradient(135deg,#fffaf6,#f7f5f3)}
-.kicker{font-size:16px;font-weight:800;color:#bd302a;letter-spacing:.12em}.title{margin:10px 0 10px;font-size:54px;line-height:1.05;letter-spacing:.02em}.sub{margin:0;color:#715f53;font-size:20px}
-.stage{display:grid;grid-template-columns:430px 1fr;gap:34px;align-items:center;margin-top:46px}.card,.result{background:#fff;border:1px solid #e9dfd8;box-shadow:0 24px 70px rgba(71,45,25,.12)}
-.card{border-radius:22px;padding:22px}.brand{display:flex;align-items:center;gap:12px}.brand img{width:50px;height:50px}.brand b{font-size:21px}.brand small{display:block;color:#89776c;margin-top:3px}
-.section{margin-top:18px;padding-top:16px;border-top:1px solid #eee}.section h3{margin:0 0 8px;font-size:16px}.desc{margin:0 0 12px;color:#78665a;font-size:12px;line-height:1.55}.list{border:1px solid #eadfd6;border-radius:12px;overflow:hidden}.row{display:flex;gap:9px;padding:10px 12px;border-bottom:1px solid #f0e8e2;font-size:12px}.row:last-child{border:0}.idx{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#ffecd7;color:#99500f;font-size:10px}.button{margin-top:14px;border-radius:11px;padding:12px;text-align:center;background:#bd302a;color:#fff;font-weight:800}.warning{margin:10px 2px 0;color:#89776c;font-size:11px;line-height:1.45}
-.result{height:440px;border-radius:20px;padding:34px 38px}.head{display:flex;justify-content:space-between;align-items:center}.head h3{margin:0;font-size:20px}.status{color:#9a7a65;font-size:12px}.track{height:11px;margin:18px 0 10px;border-radius:99px;background:#eadfd6;overflow:hidden}.bar{height:100%;width:75%;background:linear-gradient(90deg,#ef7d21,#d84a2f)}.progress{font-size:13px;color:#6f5c50}.resultlist{margin-top:18px;border-top:1px solid #eee}.r{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #eee;font-size:13px}.ok{color:#19804c}.already{color:#7b6b61}.fail{color:#b72925}.stop{margin-top:20px;border-radius:11px;padding:11px;text-align:center;background:#eee2d8;color:#563f31;font-weight:750}
-.badges{display:flex;gap:10px;margin-top:24px}.badge{padding:8px 12px;border-radius:99px;background:#fff0e2;color:#a95518;font-size:12px;font-weight:700}
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><style>
+*{box-sizing:border-box}html,body{margin:0;width:1280px;height:800px;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;color:#251c17}
+body{padding:66px 78px;background:radial-gradient(circle at 8% 8%,#fff0d9,transparent 28%),linear-gradient(135deg,#fffaf5,#f6f7f8)}
+.kicker{font-size:15px;font-weight:800;color:#d9650f;letter-spacing:.12em}.title{margin:10px 0 10px;font-size:51px;line-height:1.08}.sub{margin:0;color:#715f53;font-size:19px}
+.stage{display:flex;gap:38px;align-items:center;margin-top:42px}.popup,.panel,.browser{background:#fff;border:1px solid #e9dfd8;box-shadow:0 24px 70px rgba(71,45,25,.12)}
+.popup{width:390px;border-radius:22px;padding:20px;background:radial-gradient(circle at 100% 0,rgba(255,166,65,.14),transparent 34%),#fffaf5}
+.brand{display:flex;align-items:center;gap:12px}.brand img{width:48px;height:48px}.brand b{font-size:23px}.brand small{display:block;color:#76665c;margin-top:3px;font-size:13px}
+.h2{font-size:16px;font-weight:800;margin:21px 0 10px}.summary{font-size:13px;font-weight:700;color:#5e4a3e;margin-bottom:10px}.btn{border-radius:11px;padding:12px 14px;text-align:center;font-weight:800}.danger{background:#bd302a;color:#fff}.warning{margin:10px 2px 0;color:#826f62;font-size:12px;line-height:1.5}
+.supports{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}.support{height:34px;border:1px solid #eadfd6;border-radius:9px;background:rgba(255,255,255,.7);display:grid;grid-template-columns:18px 1fr 10px;gap:5px;align-items:center;padding:6px 8px}.support .ico{font-size:15px;color:#bd302a;text-align:center}.support b{font-size:11.5px;white-space:nowrap}.support .arr{color:#aa8c78;font-size:15px}
+.foot{display:flex;justify-content:space-between;margin-top:16px;padding-top:12px;border-top:1px solid #eadfd6;color:#9a877a;font-size:11px}.foot .link{color:#a8541c}
+.panel{flex:1;border-radius:22px;padding:30px 34px}.panel h3{font-size:24px;margin:0 0 11px}.panel p{color:#715f53;font-size:15px;line-height:1.65;margin:0}.badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.badge{padding:8px 12px;border-radius:99px;background:#fff0e2;color:#a95518;font-size:12px;font-weight:800}
+.list{border:1px solid #eadfd6;border-radius:12px;overflow:hidden;background:#fff}.row{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-bottom:1px solid #f0e8e2;font-size:12px}.row:last-child{border:0}.source{color:#a45d2b}.idx{display:grid;place-items:center;width:21px;height:21px;border-radius:50%;background:#ffecd7;color:#99500f;font-size:10px;margin-right:9px}
+.track{height:10px;border-radius:99px;background:#eadfd6;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,#ef7d21,#d84a2f)}
+.note{font-size:12px;color:#89776c;line-height:1.55}.modal{background:#fffaf5;border:1px solid #eadfd6;border-radius:18px;box-shadow:0 20px 60px rgba(44,24,14,.18);padding:22px;text-align:center}.modal h3{font-size:18px;margin:7px 0 8px}.modal p{font-size:12px;color:#7b675a;line-height:1.55}.xbtn{margin-top:14px;padding:11px 14px;border-radius:11px;background:#251c17;color:#fff;font-weight:800;font-size:13px}.qr{width:160px;height:160px;margin:12px auto 0;border:1px solid #eadfd6;border-radius:14px;overflow:hidden;background:#fff}.qr img{width:100%;height:100%;object-fit:contain}
 </style></head><body>
-<div class="kicker">用户确认后执行</div><h1 class="title">一键依次拉黑，并实时查看进度</h1><p class="sub">任务不会自动启动；由你主动确认，可随时停止尚未完成的操作。</p>
-<div class="stage"><div class="card"><div class="brand"><img src="../../extension/assets/icon-128.png"><div><b>取关狗</b><small>社区名单，一键处理</small></div></div><div class="section"><h3>名单内共 4 个账号</h3><p class="desc">请先查看名单，确认后再开始。</p><div class="list"><div class="row"><span class="idx">1</span><span>@sample_account_01</span></div><div class="row"><span class="idx">2</span><span>@sample_account_02</span></div><div class="row"><span class="idx">3</span><span>@sample_account_03</span></div><div class="row"><span class="idx">4</span><span>@sample_account_04</span></div></div><div class="button">一键拉黑全部账号</div><p class="warning">点击按钮即表示确认执行；请先在当前浏览器登录 X。</p></div></div>
-<div class="result"><div class="head"><h3>正在执行</h3><span class="status">3 / 4</span></div><div class="track"><div class="bar"></div></div><div class="progress">正在处理 @sample_account_04</div><div class="resultlist"><div class="r"><span>@sample_account_01</span><strong class="ok">已拉黑</strong></div><div class="r"><span>@sample_account_02</span><strong class="already">已拉黑过</strong></div><div class="r"><span>@sample_account_03</span><strong class="ok">已拉黑</strong></div><div class="r"><span>@sample_account_04</span><strong class="fail">处理中</strong></div></div><div class="stop">停止任务</div></div></div>
-<div class="badges"><span class="badge">主动确认</span><span class="badge">实时进度</span><span class="badge">可随时停止</span><span class="badge">本地保存任务状态</span></div>
-</body></html>
+<div class="kicker" style="color:#bd302a">用户确认后执行</div>
+<h1 class="title">依次处理，并实时查看每一步进度</h1>
+<p class="sub">不会自动开始；任务过程中可停止，操作之间保留节奏控制。</p>
+<div class="stage">
+  <div class="popup">
+    <div class="brand"><img src="../../extension/assets/icon-128.png"><div><b>取关狗</b><small>社区名单，一键处理</small></div></div>
+    <div class="h2">名单内共 4 个账号</div>
+    <div class="list">
+      <div class="row"><span style="display:flex;align-items:center"><span class="idx">1</span>@sample_account_01</span></div>
+      <div class="row"><span style="display:flex;align-items:center"><span class="idx">2</span>@sample_account_02</span></div>
+      <div class="row"><span style="display:flex;align-items:center"><span class="idx">3</span>@sample_account_03</span></div>
+      <div class="row"><span style="display:flex;align-items:center"><span class="idx">4</span>@sample_account_04</span></div>
+    </div>
+    <div class="btn danger" style="margin-top:12px">一键拉黑全部账号</div>
+    <div class="warning">请先查看名单，确认后再开始。</div>
+  </div>
+  <div class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center"><h3>正在执行</h3><span class="note">3 / 4</span></div>
+    <div class="track" style="margin:16px 0 9px"><div class="bar" style="width:75%"></div></div>
+    <div class="note">正在处理 @sample_account_04</div>
+    <div class="list" style="margin-top:18px">
+      <div class="row"><span>@sample_account_01</span><b style="color:#19804c">已拉黑</b></div>
+      <div class="row"><span>@sample_account_02</span><b style="color:#7b6b61">已拉黑过</b></div>
+      <div class="row"><span>@sample_account_03</span><b style="color:#19804c">已拉黑</b></div>
+      <div class="row"><span>@sample_account_04</span><b style="color:#b72925">处理中</b></div>
+    </div>
+    <div class="btn" style="margin-top:16px;background:#eee2d8;color:#563f31">停止任务</div>
+    <div class="badges"><span class="badge">主动确认</span><span class="badge">实时进度</span><span class="badge">可随时停止</span><span class="badge">操作间隔至少 15 秒</span></div>
+  </div>
+</div></body></html>

@@ -133,6 +133,28 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message?.type === "JOB_UPDATED") renderJob(message.job);
 });
 
+const supportPanel = $("#supportPanel");
+const feedbackPanel = $("#feedbackPanel");
+function setSupportOpen(open) {
+  supportPanel.hidden = !open;
+  $("#supportToggle").setAttribute("aria-expanded", String(open));
+}
+function setFeedbackOpen(open) {
+  feedbackPanel.hidden = !open;
+  $("#feedbackToggle").setAttribute("aria-expanded", String(open));
+}
+$("#supportToggle").addEventListener("click", () => setSupportOpen(true));
+$("#supportClose").addEventListener("click", () => setSupportOpen(false));
+supportPanel.querySelector("[data-support-close]").addEventListener("click", () => setSupportOpen(false));
+$("#feedbackToggle").addEventListener("click", () => setFeedbackOpen(true));
+$("#feedbackClose").addEventListener("click", () => setFeedbackOpen(false));
+feedbackPanel.querySelector("[data-feedback-close]").addEventListener("click", () => setFeedbackOpen(false));
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  if (!supportPanel.hidden) setSupportOpen(false);
+  if (!feedbackPanel.hidden) setFeedbackOpen(false);
+});
+
 async function initialize() {
   const [jobResponse, blocklistResponse] = await Promise.all([
     chrome.runtime.sendMessage({ type: "GET_JOB" }),

@@ -39,10 +39,49 @@
       </section>
 
       <div id="toast" class="toast hidden"></div>
+
+      <section class="support-footer" aria-label="反馈与支持">
+        <button id="feedbackToggle" class="support-link" type="button" aria-expanded="false">
+          <span class="support-link-icon">◎</span>
+          <span><strong>反馈 / 共创</strong><small>反馈、建议或加入委员会共创</small></span>
+          <span class="support-link-arrow">›</span>
+        </button>
+        <button id="supportToggle" class="support-link" type="button" aria-expanded="false">
+          <span class="support-link-icon">♡</span>
+          <span><strong>支持作者</strong><small>打赏支持插件维护</small></span>
+          <span class="support-link-arrow">›</span>
+        </button>
+      </section>
+
       <footer>
         <span>非 X 官方产品</span>
         <a href="privacy.html" target="_blank">隐私说明</a>
       </footer>
+
+      <div id="feedbackPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-feedback-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+          <button id="feedbackClose" class="support-close" type="button" aria-label="关闭">×</button>
+          <div class="support-heart" aria-hidden="true">◎</div>
+          <h2 id="feedbackTitle">反馈 / 加入取关狗委员会</h2>
+          <p class="support-copy">有 Bug、名单建议、功能想法，或者想加入取关狗委员会一起共创，都欢迎直接联系。</p>
+          <a class="x-contact-button" href="https://x.com/woyongyuangeson?s=11" target="_blank" rel="noopener noreferrer">在 X 上私信作者</a>
+          <p class="support-thanks">建议私信时简单说明：反馈内容 / 想参与的方向。</p>
+        </section>
+      </div>
+
+      <div id="supportPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-support-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+          <button id="supportClose" class="support-close" type="button" aria-label="关闭">×</button>
+          <div class="support-heart" aria-hidden="true">♥</div>
+          <h2 id="supportTitle">支持作者</h2>
+          <p class="support-copy">如果取关狗帮到了你，可以请作者喝杯咖啡。</p>
+          <div class="support-qr"><img src="assets/alipay-support.jpg" alt="支付宝收款二维码" /></div>
+          <div class="support-pay-label">支付宝扫一扫</div>
+          <p class="support-thanks">感谢你的支持，这会用于插件维护和后续功能更新。</p>
+        </section>
+      </div>
     </main>
     <script type="module" src="popup.js"></script>
   </body>
