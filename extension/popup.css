@@ -181,6 +181,15 @@ footer a { color: #a8541c; text-decoration: none; }
   position: relative; z-index: 1; width: min(330px, 100%); padding: 22px; border: 1px solid #eadfd6;
   border-radius: 18px; background: #fffaf5; box-shadow: 0 20px 60px rgba(44,24,14,.22); text-align: center;
 }
+.cooldown-risk-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: calc(100vw - 36px);
+  max-width: 330px;
+  margin: 0;
+  transform: translate(-50%, -50%);
+}
 .support-card h2 { margin: 6px 0 6px; font-size: 18px; }
 .support-close { position: absolute; top: 8px; right: 9px; padding: 4px 8px; color: #8f7a6d; background: transparent; font-size: 22px; }
 .support-heart { color: #bd302a; font-size: 24px; }
