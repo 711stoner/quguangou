@@ -15,12 +15,17 @@ function harness(targets, result, reservation = reserveAttempt) {
   } };
   const removed = [], navigated = [];
   let nextTab = 100;
+  let messageListener = null;
   const chrome = {
     storage: { local: {
       get: async key => ({ [key]: structuredClone(store[key]) }),
       set: async values => Object.assign(store, structuredClone(values))
     } },
-    runtime: { sendMessage: async () => {}, onMessage: { addListener() {} }, onStartup: { addListener() {} } },
+    runtime: {
+      sendMessage: async () => {},
+      onMessage: { addListener(listener) { messageListener = listener; } },
+      onStartup: { addListener() {} }
+    },
     tabs: {
       create: async () => ({ id: nextTab++ }),
       get: async () => ({ status: "complete" }),
@@ -32,7 +37,16 @@ function harness(targets, result, reservation = reserveAttempt) {
   const context = vm.createContext({ chrome, parseAccountList, parseAccountReference,
     reserveAttempt: reservation, Date, setTimeout: fn => { fn(); return 0; }, clearTimeout() {} });
   vm.runInContext(source, context);
-  return { store, removed, navigated, run: () => vm.runInContext("runJob()", context) };
+  const message = (payload) => new Promise((resolve, reject) => {
+    if (!messageListener) return reject(new Error("message listener missing"));
+    try {
+      const result = messageListener(payload, {}, resolve);
+      if (result !== true && result !== undefined) resolve(result);
+    } catch (error) {
+      reject(error);
+    }
+  });
+  return { store, removed, navigated, run: () => vm.runInContext("runJob()", context), message };
 }
 
 test("a failed profile is retained and remaining targets are not visited", async () => {
@@ -76,6 +90,47 @@ test("one click processes at most twenty targets before pausing for manual conti
   assert.equal(h.store.quguangouJob.currentIndex, 20);
   assert.equal(h.navigated.length, 20);
   assert.deepEqual(h.removed, [100]);
+});
+
+
+
+test("skip cooldown requires an active paused batch and records the user's override", async () => {
+  const targets = parseAccountList(Array.from({ length: 21 }, (_, index) => `@skip${index + 1}`).join(" ")).targets;
+  const h = harness(targets, { status: "blocked", reason: "已拉黑" });
+  const resumeAt = Date.now() + 1_800_000;
+  h.store.quguangouJob = {
+    status: "paused",
+    pauseKind: "batch",
+    blocklistVersion: "2026.09.09.1",
+    targets,
+    currentIndex: 20,
+    results: targets.slice(0, 20).map((target) => ({ ...target, status: "blocked" })),
+    workerTabId: null,
+    batchSize: 20,
+    batchNumber: 1,
+    batchStartIndex: 0,
+    batchEndIndex: 20,
+    resumeAt,
+    pauseReason: "本批已处理 20 个账号，冷却 30 分钟后请手动继续下一批"
+  };
+  h.store.quguangouQuota = { count: 20, nextAt: 0, cooldownUntil: resumeAt };
+
+  const response = await h.message({ type: "SKIP_COOLDOWN" });
+  assert.equal(response.ok, true);
+  assert.equal(response.job.batchNumber, 2);
+  assert.equal(response.job.batchStartIndex, 20);
+  assert.equal(response.job.batchEndIndex, 21);
+  assert.equal(response.job.skippedCooldowns.length, 1);
+  assert.equal(response.job.skippedCooldowns[0].previousResumeAt, resumeAt);
+});
+
+test("skip cooldown is rejected when there is no active cooldown", async () => {
+  const h = harness(parseAccountList("@only").targets, { status: "blocked", reason: "已拉黑" });
+  h.store.quguangouJob.status = "paused";
+  h.store.quguangouJob.pauseKind = "batch";
+  h.store.quguangouQuota = { count: 0, nextAt: 0, cooldownUntil: 0 };
+  const response = await h.message({ type: "SKIP_COOLDOWN" });
+  assert.equal(response.ok, false);
 });
 
 test("successful completion still cleans up its worker tab", async () => {

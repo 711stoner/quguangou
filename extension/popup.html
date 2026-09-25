@@ -24,6 +24,7 @@
         <p id="blocklistDescription" class="description"></p>
         <div id="blocklistSummary" class="summary">正在读取名单…</div>
         <div id="batchGuide" class="batch-guide"></div>
+        <p class="return-note">名单会持续更新，欢迎偶尔回来看看。发现新名单后，还可以继续用取关狗分批拉黑。</p>
         <div id="targetList" class="target-list"></div>
         <div id="issueList" class="issues"></div>
         <button id="startButton" class="danger" disabled>开始分批拉黑</button>
@@ -41,9 +42,12 @@
           <strong>这个账号接一条广告，大概该报多少？</strong>
           <p>根据账号规模、近期曝光和互动表现，快速估算底价、合理成交区间和首次开价。</p>
           <a href="https://jiedanfadan.com/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=block_complete" target="_blank" rel="noopener noreferrer">测一下我的广告报价 ↗</a>
+          <a class="value-promo-plugin" href="https://jiedanfadan.com/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=install_value_plugin#browser-extension" target="_blank" rel="noopener noreferrer">安装商单搭档估值插件 →</a>
         </div>
         <button id="cancelButton" class="secondary">停止任务</button>
         <button id="newTaskButton" class="primary hidden">新建任务</button>
+        <p id="cooldownAdvice" class="cooldown-advice hidden">默认建议等待完整的 30 分钟，再继续下一批。</p>
+        <button id="skipCooldownButton" class="cooldown-skip hidden" type="button">我知道风险，仍要跳过冷却</button>
       </section>
 
       <div id="toast" class="toast hidden"></div>
@@ -65,6 +69,19 @@
         <span>非 X 官方产品</span>
         <a href="privacy.html" target="_blank">隐私说明</a>
       </footer>
+
+      <div id="cooldownRiskPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-cooldown-close></div>
+        <section class="support-card cooldown-risk-card" role="dialog" aria-modal="true" aria-labelledby="cooldownRiskTitle">
+          <button id="cooldownRiskClose" class="support-close" type="button" aria-label="关闭">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="cooldownRiskTitle">确定跳过 30 分钟冷却吗？</h2>
+          <p class="support-copy">跳过冷却会提高连续自动操作频率，可能增加触发 X 频率限制、验证码、账号功能受限或暂停等风控的概率。</p>
+          <p class="cooldown-risk-recommend">建议继续等待完整的 30 分钟。</p>
+          <button id="keepCoolingButton" class="primary" type="button">继续等待</button>
+          <button id="confirmSkipCooldownButton" class="cooldown-confirm" type="button">仍然跳过并继续下一批</button>
+        </section>
+      </div>
 
       <div id="feedbackPanel" class="support-modal" hidden>
         <div class="support-backdrop" data-feedback-close></div>

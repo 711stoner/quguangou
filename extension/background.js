@@ -400,6 +400,47 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     })().catch((error) => sendResponse({ ok: false, error: error.message }));
     return true;
   }
+  if (message?.type === "SKIP_COOLDOWN") {
+    (async () => {
+      const job = await getJob();
+      if (activeRun || !job || job.status !== "paused" || job.pauseKind !== "batch" || job.currentIndex >= job.targets.length) {
+        sendResponse({ ok: false, error: "当前没有可跳过的冷却任务" });
+        return;
+      }
+      const quota = (await chrome.storage.local.get("quguangouQuota")).quguangouQuota || {};
+      if (!(quota.cooldownUntil > Date.now())) {
+        sendResponse({ ok: false, error: "冷却已经结束，请直接继续下一批" });
+        return;
+      }
+
+      const previousResumeAt = quota.cooldownUntil;
+      await chrome.storage.local.set({
+        quguangouQuota: {
+          ...quota,
+          count: 0,
+          cooldownUntil: 0
+        }
+      });
+
+      const batchSize = job.batchSize || BATCH_SIZE;
+      job.batchSize = batchSize;
+      job.batchStartIndex = job.currentIndex;
+      job.batchEndIndex = Math.min(job.currentIndex + batchSize, job.targets.length);
+      job.batchNumber = Math.floor(job.batchStartIndex / batchSize) + 1;
+      job.status = "running";
+      job.pauseKind = null;
+      job.resumeAt = null;
+      job.pauseReason = null;
+      job.skippedCooldowns = [
+        ...(Array.isArray(job.skippedCooldowns) ? job.skippedCooldowns : []),
+        { skippedAt: new Date().toISOString(), previousResumeAt }
+      ];
+      await setJob(job);
+      sendResponse({ ok: true, job });
+      void runJob();
+    })().catch((error) => sendResponse({ ok: false, error: error.message }));
+    return true;
+  }
   if (message?.type === "CANCEL_JOB") {
     (async () => {
       const job = await getJob();

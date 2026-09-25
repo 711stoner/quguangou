@@ -129,6 +129,8 @@ function renderJob(job) {
   $("#cancelButton").classList.toggle("hidden", !running);
   $("#newTaskButton").classList.toggle("hidden", running);
   $("#newTaskButton").disabled = Boolean(cooling);
+  $("#cooldownAdvice").classList.toggle("hidden", !cooling);
+  $("#skipCooldownButton").classList.toggle("hidden", !cooling);
   $("#newTaskButton").textContent = completed
     ? "暂时不用，返回名单"
     : batchPaused
@@ -170,8 +172,27 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message?.type === "JOB_UPDATED") renderJob(message.job);
 });
 
+const cooldownRiskPanel = $("#cooldownRiskPanel");
 const supportPanel = $("#supportPanel");
 const feedbackPanel = $("#feedbackPanel");
+
+function setCooldownRiskOpen(open) {
+  cooldownRiskPanel.hidden = !open;
+}
+
+$("#skipCooldownButton").addEventListener("click", () => setCooldownRiskOpen(true));
+$("#keepCoolingButton").addEventListener("click", () => setCooldownRiskOpen(false));
+$("#cooldownRiskClose").addEventListener("click", () => setCooldownRiskOpen(false));
+cooldownRiskPanel.querySelector("[data-cooldown-close]").addEventListener("click", () => setCooldownRiskOpen(false));
+$("#confirmSkipCooldownButton").addEventListener("click", async () => {
+  const button = $("#confirmSkipCooldownButton");
+  button.disabled = true;
+  const response = await chrome.runtime.sendMessage({ type: "SKIP_COOLDOWN" });
+  button.disabled = false;
+  if (!response?.ok) return toast(response?.error || "无法跳过冷却");
+  setCooldownRiskOpen(false);
+  renderJob(response.job);
+});
 function setSupportOpen(open) {
   supportPanel.hidden = !open;
   $("#supportToggle").setAttribute("aria-expanded", String(open));
@@ -188,6 +209,7 @@ $("#feedbackClose").addEventListener("click", () => setFeedbackOpen(false));
 feedbackPanel.querySelector("[data-feedback-close]").addEventListener("click", () => setFeedbackOpen(false));
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
+  if (!cooldownRiskPanel.hidden) setCooldownRiskOpen(false);
   if (!supportPanel.hidden) setSupportOpen(false);
   if (!feedbackPanel.hidden) setFeedbackOpen(false);
 });

@@ -51,7 +51,8 @@ textarea:focus { border-color: #e97718; box-shadow: 0 0 0 3px rgba(233, 119, 24,
 .hint, .warning { color: #826f62; font-size: 12px; line-height: 1.5; }
 .hint { margin: 8px 0 16px; }
 .warning { margin: 10px 2px 0; }
-.batch-guide { margin: 0 0 12px; padding: 10px 11px; border: 1px solid #ead7c8; border-radius: 10px; color: #6b4d39; background: #fff3e5; font-size: 12px; line-height: 1.55; }
+.batch-guide { margin: 0 0 8px; padding: 10px 11px; border: 1px solid #ead7c8; border-radius: 10px; color: #6b4d39; background: #fff3e5; font-size: 12px; line-height: 1.55; }
+.return-note { margin: 0 2px 12px; color: #7e6c61; font-size: 11px; line-height: 1.55; }
 .batch-status { margin: -2px 0 10px; color: #9b531d; font-size: 12px; font-weight: 750; }
 
 button {
@@ -68,6 +69,12 @@ button:disabled { cursor: not-allowed; opacity: .45; }
 .danger { width: 100%; color: #fff; background: #bd302a; }
 .danger:hover:not(:disabled) { background: #a52520; }
 .secondary { width: 100%; color: #563f31; background: #eee2d8; }
+.cooldown-advice { margin: 9px 0 4px; color: #7b675a; font-size: 11px; line-height: 1.5; text-align: center; }
+.cooldown-skip { width: 100%; padding: 7px 10px; color: #a34734; background: transparent; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
+.cooldown-skip:hover { color: #842f21; background: #fff1eb; }
+.cooldown-confirm { width: 100%; margin-top: 8px; color: #a8322c; background: #fff; border: 1px solid #e4b9af; }
+.cooldown-confirm:hover:not(:disabled) { background: #fff1ed; }
+.cooldown-risk-recommend { margin: -2px 0 12px; color: #8a5b46; font-size: 11px; font-weight: 700; }
 .link-button { padding: 4px; color: #b45112; background: transparent; font-size: 12px; }
 
 .section-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -127,6 +134,8 @@ button:disabled { cursor: not-allowed; opacity: .45; }
 .value-promo p { margin: 7px 0 12px; color: #6b776f; font-size: 11px; line-height: 1.5; }
 .value-promo a { display: block; padding: 11px 13px; border-radius: 10px; color: #fff; background: #1f6b4f; text-align: center; text-decoration: none; font-size: 13px; font-weight: 800; }
 .value-promo a:hover { background: #18583f; }
+.value-promo .value-promo-plugin { margin-top: 7px; padding: 7px 9px; color: #3f6f59; background: transparent; font-size: 11px; font-weight: 750; text-decoration: underline; text-underline-offset: 3px; }
+.value-promo .value-promo-plugin:hover { color: #254f3d; background: #e8f2eb; }
 
 .toast {
   position: fixed;
