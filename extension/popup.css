@@ -137,6 +137,25 @@ button:disabled { cursor: not-allowed; opacity: .45; }
 .value-promo .value-promo-plugin { margin-top: 7px; padding: 7px 9px; color: #3f6f59; background: transparent; font-size: 11px; font-weight: 750; text-decoration: underline; text-underline-offset: 3px; }
 .value-promo .value-promo-plugin:hover { color: #254f3d; background: #e8f2eb; }
 
+.sticky-value-promo {
+  position: static;
+  width: 100%;
+  margin: 12px auto 0;
+  padding: 12px 13px;
+  border: 1px solid #d5dfd7;
+  border-radius: 13px;
+  background: #f3f8f3;
+  box-shadow: 0 8px 22px rgba(31,79,58,.08);
+  text-align: left;
+}
+.sticky-value-kicker { display: block; margin-bottom: 3px; color: #5f7e68; font-size: 9px; font-weight: 800; letter-spacing: .07em; }
+.sticky-value-promo strong { display: block; color: #24352b; font-size: 13.5px; line-height: 1.35; }
+.sticky-value-promo p { margin: 5px 0 9px; color: #6b776f; font-size: 10.5px; line-height: 1.45; }
+.sticky-value-main { display: block; padding: 9px 11px; border-radius: 9px; color: #fff; background: #1f6b4f; text-align: center; text-decoration: none; font-size: 11.5px; font-weight: 800; }
+.sticky-value-main:hover { background: #18583f; }
+.sticky-value-plugin { display: block; margin-top: 6px; color: #3f6f59; text-align: center; text-decoration: none; font-size: 9.5px; font-weight: 750; }
+.sticky-value-plugin:hover { text-decoration: underline; }
+
 .toast {
   position: fixed;
   right: 16px;
