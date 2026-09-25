@@ -64,7 +64,7 @@ function renderBlocklist() {
     : "当前没有需要处理的账号。";
   $("#startButton").disabled = blocklist.targets.length === 0;
   $("#startButton").textContent = blocklist.targets.length ? `开始处理第 1 批（最多 ${BATCH_SIZE} 个）` : "当前无账号可处理";
-  $("#stickyValuePromo").classList.remove("hidden");
+  $("#stickyValuePromo").classList.add("hidden");
   showOnly(blocklistView);
 }
 
@@ -127,7 +127,7 @@ function renderJob(job) {
     resultList.append(row);
   });
   $("#valuePromo").classList.toggle("hidden", !completed);
-  $("#stickyValuePromo").classList.toggle("hidden", completed);
+  $("#stickyValuePromo").classList.toggle("hidden", !batchPaused || completed);
   $("#cancelButton").classList.toggle("hidden", !running);
   $("#newTaskButton").classList.toggle("hidden", running);
   $("#newTaskButton").disabled = Boolean(cooling);
