@@ -49,24 +49,34 @@ function harness(targets, result, reservation = reserveAttempt) {
   return { store, removed, navigated, run: () => vm.runInContext("runJob()", context), message };
 }
 
-test("a failed profile is retained and remaining targets are not visited", async () => {
+test("an unavailable account is recorded and the batch continues automatically", async () => {
+  const h = harness(parseAccountList("@first @second").targets, {
+    status: "failed",
+    failureKind: "unavailable",
+    reason: "该账号被 X 停用、已注销或无法访问"
+  });
+  await h.run();
+  assert.equal(h.store.quguangouJob.status, "completed");
+  assert.equal(h.store.quguangouJob.currentIndex, 2);
+  assert.equal(h.store.quguangouJob.results.length, 2);
+  assert.equal(h.store.quguangouJob.results[0].failureKind, "unavailable");
+  assert.equal(h.navigated.length, 2);
+  assert.deepEqual(h.removed, [100]);
+});
+
+test("a system failure still pauses and preserves the diagnostic page", async () => {
   const h = harness(parseAccountList("@first @second").targets, { status: "failed", reason: "菜单未找到" });
   await h.run();
   assert.equal(h.store.quguangouJob.status, "paused");
+  assert.equal(h.store.quguangouJob.pauseKind, "failure");
   assert.equal(h.store.quguangouJob.currentIndex, 1);
   assert.equal(h.store.quguangouJob.workerTabId, null);
   assert.equal(h.store.quguangouJob.retainedTabId, 100);
   assert.equal(h.navigated.length, 1);
   assert.deepEqual(h.removed, []);
-  // A manually resumed job uses a new tab, leaving the failed page untouched.
-  h.store.quguangouQuota.nextAt = 0;
-  h.store.quguangouJob.status = "running";
-  await h.run();
-  assert.equal(h.navigated[1].id, 101);
-  assert.deepEqual(h.removed, []);
 });
 
-test("even failure on the last target preserves the page", async () => {
+test("even a system failure on the last target preserves the page", async () => {
   const h = harness(parseAccountList("@last").targets, { status: "failed", reason: "菜单未找到" });
   await h.run();
   assert.equal(h.store.quguangouJob.status, "paused");

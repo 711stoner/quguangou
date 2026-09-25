@@ -149,7 +149,13 @@ async function blockProfileInPage(target) {
   if (/\/i\/flow\/login/.test(location.pathname) || loginPattern.test(pageText())) {
     return { status: "failed", reason: "当前浏览器中尚未登录 X" };
   }
-  if (unavailablePattern.test(pageText())) return { status: "failed", reason: "账号不存在、已停用或无法访问" };
+  if (unavailablePattern.test(pageText())) {
+    return {
+      status: "failed",
+      failureKind: "unavailable",
+      reason: "该账号被 X 停用、已注销或无法访问"
+    };
+  }
 
   const actions = await waitFor(() => {
     const profileActions = [...document.querySelectorAll('[data-testid="userActions"]')].filter(visible);
@@ -291,11 +297,11 @@ async function runJob() {
         job.resumeAt = reservation.state.cooldownUntil;
         job.pauseReason = "本批已处理 20 个账号，冷却 30 分钟后请手动继续下一批";
       }
-      if (outcome.status === "failed") {
+      if (outcome.status === "failed" && outcome.failureKind !== "unavailable") {
         job.status = "paused";
         job.pauseKind = "failure";
         job.resumeAt = null;
-        job.pauseReason = "出现失败，已暂停；该账号页面已保留在浏览器标签页中。请先检查原因，再决定是否继续剩余账号";
+        job.pauseReason = "出现系统性失败，已暂停；该账号页面已保留在浏览器标签页中。请先检查原因，再决定是否继续剩余账号";
         // Detach the diagnostic tab so cleanup and subsequent runs cannot close or reuse it.
         job.retainedTabId = job.workerTabId;
         job.workerTabId = null;
