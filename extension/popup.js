@@ -3,6 +3,7 @@ const blocklistView = $("#blocklistView");
 const progressView = $("#progressView");
 let blocklist = null;
 let currentJob = null;
+const BATCH_SIZE = 20;
 
 function showOnly(view) {
   [blocklistView, progressView].forEach((item) => item.classList.toggle("hidden", item !== view));
@@ -57,7 +58,12 @@ function renderBlocklist() {
     paragraph.textContent = issue;
     issueList.append(paragraph);
   });
+  const batchCount = Math.ceil(blocklist.targets.length / BATCH_SIZE);
+  $("#batchGuide").textContent = blocklist.targets.length
+    ? `拟人化分批处理：每批最多自动处理 ${BATCH_SIZE} 个账号，完成后强制冷却 30 分钟；冷却结束后需要你手动点击继续下一批。当前名单预计需要操作 ${batchCount} 次。`
+    : "当前没有需要处理的账号。";
   $("#startButton").disabled = blocklist.targets.length === 0;
+  $("#startButton").textContent = blocklist.targets.length ? `开始处理第 1 批（最多 ${BATCH_SIZE} 个）` : "当前无账号可处理";
   showOnly(blocklistView);
 }
 
@@ -65,16 +71,39 @@ function renderJob(job) {
   if (!job) return;
   currentJob = job;
   showOnly(progressView);
-  const done = job.results.length;
+  const done = Number.isInteger(job.currentIndex) ? job.currentIndex : job.results.length;
   const total = job.targets.length;
+  const batchSize = job.batchSize || BATCH_SIZE;
+  const totalBatches = Math.max(1, Math.ceil(total / batchSize));
+  const running = job.status === "running";
+  const completed = job.status === "completed";
+  const batchPaused = job.status === "paused" && job.pauseKind === "batch";
+  const cooling = batchPaused && job.resumeAt && job.resumeAt > Date.now();
+  let batchNumber = job.batchNumber || Math.min(totalBatches, Math.floor(done / batchSize) + 1);
+  if (completed) batchNumber = totalBatches;
+  else if (batchPaused && !job.batchNumber) batchNumber = Math.max(1, Math.ceil(done / batchSize));
+  const batchStart = Number.isInteger(job.batchStartIndex) ? job.batchStartIndex : Math.max(0, (batchNumber - 1) * batchSize);
+  const batchEnd = Number.isInteger(job.batchEndIndex) ? job.batchEndIndex : Math.min(batchStart + batchSize, total);
+  const batchDone = Math.max(0, Math.min(done, batchEnd) - batchStart);
+  const batchTotal = Math.max(1, batchEnd - batchStart);
   const percent = total ? Math.round((done / total) * 100) : 0;
   $("#progressBar").style.width = `${percent}%`;
-  const running = job.status === "running";
-  $("#progressTitle").textContent = running ? "正在执行" : job.status === "completed" ? "任务完成" : "任务已停止";
+  $("#progressTitle").textContent = running ? "正在执行" : completed ? "全部处理完成" : batchPaused ? "本批处理完成" : "任务已暂停";
+  $("#batchStatus").textContent = completed
+    ? `共 ${totalBatches} 批 · 已全部完成`
+    : batchPaused
+      ? cooling
+        ? `第 ${batchNumber} / ${totalBatches} 批已完成 · 冷却 30 分钟中`
+        : `第 ${batchNumber} / ${totalBatches} 批已完成 · 可以手动继续下一批`
+      : `第 ${batchNumber} / ${totalBatches} 批 · 每批最多 ${batchSize} 个`;
   $("#progressText").textContent = running
-    ? `${done} / ${total}${job.currentTarget ? ` · 正在处理 ${job.currentTarget.label}` : ""}`
-    : `${done} / ${total}`;
-  if (job.pauseReason) $("#progressText").textContent += ` · ${job.pauseReason}${job.resumeAt ? `（可继续时间：${new Date(job.resumeAt).toLocaleString()}）` : ""}`;
+    ? `本批 ${batchDone} / ${batchTotal} · 总进度 ${done} / ${total}${job.currentTarget ? ` · 正在处理 ${job.currentTarget.label}` : ""}`
+    : `总进度 ${done} / ${total}`;
+  if (batchPaused && job.resumeAt) {
+    $("#progressText").textContent += ` · ${cooling ? "冷却结束时间" : "冷却已结束"}：${new Date(job.resumeAt).toLocaleString()}`;
+  } else if (job.pauseReason) {
+    $("#progressText").textContent += ` · ${job.pauseReason}`;
+  }
 
   const statusLabel = { blocked: "已拉黑", already_blocked: "已拉黑过", failed: "失败" };
   const resultList = $("#resultList");
@@ -96,9 +125,17 @@ function renderJob(job) {
     row.append(detail, status);
     resultList.append(row);
   });
+  $("#valuePromo").classList.toggle("hidden", !completed);
   $("#cancelButton").classList.toggle("hidden", !running);
   $("#newTaskButton").classList.toggle("hidden", running);
-  $("#newTaskButton").textContent = done < total ? "继续剩余账号" : "返回名单";
+  $("#newTaskButton").disabled = Boolean(cooling);
+  $("#newTaskButton").textContent = completed
+    ? "暂时不用，返回名单"
+    : batchPaused
+      ? cooling
+        ? `冷却中，${new Date(job.resumeAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} 后可继续`
+        : `继续处理第 ${Math.min(batchNumber + 1, totalBatches)} 批`
+      : "继续剩余账号";
 }
 
 $("#startButton").addEventListener("click", async () => {

@@ -23,17 +23,25 @@
         </div>
         <p id="blocklistDescription" class="description"></p>
         <div id="blocklistSummary" class="summary">正在读取名单…</div>
+        <div id="batchGuide" class="batch-guide"></div>
         <div id="targetList" class="target-list"></div>
         <div id="issueList" class="issues"></div>
-        <button id="startButton" class="danger" disabled>一键拉黑全部账号</button>
-        <p class="warning">这不是你的个人取关检测结果。点击按钮即表示确认执行；请先在当前浏览器登录 X，执行时会打开一个后台标签页。</p>
+        <button id="startButton" class="danger" disabled>开始分批拉黑</button>
+        <p class="warning">这不是你的个人取关检测结果。每批最多自动处理 20 个账号，完成后会强制冷却 30 分钟；冷却结束后需要你手动继续下一批。请先在当前浏览器登录 X。</p>
       </section>
 
       <section id="progressView" class="hidden">
         <div class="section-title"><h2 id="progressTitle">正在执行</h2></div>
+        <div id="batchStatus" class="batch-status"></div>
         <div class="progress-track"><div id="progressBar"></div></div>
         <p id="progressText" class="progress-text"></p>
         <div id="resultList" class="result-list"></div>
+        <div id="valuePromo" class="value-promo hidden">
+          <span class="value-promo-kicker">名单处理完了，顺手看看</span>
+          <strong>这个账号接一条广告，大概该报多少？</strong>
+          <p>根据账号规模、近期曝光和互动表现，快速估算底价、合理成交区间和首次开价。</p>
+          <a href="https://jiedanfadan.com/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=block_complete" target="_blank" rel="noopener noreferrer">测一下我的广告报价 ↗</a>
+        </div>
         <button id="cancelButton" class="secondary">停止任务</button>
         <button id="newTaskButton" class="primary hidden">新建任务</button>
       </section>

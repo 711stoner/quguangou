@@ -8,7 +8,7 @@ import { reserveAttempt } from "../lib/pacing.js";
 const source = (await readFile(new URL("../background.js", import.meta.url), "utf8"))
   .replace(/^import .*;\n/gm, "").replace(/void runJob\(\);\s*$/, "");
 
-function harness(targets, result) {
+function harness(targets, result, reservation = reserveAttempt) {
   const store = { quguangouJob: {
     status: "running", blocklistVersion: "2026.09.09.1",
     targets, currentIndex: 0, results: [], workerTabId: null
@@ -30,7 +30,7 @@ function harness(targets, result) {
     scripting: { executeScript: async () => [{ result }] }
   };
   const context = vm.createContext({ chrome, parseAccountList, parseAccountReference,
-    reserveAttempt, Date, setTimeout: fn => { fn(); return 0; }, clearTimeout() {} });
+    reserveAttempt: reservation, Date, setTimeout: fn => { fn(); return 0; }, clearTimeout() {} });
   vm.runInContext(source, context);
   return { store, removed, navigated, run: () => vm.runInContext("runJob()", context) };
 }
@@ -64,6 +64,18 @@ test("saved bundled numeric handle is repaired before navigation", async () => {
   await h.run();
   assert.equal(h.navigated[0].url, "https://x.com/665162");
   assert.equal(h.store.quguangouJob.results[0].label, "@665162");
+});
+
+test("one click processes at most twenty targets before pausing for manual continuation", async () => {
+  const accounts = Array.from({ length: 21 }, (_, index) => `@user${index + 1}`).join(" ");
+  const alwaysReady = (state = {}) => ({ allowed: true, state: { ...state, count: (state.count || 0) + 1, nextAt: 0 } });
+  const h = harness(parseAccountList(accounts).targets, { status: "blocked", reason: "已拉黑" }, alwaysReady);
+  await h.run();
+  assert.equal(h.store.quguangouJob.status, "paused");
+  assert.equal(h.store.quguangouJob.pauseKind, "batch");
+  assert.equal(h.store.quguangouJob.currentIndex, 20);
+  assert.equal(h.navigated.length, 20);
+  assert.deepEqual(h.removed, [100]);
 });
 
 test("successful completion still cleans up its worker tab", async () => {

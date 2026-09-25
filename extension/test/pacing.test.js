@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { reserveAttempt } from '../lib/pacing.js';
 
-test('twenty attempts require a full cooldown; persisted quota survives task changes', () => {
+test('twenty attempts require a thirty minute cooldown', () => {
   let state = {};
   for (let i = 0; i < 20; i++) {
     const result = reserveAttempt(state, i * 15_000);

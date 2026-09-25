@@ -51,6 +51,8 @@ textarea:focus { border-color: #e97718; box-shadow: 0 0 0 3px rgba(233, 119, 24,
 .hint, .warning { color: #826f62; font-size: 12px; line-height: 1.5; }
 .hint { margin: 8px 0 16px; }
 .warning { margin: 10px 2px 0; }
+.batch-guide { margin: 0 0 12px; padding: 10px 11px; border: 1px solid #ead7c8; border-radius: 10px; color: #6b4d39; background: #fff3e5; font-size: 12px; line-height: 1.55; }
+.batch-status { margin: -2px 0 10px; color: #9b531d; font-size: 12px; font-weight: 750; }
 
 button {
   border: 0;
@@ -118,6 +120,13 @@ button:disabled { cursor: not-allowed; opacity: .45; }
 .result-row.blocked span:last-child { color: #19804c; }
 .result-row.already_blocked span:last-child { color: #7b6b61; }
 .result-row.failed span:last-child { color: #b72925; }
+
+.value-promo { margin: 0 0 12px; padding: 16px; border: 1px solid #d5dfd7; border-radius: 14px; background: #f3f8f3; }
+.value-promo-kicker { display: block; margin-bottom: 5px; color: #5f7e68; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+.value-promo strong { display: block; color: #24352b; font-size: 15px; line-height: 1.4; }
+.value-promo p { margin: 7px 0 12px; color: #6b776f; font-size: 11px; line-height: 1.5; }
+.value-promo a { display: block; padding: 11px 13px; border-radius: 10px; color: #fff; background: #1f6b4f; text-align: center; text-decoration: none; font-size: 13px; font-weight: 800; }
+.value-promo a:hover { background: #18583f; }
 
 .toast {
   position: fixed;

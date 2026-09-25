@@ -5,6 +5,7 @@ const STORAGE_KEY = "quguangouJob";
 const BLOCKLIST_CACHE_KEY = "quguangouBlocklistCache";
 const REMOTE_BLOCKLIST_URL = "https://711stoner.github.io/quguangou/extension/data/blocklist.json";
 const REMOTE_BLOCKLIST_TIMEOUT_MS = 6000;
+const BATCH_SIZE = 20;
 let activeRun = false;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -15,6 +16,9 @@ async function getJob() {
   if (job?.blocklistVersion === "2026.09.09.1") {
     job.targets = job.targets.map((target, index) => index >= job.currentIndex && target.key === "id:665162"
       ? parseAccountReference("@665162") : target);
+  }
+  if (job?.status === "paused" && !job.pauseKind && (job.resumeAt || /冷却|20 个账号/.test(job.pauseReason || ""))) {
+    job.pauseKind = "batch";
   }
   return job;
 }
@@ -226,13 +230,20 @@ async function runJob() {
     let job = await getJob();
     if (!job || job.status !== "running") return;
 
+    job.batchSize = job.batchSize || BATCH_SIZE;
+    if (!Number.isInteger(job.batchStartIndex)) job.batchStartIndex = Math.floor(job.currentIndex / job.batchSize) * job.batchSize;
+    if (!Number.isInteger(job.batchEndIndex)) job.batchEndIndex = Math.min(job.batchStartIndex + job.batchSize, job.targets.length);
+    if (!Number.isInteger(job.batchNumber)) job.batchNumber = Math.floor(job.batchStartIndex / job.batchSize) + 1;
+    const batchEndIndex = job.batchEndIndex;
+    await setJob(job);
+
     if (!job.workerTabId) {
       const tab = await chrome.tabs.create({ url: "about:blank", active: false });
       job.workerTabId = tab.id;
       await setJob(job);
     }
 
-    while (job.currentIndex < job.targets.length) {
+    while (job.currentIndex < job.targets.length && job.currentIndex < batchEndIndex) {
       job = await getJob();
       if (!job || job.status !== "running") break;
       const quota = (await chrome.storage.local.get("quguangouQuota")).quguangouQuota || {};
@@ -240,8 +251,9 @@ async function runJob() {
       if (!reservation.allowed) {
         if (quota.cooldownUntil > Date.now()) {
           job.status = "paused";
-          job.pauseReason = "本批已尝试 20 个账号，冷却结束后请手动继续";
+          job.pauseKind = "batch";
           job.resumeAt = quota.cooldownUntil;
+          job.pauseReason = "本批已处理 20 个账号，冷却 30 分钟后请手动继续下一批";
           await setJob(job);
           break;
         }
@@ -273,18 +285,16 @@ async function runJob() {
       job.results.push({ ...target, ...outcome, finishedAt: new Date().toISOString() });
       job.currentIndex += 1;
       job.currentTarget = null;
-      if (reservation.state.cooldownUntil) {
-        const quota = reservation.state;
-        quota.cooldownUntil = Date.now() + 1_800_000;
-        await chrome.storage.local.set({ quguangouQuota: quota });
-        if (job.currentIndex < job.targets.length) {
-          job.status = "paused";
-          job.resumeAt = quota.cooldownUntil;
-          job.pauseReason = "本批已尝试 20 个账号，请冷却半小时后手动继续";
-        }
+      if (reservation.state.cooldownUntil && job.currentIndex < job.targets.length) {
+        job.status = "paused";
+        job.pauseKind = "batch";
+        job.resumeAt = reservation.state.cooldownUntil;
+        job.pauseReason = "本批已处理 20 个账号，冷却 30 分钟后请手动继续下一批";
       }
       if (outcome.status === "failed") {
         job.status = "paused";
+        job.pauseKind = "failure";
+        job.resumeAt = null;
         job.pauseReason = "出现失败，已暂停；该账号页面已保留在浏览器标签页中。请先检查原因，再决定是否继续剩余账号";
         // Detach the diagnostic tab so cleanup and subsequent runs cannot close or reuse it.
         job.retainedTabId = job.workerTabId;
@@ -300,8 +310,18 @@ async function runJob() {
       job.workerTabId = null;
     }
     if (job?.status === "running") {
-      job.status = "completed";
-      job.completedAt = new Date().toISOString();
+      if (job.currentIndex >= job.targets.length) {
+        job.status = "completed";
+        job.pauseKind = null;
+        job.pauseReason = null;
+        job.completedAt = new Date().toISOString();
+      } else if (job.currentIndex >= batchEndIndex) {
+        const quota = (await chrome.storage.local.get("quguangouQuota")).quguangouQuota || {};
+        job.status = "paused";
+        job.pauseKind = "batch";
+        job.resumeAt = quota.cooldownUntil || Date.now() + 1_800_000;
+        job.pauseReason = `第 ${job.batchNumber} 批已处理完成，冷却 30 分钟后请手动继续下一批`;
+      }
     }
     if (job) await setJob(job);
   } finally {
@@ -329,11 +349,22 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       }
       const quota = (await chrome.storage.local.get("quguangouQuota")).quguangouQuota || {};
       if (quota.cooldownUntil > Date.now()) {
-        sendResponse({ ok: false, error: `冷却中，请在 ${new Date(quota.cooldownUntil).toLocaleString()} 后继续` });
+        sendResponse({ ok: false, error: `本批已完成，请在 ${new Date(quota.cooldownUntil).toLocaleString()} 后手动继续下一批` });
         return;
       }
       if (existing && ["paused", "cancelled"].includes(existing.status) && existing.currentIndex < existing.targets.length) {
+        const batchSize = existing.batchSize || BATCH_SIZE;
+        const needsNewBatch = existing.pauseKind === "batch"
+          || !Number.isInteger(existing.batchEndIndex)
+          || existing.currentIndex >= existing.batchEndIndex;
+        existing.batchSize = batchSize;
+        if (needsNewBatch) {
+          existing.batchStartIndex = existing.currentIndex;
+          existing.batchEndIndex = Math.min(existing.currentIndex + batchSize, existing.targets.length);
+          existing.batchNumber = Math.floor(existing.batchStartIndex / batchSize) + 1;
+        }
         existing.status = "running";
+        existing.pauseKind = null;
         existing.resumeAt = null;
         existing.pauseReason = null;
         await setJob(existing);
@@ -355,6 +386,11 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         results: [],
         currentIndex: 0,
         currentTarget: null,
+        batchSize: BATCH_SIZE,
+        batchNumber: 1,
+        batchStartIndex: 0,
+        batchEndIndex: Math.min(BATCH_SIZE, blocklist.targets.length),
+        pauseKind: null,
         workerTabId: null,
         startedAt: new Date().toISOString()
       };
