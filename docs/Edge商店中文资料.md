@@ -40,3 +40,8 @@
 - 中文名称、短名称和简介位于 `_locales/zh_CN/messages.json`。
 - Edge Partner Center 的“详细描述”属于商店资料，不能由安装包自动覆盖；更新版本时仍需把本文档中的中文详细描述复制到商店后台。
 - 旧的英文描述“Identify accounts that have unfollowed you / Track changes in following relationships”已经与当前功能不符，不应继续使用。
+
+## 公开页面
+
+- 官网 / 支持页：https://jiedanfadan.com/quguangou/
+- 隐私政策：https://jiedanfadan.com/quguangou/privacy

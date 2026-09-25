@@ -155,7 +155,7 @@ npm run build:firefox
 - 把资料中所有“Chrome”专属表述替换成对应的“Microsoft Edge”或“Firefox”。
 - 屏幕截图中不要出现另一家浏览器的品牌、地址栏或商店页面。
 - 对扩展的功能、权限、风险和不收集数据的说明必须与实际代码一致。
-- 隐私政策使用可公开访问的 HTTPS 网址，建议继续使用：`https://711stoner.github.io/quguangou/privacy.html`。
+- 隐私政策使用可公开访问的 HTTPS 网址，建议继续使用：`https://jiedanfadan.com/quguangou/privacy`。
 
 ## 8. 建议的审核备注
 
