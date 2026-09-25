@@ -67,6 +67,7 @@ button:disabled { cursor: not-allowed; opacity: .45; }
 .primary { width: 100%; color: #fff; background: #ef7d21; }
 .primary:hover:not(:disabled) { background: #d9650f; }
 .danger { width: 100%; color: #fff; background: #bd302a; }
+#startButton { margin-top: 12px; }
 .danger:hover:not(:disabled) { background: #a52520; }
 .secondary { width: 100%; color: #563f31; background: #eee2d8; }
 .cooldown-advice { margin: 9px 0 4px; color: #7b675a; font-size: 11px; line-height: 1.5; text-align: center; }
