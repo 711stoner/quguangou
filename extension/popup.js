@@ -78,7 +78,12 @@ function renderJob(job) {
   const totalBatches = Math.max(1, Math.ceil(total / batchSize));
   const running = job.status === "running";
   const completed = job.status === "completed";
-  const batchPaused = job.status === "paused" && job.pauseKind === "batch";
+  const atBatchBoundary = job.status === "paused"
+    && done > 0
+    && done < total
+    && done % batchSize === 0
+    && Boolean(job.resumeAt);
+  const batchPaused = job.status === "paused" && (job.pauseKind === "batch" || atBatchBoundary);
   const cooling = batchPaused && job.resumeAt && job.resumeAt > Date.now();
   let batchNumber = job.batchNumber || Math.min(totalBatches, Math.floor(done / batchSize) + 1);
   if (completed) batchNumber = totalBatches;
@@ -89,22 +94,31 @@ function renderJob(job) {
   const batchTotal = Math.max(1, batchEnd - batchStart);
   const percent = total ? Math.round((done / total) * 100) : 0;
   $("#progressBar").style.width = `${percent}%`;
-  $("#progressTitle").textContent = running ? "正在执行" : completed ? "全部处理完成" : batchPaused ? "本批处理完成" : "任务已暂停";
+  $("#progressTitle").textContent = running
+    ? "正在执行"
+    : completed
+      ? "全部处理完成"
+      : batchPaused
+        ? cooling ? "拟人化冷却中" : "本批处理完成"
+        : "任务已暂停";
   $("#batchStatus").textContent = completed
     ? `共 ${totalBatches} 批 · 已全部完成`
     : batchPaused
       ? cooling
-        ? `第 ${batchNumber} / ${totalBatches} 批已完成 · 冷却 30 分钟中`
+        ? `第 ${batchNumber} / ${totalBatches} 批已完成 · 本批已处理 ${batchDone || batchSize} 个`
         : `第 ${batchNumber} / ${totalBatches} 批已完成 · 可以手动继续下一批`
       : `第 ${batchNumber} / ${totalBatches} 批 · 每批最多 ${batchSize} 个`;
+
+  const resumeTime = job.resumeAt
+    ? new Date(job.resumeAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    : "";
   $("#progressText").textContent = running
     ? `本批 ${batchDone} / ${batchTotal} · 总进度 ${done} / ${total}${job.currentTarget ? ` · 正在处理 ${job.currentTarget.label}` : ""}`
-    : `总进度 ${done} / ${total}`;
-  if (batchPaused && job.resumeAt) {
-    $("#progressText").textContent += ` · ${cooling ? "冷却结束时间" : "冷却已结束"}：${new Date(job.resumeAt).toLocaleString()}`;
-  } else if (job.pauseReason) {
-    $("#progressText").textContent += ` · ${job.pauseReason}`;
-  }
+    : batchPaused
+      ? cooling
+        ? `总进度 ${done} / ${total} · 为模拟正常人工操作，自动冷却 30 分钟 · ${resumeTime} 后可继续下一批`
+        : `总进度 ${done} / ${total} · 冷却已结束，可以继续下一批`
+      : `总进度 ${done} / ${total}${job.pauseReason ? ` · ${job.pauseReason}` : ""}`;
 
   const statusLabel = { blocked: "已拉黑", already_blocked: "已拉黑过", failed: "失败" };
   const resultList = $("#resultList");
@@ -137,7 +151,7 @@ function renderJob(job) {
     ? "暂时不用，返回名单"
     : batchPaused
       ? cooling
-        ? `冷却中，${new Date(job.resumeAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} 后可继续`
+        ? `拟人化冷却中 · ${resumeTime} 后继续下一批`
         : `继续处理第 ${Math.min(batchNumber + 1, totalBatches)} 批`
       : "继续剩余账号";
 }
