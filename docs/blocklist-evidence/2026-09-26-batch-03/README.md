@@ -1,0 +1,94 @@
+# 2026-09-26 第三批名单证据
+
+- 原始截图：83 张（本地归档，不纳入 Git 仓库）
+- 截图中明确确认的唯一 Handle：79 个
+- 旧名单已存在：10 个
+- 本次新增：69 个
+- 更新后名单总数：174 个
+- 明确排除：用户本人账号 @woyongyuangeson
+- 处理原则：只录入截图中能明确辨认的 X Handle；模糊、截断或无法确认归属的文字不录入。
+
+## 本次已在旧名单中的 10 个
+
+- @xxx14566
+- @0427SMtieshou
+- @drop_grl
+- @ysp2025
+- @Pomelo24h
+- @wuweizi2018
+- @wenle886
+- @aiphotoV
+- @santaizi_James
+- @0b0ksu
+
+## 本次新增 69 个
+
+- @Weixin_WeChat
+- @xiaqingfeng666
+- @BarackObama
+- @scottncku
+- @0xKevinJ
+- @665162
+- @buildnomadx
+- @nandaoking
+- @ShuaiYang70381
+- @kidzpod
+- @y1cxmm
+- @hoangyen2k9
+- @bbming926
+- @yngxn131035
+- @xiexieyixin
+- @der422937269087
+- @vrggr2
+- @qcb16803
+- @feiy1314
+- @DongLi64670501
+- @ycfd1688
+- @1uuTim
+- @0xmina_
+- @0xallen69
+- @zzqgz7326
+- @NIAOBGE
+- @mfanyu17
+- @Min040824
+- @Salmonbro
+- @linda6248130564
+- @emmmMile
+- @jdasad77
+- @ChrisHuRocks
+- @AlexWangi25g
+- @95512eth
+- @ke_ba57088
+- @blockcnth
+- @asdchen1995
+- @Alpynan
+- @MrPao168
+- @MG_Web3
+- @wanyanyongqiang
+- @SAM1021219
+- @ntraholic
+- @linlin429892
+- @AndyL5cc
+- @333333sc
+- @yangqisniper
+- @ParachiDesai
+- @fan98ai
+- @wiz_von
+- @Starcn_
+- @herolife998
+- @gimcall
+- @getinfo8888
+- @zhang_jia184471
+- @gunsch09
+- @LeoLeo987789
+- @chaiyan88
+- @btcsu7
+- @MeWdodo
+- @linda_wardrobe
+- @Web3_Vio
+- @PalauConsensus
+- @Mariiah_carey
+- @inciyesilyurt
+- @DucklowOrval
+- @Ikunakala
+- @vklovecat
