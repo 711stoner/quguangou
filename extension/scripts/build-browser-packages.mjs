@@ -7,11 +7,11 @@ import { fileURLToPath } from "node:url";
 const execFileAsync = promisify(execFile);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dist = path.join(root, "dist");
-const supported = ["chrome", "edge", "firefox"];
+const supported = ["chrome", "edge", "firefox", "opera"];
 const requested = process.argv[2] ? [process.argv[2]] : supported;
 
 if (requested.some((browser) => !supported.includes(browser))) {
-  throw new Error(`未知浏览器：${process.argv[2]}（可选 chrome、edge 或 firefox）`);
+  throw new Error(`未知浏览器：${process.argv[2]}（可选 chrome、edge、firefox 或 opera）`);
 }
 
 const runtimeEntries = [
@@ -33,10 +33,13 @@ for (const browser of requested) {
   const target = path.join(dist, browser);
   await rm(target, { recursive: true, force: true });
   await mkdir(target, { recursive: true });
-  for (const entry of runtimeEntries) {
+  const browserEntries = browser === "opera"
+    ? runtimeEntries.filter((entry) => !["privacy.css", "privacy.html"].includes(entry))
+    : runtimeEntries;
+  for (const entry of browserEntries) {
     await cp(path.join(root, entry), path.join(target, entry), { recursive: true });
   }
-  const manifestPath = browser === "chrome"
+  const manifestPath = browser === "chrome" || browser === "opera"
     ? path.join(root, "manifest.json")
     : path.join(root, "manifests", `${browser}.json`);
   const manifest = await readFile(manifestPath, "utf8");

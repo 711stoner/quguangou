@@ -64,7 +64,6 @@ function renderBlocklist() {
     : "当前没有需要处理的账号。";
   $("#startButton").disabled = blocklist.targets.length === 0;
   $("#startButton").textContent = blocklist.targets.length ? `开始处理第 1 批（最多 ${BATCH_SIZE} 个）` : "当前无账号可处理";
-  $("#stickyValuePromo").classList.add("hidden");
   showOnly(blocklistView);
 }
 
@@ -188,6 +187,20 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message?.type === "JOB_UPDATED") renderJob(message.job);
 });
 
+
+const ACCOUNT_TOOL_HIDDEN_KEY = "quguangouAccountToolHidden";
+
+async function initializeAccountTool() {
+  const stored = await chrome.storage.local.get(ACCOUNT_TOOL_HIDDEN_KEY);
+  const hidden = Boolean(stored[ACCOUNT_TOOL_HIDDEN_KEY]);
+  $("#accountTool").classList.toggle("hidden", hidden);
+}
+
+$("#dismissAccountTool").addEventListener("click", async () => {
+  await chrome.storage.local.set({ [ACCOUNT_TOOL_HIDDEN_KEY]: true });
+  $("#accountTool").classList.add("hidden");
+});
+
 const cooldownRiskPanel = $("#cooldownRiskPanel");
 const supportPanel = $("#supportPanel");
 const feedbackPanel = $("#feedbackPanel");
@@ -233,7 +246,8 @@ document.addEventListener("keydown", (event) => {
 async function initialize() {
   const [jobResponse, blocklistResponse] = await Promise.all([
     chrome.runtime.sendMessage({ type: "GET_JOB" }),
-    chrome.runtime.sendMessage({ type: "GET_BLOCKLIST" })
+    chrome.runtime.sendMessage({ type: "GET_BLOCKLIST" }),
+    initializeAccountTool()
   ]);
   if (!blocklistResponse?.ok) throw new Error(blocklistResponse?.error || "无法读取社区名单");
   blocklist = blocklistResponse.blocklist;
