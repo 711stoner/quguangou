@@ -81,7 +81,7 @@ async function getCachedBlocklist() {
 
 async function getBundledBlocklist() {
   const response = await fetch(chrome.runtime.getURL("data/blocklist.json"));
-  if (!response.ok) throw new Error("无法读取扩展内置名单");
+  if (!response.ok) throw new Error("无法读取扩展备用名单");
   return normalizeBlocklist(await response.json(), "bundled");
 }
 

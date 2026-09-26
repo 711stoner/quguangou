@@ -3,30 +3,58 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>取关狗隐私政策</title>
+    <meta name="description" content="取关狗浏览器扩展隐私政策" />
+    <title>隐私政策｜取关狗</title>
+    <link rel="icon" href="assets/icon-32.png" sizes="32x32" />
+    <link rel="stylesheet" href="../styles.css" />
     <style>
-      :root{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#251c17;background:#fffaf5}body{margin:0}main{width:min(760px,calc(100% - 40px));margin:48px auto 80px}h1{margin-bottom:8px;font-size:32px}h2{margin:30px 0 8px;font-size:18px}p,li{color:#5f4e44;line-height:1.75}.updated{color:#917b6e;font-size:13px}code{padding:2px 5px;border-radius:5px;background:#f3e6dc}.notice{padding:12px 14px;border-radius:10px;color:#8b3d27;background:#fff0e8}
+      .legal{width:min(820px,calc(100% - 36px));margin:0 auto;padding:72px 0 90px}
+      .legal h1{margin:12px 0 8px;font-size:clamp(40px,6vw,58px);letter-spacing:-.04em}
+      .legal h2{margin:34px 0 8px;font-size:20px}
+      .legal p,.legal li{color:var(--muted);font-size:14px;line-height:1.85}
+      .legal code{padding:2px 6px;border-radius:5px;background:#f4e8dd}
+      .updated{font-size:12px!important}
+      .back{font-size:13px;font-weight:750;text-decoration:none;color:var(--muted)}
     </style>
   </head>
   <body>
-    <main>
-      <h1>取关狗隐私政策</h1>
-      <p class="updated">生效日期：2026 年 9 月 9 日</p>
-      <p>开发者：siyiwang<br>联系方式：X 评论区 https://x.com/woyongyuangeson/status/2098974760801870134?s=20</p>
-      <h2>我们处理哪些信息</h2>
-      <p>扩展仅在用户主动点击“一键拉黑全部账号”后访问 x.com 用户页面，以识别用户操作菜单、执行拉黑并判断操作结果。扩展不会读取、请求或保存用户的 X 密码、身份验证 Cookie、私信或发帖内容。</p>
+    <header class="topbar">
+      <a class="brand" href="index.html"><img src="assets/logo.svg" alt="" /><span>取关狗</span></a>
+      <a class="back" href="index.html">返回首页</a>
+    </header>
+    <main class="legal">
+      <span class="kicker">PRIVACY</span>
+      <h1>隐私政策</h1>
+      <p class="updated">更新日期：2026 年 9 月 26 日</p>
+
+      <h2>扩展处理哪些信息</h2>
+      <p>取关狗仅在用户主动执行名单处理时访问 x.com 用户页面，用于识别页面菜单、执行拉黑并判断结果。扩展不会读取、请求或保存 X 密码、身份验证 Cookie、私信或发帖内容，也不会扫描用户的粉丝或关注历史。</p>
+
       <h2>本地存储</h2>
-      <p>扩展使用 Chrome 本地存储保存当前任务进度、目标账号和执行结果。这些信息只保存在用户设备中，可以通过卸载扩展或清除扩展数据删除。</p>
-      <h2>数据传输与共享</h2>
-      <p>扩展没有开发者服务器、分析工具或广告组件，不会把用户数据、浏览活动、任务记录或 X 账号信息发送给开发者或第三方。与 X 的页面访问由用户自己的浏览器直接完成。</p>
+      <p>扩展使用浏览器本地存储保存任务进度、目标账号和执行结果，以便弹窗关闭后继续显示进度。相关信息仅保存在用户自己的设备中。</p>
+
+      <h2>数据传输</h2>
+      <p>扩展启动时会从 <code>711stoner.github.io</code> 下载公开的社区名单 JSON，以获取最新名单。该请求不会包含用户的 X 密码、粉丝/关注历史、任务记录或 X 账号信息；在线读取失败时，扩展会使用上一次成功缓存或随扩展打包的本地备用名单。GitHub Pages 作为托管服务可能按照其常规日志规则处理 IP 地址、User-Agent 等标准网络请求信息。</p>
+      <p>扩展没有开发者分析 SDK 或第三方广告 SDK，不会把用户的任务记录、拉黑结果、浏览数据或 X 账号信息发送给开发者。</p>
+
       <h2>权限用途</h2>
-      <ul><li><code>storage</code>：在本地保存任务进度和结果。</li><li><code>scripting</code>：在 X 用户页识别并点击拉黑相关控件。</li><li><code>https://x.com/*</code>：打开内置名单中的 X 用户页并完成用户主动发起的操作。</li></ul>
+      <ul>
+        <li><code>storage</code>：保存本地任务进度和结果。</li>
+        <li><code>scripting</code>：在 X 用户页面识别并操作拉黑相关控件。</li>
+        <li><code>https://x.com/*</code>：打开名单中的 X 用户页面并完成用户主动发起的操作。</li>
+        <li><code>https://711stoner.github.io/*</code>：仅读取公开的最新社区名单 JSON。</li>
+      </ul>
+
+      <h2>名单线索</h2>
+      <p>名单线索来自 X 中文社区公开信息和用户投稿，并由维护者人工整理。提交者应只提供核对所需的信息，不应提交密码、Cookie、访问令牌、联系方式、私信内容或无关人员信息。被收录账号可以提交补充材料申请复核、更正或移除。</p>
+
       <h2>用户控制</h2>
-      <p>扩展不会自动启动。用户可以在执行前查看名单，必须主动点击按钮才能开始，并可以随时停止尚未完成的任务。</p>
-      <h2>有限使用承诺</h2>
-      <p>取关狗对通过浏览器权限获得的信息的使用，将遵守 Chrome Web Store 用户数据政策（包括有限使用要求），并仅限于提供本政策所述的单一功能。</p>
+      <p>扩展不会自动启动任务。用户可以先查看名单，再主动决定是否执行，并可停止尚未完成的任务。</p>
+
       <h2>联系我们</h2>
-      <p>如对本隐私政策或扩展的数据处理方式有疑问，请通过 X 评论区联系：https://x.com/woyongyuangeson/status/2098974760801870134?s=20</p>
-    </main>
+      <p>反馈、名单线索、申诉或隐私问题请前往 <a href="https://jiedanfadan.com/quguangou/" target="_blank" rel="noopener noreferrer">取关狗支持页</a>。</p>
+    <h2>可选估值入口</h2>
+<p>扩展仅在批次冷却和全部处理完成时展示一个可选的 X 推文广告价值估算入口。只有用户主动点击后，浏览器才会打开 jiedanfadan.com/value-check。扩展不会把用户的 X 账号信息、名单处理结果、粉丝/关注历史或任务记录自动传送到该页面；链接仅包含固定来源标记参数。</p>
+</main>
   </body>
 </html>

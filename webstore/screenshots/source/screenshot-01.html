@@ -1,38 +1,27 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><style>
-*{box-sizing:border-box}html,body{margin:0;width:1280px;height:800px;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;color:#251c17}
-body{padding:66px 78px;background:radial-gradient(circle at 8% 8%,#fff0d9,transparent 28%),linear-gradient(135deg,#fffaf5,#f6f7f8)}
-.kicker{font-size:15px;font-weight:800;color:#d9650f;letter-spacing:.12em}.title{margin:10px 0 10px;font-size:51px;line-height:1.08}.sub{margin:0;color:#715f53;font-size:19px}
-.stage{display:flex;gap:38px;align-items:center;margin-top:42px}.popup,.panel,.browser{background:#fff;border:1px solid #e9dfd8;box-shadow:0 24px 70px rgba(71,45,25,.12)}
-.popup{width:390px;border-radius:22px;padding:20px;background:radial-gradient(circle at 100% 0,rgba(255,166,65,.14),transparent 34%),#fffaf5}
-.brand{display:flex;align-items:center;gap:12px}.brand img{width:48px;height:48px}.brand b{font-size:23px}.brand small{display:block;color:#76665c;margin-top:3px;font-size:13px}
-.h2{font-size:16px;font-weight:800;margin:21px 0 10px}.summary{font-size:13px;font-weight:700;color:#5e4a3e;margin-bottom:10px}.btn{border-radius:11px;padding:12px 14px;text-align:center;font-weight:800}.danger{background:#bd302a;color:#fff}.warning{margin:10px 2px 0;color:#826f62;font-size:12px;line-height:1.5}
-.supports{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}.support{height:34px;border:1px solid #eadfd6;border-radius:9px;background:rgba(255,255,255,.7);display:grid;grid-template-columns:18px 1fr 10px;gap:5px;align-items:center;padding:6px 8px}.support .ico{font-size:15px;color:#bd302a;text-align:center}.support b{font-size:11.5px;white-space:nowrap}.support .arr{color:#aa8c78;font-size:15px}
-.foot{display:flex;justify-content:space-between;margin-top:16px;padding-top:12px;border-top:1px solid #eadfd6;color:#9a877a;font-size:11px}.foot .link{color:#a8541c}
-.panel{flex:1;border-radius:22px;padding:30px 34px}.panel h3{font-size:24px;margin:0 0 11px}.panel p{color:#715f53;font-size:15px;line-height:1.65;margin:0}.badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.badge{padding:8px 12px;border-radius:99px;background:#fff0e2;color:#a95518;font-size:12px;font-weight:800}
-.list{border:1px solid #eadfd6;border-radius:12px;overflow:hidden;background:#fff}.row{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-bottom:1px solid #f0e8e2;font-size:12px}.row:last-child{border:0}.source{color:#a45d2b}.idx{display:grid;place-items:center;width:21px;height:21px;border-radius:50%;background:#ffecd7;color:#99500f;font-size:10px;margin-right:9px}
-.track{height:10px;border-radius:99px;background:#eadfd6;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,#ef7d21,#d84a2f)}
-.note{font-size:12px;color:#89776c;line-height:1.55}.modal{background:#fffaf5;border:1px solid #eadfd6;border-radius:18px;box-shadow:0 20px 60px rgba(44,24,14,.18);padding:22px;text-align:center}.modal h3{font-size:18px;margin:7px 0 8px}.modal p{font-size:12px;color:#7b675a;line-height:1.55}.xbtn{margin-top:14px;padding:11px 14px;border-radius:11px;background:#251c17;color:#fff;font-weight:800;font-size:13px}.qr{width:160px;height:160px;margin:12px auto 0;border:1px solid #eadfd6;border-radius:14px;overflow:hidden;background:#fff}.qr img{width:100%;height:100%;object-fit:contain}
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}html,body{margin:0;width:1280px;height:800px;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;color:#281d18;background:linear-gradient(135deg,#fff9f1 0%,#fffdf9 57%,#f7f4f0 100%);padding:58px 78px}
+.eyebrow{color:#e45517;font-size:15px;font-weight:800;letter-spacing:.14em;margin-bottom:12px}
+h1{font-size:48px;line-height:1.13;margin:0 0 12px;max-width:1040px;letter-spacing:-.02em}
+.lead{font-size:20px;color:#76655b;margin:0;line-height:1.5}
+.layout{display:grid;grid-template-columns:420px 1fr;gap:42px;align-items:center;margin-top:34px}
+.popup{background:#fffaf4;border:1px solid #eadbd1;border-radius:22px;padding:20px;box-shadow:0 25px 70px rgba(75,42,27,.12)}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:18px}.brand img{width:44px;height:44px}.brand b{font-size:23px}.brand small{display:block;color:#7a6b62;margin-top:2px}
+.section-title{display:flex;justify-content:space-between;align-items:center}.section-title strong{font-size:17px}.version{font-size:11px;color:#9a8172}
+.desc{font-size:12px;color:#725f54;line-height:1.5}.summary{font-size:13px;font-weight:700;margin:10px 0}
+.guide{font-size:11px;line-height:1.5;color:#745f50;background:#fff4e8;border:1px solid #eed8c5;border-radius:10px;padding:9px 10px}
+.list{border:1px solid #e5d8cf;border-radius:12px;overflow:hidden;background:#fff;margin-top:10px}.row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #eee5df;font-size:12px}.row:last-child{border:0}.row small{display:block;color:#8e7567;font-size:10px;margin-top:3px}.status-ok{color:#198754}.status-fail{color:#cc2222}.status-old{color:#8a786e}.num{display:inline-grid;place-items:center;width:21px;height:21px;border-radius:50%;background:#ffead5;color:#9c541b;margin-right:9px}
+.btn{margin-top:13px;border-radius:11px;padding:12px;text-align:center;color:white;background:#c92d27;font-weight:800;font-size:13px}.btn.cool{background:#ffb47e}.btn.orange{background:#f57c1f}
+.note{font-size:10.5px;color:#7b6960;line-height:1.45;margin:10px 0 0}.progress{height:8px;border-radius:9px;background:#ece3dd;overflow:hidden;margin:10px 0}.progress i{display:block;height:100%;background:#e94b22}
+.estimate{margin-top:13px;border:1px solid #d6e2da;border-radius:13px;background:#f3f8f4;padding:12px}.estimate .kick{font-size:9px;color:#5d806b;font-weight:800}.estimate strong{display:block;font-size:13px;margin:5px 0}.estimate p{font-size:10px;color:#6e786f;margin:0 0 8px}.estimate .go{background:#207454;color:white;text-align:center;border-radius:8px;padding:9px;font-size:11px;font-weight:800}
+.info{background:white;border:1px solid #e7ddd6;border-radius:20px;padding:26px 30px;box-shadow:0 18px 55px rgba(58,40,28,.08)}.info h2{font-size:27px;margin:0 0 10px}.info p{font-size:16px;color:#725f54;line-height:1.65;margin:0}.tags{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.tag{font-size:12px;font-weight:700;color:#a44c16;background:#fff0e1;border-radius:999px;padding:8px 12px}
+.footer{position:absolute;left:78px;bottom:32px;color:#9b897e;font-size:12px}
 </style></head><body>
-<div class="kicker">取关狗 · X 中文社区取关名单</div>
-<h1 class="title">先看名单，再决定要不要处理</h1>
-<p class="sub">不做“谁刚刚取关了你”的自动检测，只把社区线索集中到一个清楚的入口里。</p>
-<div class="stage">
-  <div class="popup">
-    <div class="brand"><img src="../../../extension/assets/icon-128.png"><div><b>取关狗</b><small>X 中文社区取关名单 · 非取关检测</small></div></div>
-    <div class="h2">社区取关名单</div><div class="summary">名单内共 12 个账号 · 在线最新名单</div>
-    <div class="list">
-      <div class="row"><span>@sample_account_01</span><span class="source">公开曝光</span></div>
-      <div class="row"><span>@sample_account_02</span><span class="source">互关帖线索</span></div>
-      <div class="row"><span>@sample_account_03</span><span class="source">用户投稿</span></div>
-    </div>
-    <div class="btn danger" style="margin-top:12px">一键拉黑全部账号</div>
-    <div class="warning">这不是你的个人取关检测结果。点击按钮即表示确认执行；请先在当前浏览器登录 X。</div>
-    <div class="supports"><div class="support"><span class="ico">◎</span><b>反馈 / 共创</b><span class="arr">›</span></div><div class="support"><span class="ico">♡</span><b>支持作者</b><span class="arr">›</span></div></div>
-    <div class="foot"><span>非 X 官方产品</span><span class="link">隐私说明</span></div>
-  </div>
-  <div class="panel">
-    <h3>主功能保持突出，辅助入口更克制</h3>
-    <p>社区名单是核心；反馈、委员会共创和支持作者都收进底部的小入口，不干扰主要操作。</p>
-    <div class="badges"><span class="badge">社区名单</span><span class="badge">非取关检测</span><span class="badge">主动确认</span><span class="badge">辅助入口简洁</span></div>
-  </div>
-</div></body></html>
+<div class="eyebrow">取关狗 · X 中文社区账号管理辅助工具</div><h1>先看黑名单，再决定是否处理</h1><p class="lead">不是“谁刚刚取关了你”的自动检测。社区黑名单与单向取关线索集中展示，用户自己确认后再开始。</p>
+<div class="layout"><div class="popup"><div class="brand"><img src="file:///Users/zhangan/quguangou/extension/assets/icon-128.png"><div><b>取关狗</b><small>X 中文社区取关名单 · 非取关检测</small></div></div>
+<div class="section-title"><strong>社区取关名单</strong><span class="version">版本 2026.09.26.2</span></div>
+<p class="desc">来自 X 中文社区公开线索、用户投稿与人工复核的社区名单。</p><p class="summary">名单内共 138 个账号 · 在线最新名单</p>
+<div class="guide">拟人化分批处理：每批最多自动处理 20 个账号，完成后冷却 30 分钟；冷却结束后手动继续下一批。</div>
+<div class="list"><div class="row"><span><span class="num">1</span>@sample_account_01</span></div><div class="row"><span><span class="num">2</span>@sample_account_02</span></div><div class="row"><span><span class="num">3</span>@sample_account_03</span></div></div>
+<div class="btn">开始处理第 1 批（最多 20 个）</div><p class="note">这不是你的个人取关检测结果。请先在当前浏览器登录 X。</p></div><div class="info"><h2>功能与实际插件一致</h2><p>当前 v0.2.25：在线名单 138 个账号；首页不放估值入口，冷却与完成状态各最多显示一张相关入口。</p><div class="tags"><span class="tag">黑名单</span><span class="tag">单向取关线索</span><span class="tag">用户主动确认</span></div></div></div>
+<div class="footer">非 X 官方产品 · 截图账号为测试占位，不代表真实收录账号</div></body></html>

@@ -152,23 +152,6 @@ button:disabled { cursor: not-allowed; opacity: .45; }
 .sticky-value-main { display: block; padding: 9px 11px; border-radius: 9px; color: #fff; background: #1f6b4f; text-align: center; text-decoration: none; font-size: 11.5px; font-weight: 800; }
 .sticky-value-main:hover { background: #18583f; }
 
-.account-tool {
-  margin: 14px 0 0;
-  padding: 14px;
-  border: 1px solid #d6e2da;
-  border-radius: 14px;
-  background: #f3f8f4;
-  box-shadow: 0 7px 18px rgba(31,79,58,.06);
-}
-.account-tool-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
-.account-tool-label { color: #5b7d68; font-size: 9px; font-weight: 850; letter-spacing: .08em; }
-.account-tool-dismiss { width: auto; min-height: 0; padding: 0; border: 0; background: transparent; color: #6f7c74; font-size: 9px; font-weight: 700; cursor: pointer; }
-.account-tool-dismiss:hover { color: #44534a; background: transparent; }
-.account-tool strong { display: block; margin: 0 0 5px; color: #26372d; font-size: 14px; line-height: 1.35; }
-.account-tool p { margin: 0 0 10px; color: #69786f; font-size: 10.5px; line-height: 1.45; }
-.account-tool-main { display: flex; align-items: center; justify-content: center; min-height: 37px; border-radius: 9px; background: #1f6b4f; color: #fff; text-decoration: none; font-size: 11.5px; font-weight: 850; }
-.account-tool-main:hover { background: #18583f; }
-
 .toast {
   position: fixed;
   right: 16px;
