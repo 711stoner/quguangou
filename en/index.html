@@ -1,92 +1,173 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
-  <title>Followback Watchdog — Non-Follower Checker &amp; Community Blocklists for X</title>
-  <meta name="description" content="Check who does not currently follow you back on X, review a community blocklist, and handle selected accounts in paced batches with confirmation.">
-  <link rel="canonical" href="https://711stoner.github.io/quguangou/en/">
-  <link rel="icon" href="../assets/icon-32.png" sizes="32x32">
-  <meta property="og:title" content="Followback Watchdog | X Non-Follower Checker">
-  <meta property="og:description" content="Personal follower comparisons, community blocklists, and user-confirmed actions in paced batches.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://711stoner.github.io/quguangou/en/">
-  <style>
-    :root{color-scheme:light;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#29231d;background:#fffcf7}
-    *{box-sizing:border-box}body{margin:0;line-height:1.6}a{color:inherit;text-decoration-thickness:1px;text-underline-offset:3px}
-    .wrap{max-width:1020px;margin:auto;padding:0 24px}header{border-bottom:1px solid #eadfd2;background:#fff9ef}
-    nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
-    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:16px;font-weight:850;letter-spacing:-.02em}
-    .brand img{width:42px;height:42px;border-radius:12px}.links{display:flex;align-items:center;gap:22px;font-size:13px;font-weight:650}
-    .links a{white-space:nowrap}.hero{padding:88px 0 68px;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:40px}
-    .eyebrow{color:#9c4d18;text-transform:uppercase;letter-spacing:.1em;font-size:12px;font-weight:850;margin:0 0 16px}
-    h1{font-size:clamp(38px,5.5vw,65px);line-height:1.08;letter-spacing:-.06em;margin:0 0 24px}
-    .lede{font-size:17px;color:#5d554e;max-width:600px;margin:0 0 30px}
-    .actions{display:flex;flex-wrap:wrap;gap:12px}.button{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:12px;font-size:14px;font-weight:760;text-decoration:none}
-    .primary{background:#bd4f12;color:white}.secondary{background:#fff;border:1px solid #ddcbbb}
-    .hero-art{background:#fff0da;border:1px solid #edd5bb;border-radius:26px;padding:44px 20px;text-align:center}
-    .hero-art img{width:min(70%,240px);height:auto;filter:drop-shadow(0 12px 18px #8b501925)}
-    .hero-art p{font-size:13px;font-weight:700;color:#85512f;margin:18px 0 0}
-    .note{padding:16px 20px;border-radius:12px;background:#f8efe4;border:1px solid #f1dfcb;color:#6f4930;font-size:13px;margin:0 0 60px}
-    section.content{padding:0 0 80px}h2{font-size:29px;letter-spacing:-.04em;margin:0 0 25px}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .panel{background:white;border:1px solid #eadfd2;padding:26px;border-radius:19px}
-    .panel small{display:block;color:#ac5e28;font-weight:800;margin-bottom:9px;text-transform:uppercase;letter-spacing:.08em}
-    .panel h3{font-size:22px;margin:0 0 12px;line-height:1.3}.panel p{color:#5d554e;margin:0}
-    .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}
-    .step{border-top:2px solid #c85b1a;padding-top:17px}.step b{font-size:16px}.step p{color:#625b54;font-size:14px}
-    .caution{border-left:3px solid #b96024;padding:17px 20px;margin:0 0 72px;background:#fff7ed;font-size:14px;color:#5d534a}
-    footer{background:#f6eee4;border-top:1px solid #e9dac9;padding:31px 0;color:#67574b;font-size:13px}
-    .foot{display:flex;gap:20px;justify-content:space-between;flex-wrap:wrap}.footlinks{display:flex;gap:20px;flex-wrap:wrap}
-    @media(max-width:720px){nav{height:auto;min-height:75px;padding:12px 0}.links{gap:14px}.hero{grid-template-columns:1fr;padding:54px 0 40px}.hero-art{padding:22px}.hero-art img{width:160px}.grid,.steps{grid-template-columns:1fr}.note{margin-bottom:45px}h2{font-size:26px}}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Followback Watchdog offers two modes: compare your current X Following and Followers lists, or review a shared community blocklist. You decide whether to block or unfollow after confirming." />
+<meta name="robots" content="index,follow,max-image-preview:large" />
+<link rel="canonical" href="https://711stoner.github.io/quguangou/en/" />
+<meta name="theme-color" content="#f77823" />
+<meta property="og:title" content="Followback Watchdog | X Non-Follower Checker &amp; Community Blocklist" />
+<meta property="og:description" content="Check current non-followers with Personal Account mode or browse the community blocklist. The two modes are separate and you decide what to do." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://711stoner.github.io/quguangou/en/" />
+<meta property="og:image" content="https://711stoner.github.io/quguangou/en/assets/social-card-1200x630.png?v=20261005" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Followback Watchdog | X Follow Relationship Tools" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://711stoner.github.io/quguangou/en/assets/social-card-1200x630.png?v=20261005" />
+<title>Followback Watchdog | X Non-Follower Checker &amp; Community Blocklist</title>
+<link rel="icon" href="assets/icon-16.png" sizes="16x16" />
+<link rel="icon" href="assets/icon-32.png" sizes="32x32" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon-180.png" sizes="180x180" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="poster.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Followback Watchdog","applicationCategory":"BrowserApplication","softwareVersion":"0.2.55","operatingSystem":"Google Chrome, Microsoft Edge, Firefox","url":"https://711stoner.github.io/quguangou/en/","downloadUrl":["https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=en","https://microsoftedge.microsoft.com/addons/detail/cgolihjabbbgdomlcpbfcffkdinahjgd","https://addons.mozilla.org/en-US/firefox/addon/%E5%8F%96%E5%85%B3%E7%8B%97/"],"description":"An X account tool with separate modes for checking current non-followers and reviewing a shared community blocklist. Blocks and unfollows require user confirmation.","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <nav aria-label="Main navigation">
-      <a class="brand" href="./"><img src="../assets/icon-128.png" alt="">Followback Watchdog</a>
-      <div class="links"><a href="#features">Features</a><a href="privacy.html">Privacy</a><a href="https://x.com/woyongyuangeson" target="_blank" rel="noopener noreferrer">Contact</a></div>
-    </nav>
-  </div>
-</header>
-<main class="wrap">
-  <div class="hero">
-    <div>
-      <p class="eyebrow">X (formerly Twitter) · Browser extension</p>
-      <h1>Know who doesn’t follow you back.</h1>
-      <p class="lede">Followback Watchdog compares your current Following and Followers lists, lets you review a community blocklist, and gives you control over what happens next.</p>
-      <div class="actions">
-        <a class="button primary" href="https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=en" target="_blank" rel="noopener noreferrer">View on Chrome Web Store ↗</a>
-        <a class="button secondary" href="https://github.com/711stoner/quguangou/releases/latest" target="_blank" rel="noopener noreferrer">See releases ↗</a>
+<header class="topbar"><a class="brand" href="#top" aria-label="Followback Watchdog homepage"><img src="../assets/logo.svg" alt="" /><span>Followback Watchdog</span></a><a class="home-return" href="https://jiedanfadan.com/en/">← Back to Brand Deal Buddy</a></header>
+<main id="top">
+  <section class="hero hero-clean">
+    <div class="hero-copy reveal">
+      <span class="eyebrow">X / Twitter follow-relationship tool</span>
+      <h1>Two modes.<br><em>Two different needs.</em></h1>
+      <p class="lead">Followback Watchdog does more than check non-followers. Use<strong>Personal Account mode</strong>to review your current follow relationships, or use<strong>Community Blocklist mode</strong>to browse a shared blocklist curated from X community reports.</p>
+      <div class="trust"><span>No X password required</span><span>Doesn't access DMs</span><span>No automatic blocking</span></div>
+    </div>
+    <div class="hero-visual reveal">
+      <img src="assets/store-en-06-dual-mode.png" alt="English preview of Personal Account and Community Blocklist modes">
+    </div>
+  </section>
+
+  <section id="download" class="section browsers" aria-labelledby="browser-title">
+    <div class="section-head reveal">
+      <span class="kicker">Download</span>
+      <h2 id="browser-title">Install it, then choose the mode you need</h2>
+      <p>Available for Chrome, Edge and Firefox. Store versions may lag behind the latest release while updates await review. English UI availability depends on store approval.</p>
+    </div>
+    <div class="browser-grid">
+      <article class="browser-card live reveal"><div class="browser-name"><span class="browser-icon"><img src="../assets/chrome.svg" alt=""></span><div><h3>Google Chrome</h3><p>Chrome Web Store</p></div></div><a class="browser-action" href="https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=en" target="_blank" rel="noopener noreferrer">Install for Chrome</a></article>
+      <article class="browser-card live reveal"><div class="browser-name"><span class="browser-icon"><img src="../assets/edge.svg" alt=""></span><div><h3>Microsoft Edge</h3><p>Edge Add-ons</p></div></div><a class="browser-action" href="https://microsoftedge.microsoft.com/addons/detail/cgolihjabbbgdomlcpbfcffkdinahjgd" target="_blank" rel="noopener noreferrer">Install for Edge</a></article>
+      <article class="browser-card live reveal"><div class="browser-name"><span class="browser-icon"><img src="../assets/firefox.svg" alt=""></span><div><h3>Firefox</h3><p>Desktop / Android</p></div></div><a class="browser-action" href="https://addons.mozilla.org/en-US/firefox/addon/%E5%8F%96%E5%85%B3%E7%8B%97/" target="_blank" rel="noopener noreferrer">Install for Firefox</a></article>
+    </div>
+  </section>
+
+  <section id="modes" class="section modes-section" aria-labelledby="modes-title">
+    <div class="section-head reveal">
+      <span class="kicker">Two modes</span>
+      <h2 id="modes-title">One checks your relationships. The other shows a shared community list.</h2>
+      <p>These modes serve different purposes and stay separate. Use Personal Account to check the accounts you follow, or Community Blocklist to explore a shared list before you engage.</p>
+    </div>
+    <div class="mode-grid">
+      <article class="mode-card mode-private reveal">
+        <span class="mode-label">Personal Account mode</span>
+        <h3>Personal Account: Who do I follow that doesn't follow me back?</h3>
+        <p>This mode analyzes<strong>your own account</strong>. It compares your current Following and Followers lists to identify accounts you follow that do not currently follow you back.</p>
+        <ul><li>Best for reviewing your own follow relationships</li><li>Shows current non-followers, not historical unfollows</li><li>You decide whether to block or unfollow after reviewing the list</li></ul>
+      </article>
+      <article class="mode-card mode-community reveal">
+        <span class="mode-label">Community Blocklist mode</span>
+        <h3>Community Blocklist: Review accounts gathered from community reports</h3>
+        <p>This mode<strong>does not scan your private follow relationships</strong>. It presents a separate list based on public posts, follow-back discussions, voluntary submissions and manual review.</p>
+        <ul><li>Best for checking community reports before following or engaging</li><li>You can open the shared list without running a personal scan</li><li>If you want to avoid an account, you can choose to block it</li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="section gallery-section" aria-labelledby="gallery-title">
+    <div class="section-head reveal">
+      <span class="kicker">Inside the extension</span>
+      <h2 id="gallery-title">See how it works, screen by screen</h2>
+      <p>These English interface previews illustrate the six key steps. Browse left or right to see each feature. Sample account details are illustrative, not real scan results.</p>
+    </div>
+    <div class="product-carousel reveal" data-carousel>
+      <div class="carousel-viewport">
+        <div class="carousel-track">
+          <figure class="carousel-slide is-active"><img src="assets/store-en-06-dual-mode.png" alt="Two modes in the English extension"><figcaption><strong>Two modes</strong><span>Personal Account and Community Blocklist are separate.</span></figcaption></figure>
+          <figure class="carousel-slide"><img src="assets/store-en-01-private-detect.png" alt="English Personal Account scan preview"><figcaption><strong>Personal Account mode</strong><span>Scan your current follow relationships while signed in to X.</span></figcaption></figure>
+          <figure class="carousel-slide"><img src="assets/store-en-02-private-list.png" alt="English non-follower results preview"><figcaption><strong>Non-follower list</strong><span>Review results, then select the accounts you want to act on.</span></figcaption></figure>
+          <figure class="carousel-slide"><img src="assets/store-en-03-batch.png" alt="English paced batch processing preview"><figcaption><strong>Paced batch processing</strong><span>Up to 20 accounts per batch, with progress and stop controls.</span></figcaption></figure>
+          <figure class="carousel-slide"><img src="assets/store-en-04-protection.png" alt="English error pause and recovery preview"><figcaption><strong>Error protection</strong><span>Pause if X returns an error rather than continue blindly.</span></figcaption></figure>
+          <figure class="carousel-slide"><img src="assets/store-en-05-community.png" alt="English community blocklist preview"><figcaption><strong>Community Blocklist mode</strong><span>Review shared entries and results before you continue.</span></figcaption></figure>
+        </div>
+      </div>
+      <div class="carousel-controls">
+        <button class="carousel-button" type="button" data-carousel-prev aria-label="Previous screenshot">←</button>
+        <div class="carousel-dots" aria-label="Screenshot carousel pagination">
+          <button class="is-active" type="button" data-carousel-dot="0" aria-label="Screenshot 1"></button>
+          <button type="button" data-carousel-dot="1" aria-label="Screenshot 2"></button>
+          <button type="button" data-carousel-dot="2" aria-label="Screenshot 3"></button>
+          <button type="button" data-carousel-dot="3" aria-label="Screenshot 4"></button>
+          <button type="button" data-carousel-dot="4" aria-label="Screenshot 5"></button>
+          <button type="button" data-carousel-dot="5" aria-label="Screenshot 6"></button>
+        </div>
+        <button class="carousel-button" type="button" data-carousel-next aria-label="Next screenshot">→</button>
       </div>
     </div>
-    <div class="hero-art"><img src="../assets/icon-128.png" alt="Followback Watchdog dog icon"><p>A calmer way to review your X account</p></div>
-  </div>
-  <p class="note"><strong>Language availability:</strong> The English interface is included in the bilingual test build. The public Chrome Web Store listing may still show the older Chinese release until the bilingual update is approved.</p>
-  <section class="content" id="features">
-    <p class="eyebrow">What it does</p><h2>Two modes, one extension</h2>
-    <div class="grid">
-      <article class="panel"><small>Personal Account</small><h3>Check current non-followers</h3><p>Compare your signed-in X account’s Following and Followers lists. Review who you follow but who does not currently follow you back. This is not a historical unfollow tracker.</p></article>
-      <article class="panel"><small>Community Blocklist</small><h3>Review a shared account list</h3><p>Browse a maintained community blocklist, then choose whether to process listed accounts. Submissions are reviewed; inclusion is not proof that an account has violated X rules.</p></article>
-    </div>
-    <div class="steps">
-      <div class="step"><b>1. Choose a mode</b><p>Start a personal scan or open the shared community list.</p></div>
-      <div class="step"><b>2. Review the accounts</b><p>Check the results and choose the accounts you want to act on.</p></div>
-      <div class="step"><b>3. Confirm an action</b><p>Blocks or unfollows are user-confirmed, paced one by one and subject to batch cooldowns.</p></div>
+  </section>
+
+  <section class="section community-focus" aria-labelledby="community-title">
+    <div class="community-focus-grid">
+      <div class="community-focus-copy reveal">
+        <span class="kicker">Why a shared list?</span>
+        <h2 id="community-title">Review community reports before you follow</h2>
+        <p>Personal Account shows<strong>your own current relationships</strong>; Community Blocklist gathers public reports and user submissions in one place.</p>
+        <p>Before following back, engaging or deciding to follow someone, you can check the community list. If there's an account you would rather avoid, you can<strong>choose to block it</strong> without having to interact with it first.</p>
+        <div class="community-caution">Community entries are for reference, not automatic judgments. You always decide and confirm whether to block.</div>
+      </div>
+      <div class="community-focus-visual reveal"><img src="assets/store-en-05-community.png" alt="English community blocklist sample interface"></div>
     </div>
   </section>
-  <p class="caution"><strong>Important:</strong> The extension does not identify who recently unfollowed you, and it is not affiliated with or endorsed by X. Automated interactions may be restricted by X and could result in account limits or suspension. Review X’s terms and use the extension at your discretion.</p>
-  <section class="content">
-    <p class="eyebrow">Useful links</p>
-    <h2>Help, privacy and support</h2>
-    <div class="grid">
-      <article class="panel"><h3>Privacy details</h3><p>Read what the extension stores locally, when community submissions are made, and what permissions are used.</p><p style="margin-top:14px"><a href="privacy.html">Read the English privacy notice ↗</a></p></article>
-      <article class="panel"><h3>Get in touch</h3><p>Send a question, bug report, correction request or feature suggestion to the developer on X.</p><p style="margin-top:14px"><a href="https://x.com/woyongyuangeson" target="_blank" rel="noopener noreferrer">Contact on X ↗</a></p></article>
+
+  <section id="privacy" class="section privacy-section" aria-labelledby="privacy-title">
+    <div class="section-head reveal">
+      <span class="kicker">Privacy</span>
+      <h2 id="privacy-title">It reads current follow relationships without automatically uploading your private lists</h2>
+    </div>
+    <div class="privacy-row reveal">
+      <div><strong>Personal scans read</strong><span>the accounts you follow and the accounts following you.</span></div>
+      <div><strong>Does not read</strong><span>your X password, DMs or post contents.</span></div>
+      <div><strong>No automatic upload</strong><span>Personal scan results are kept locally by default.</span></div>
+      <a href="privacy.html">Read the full privacy notice →</a>
     </div>
   </section>
+
+  <section class="section changelog" aria-labelledby="changelog-title">
+    <div class="section-head reveal">
+      <span class="kicker">Versions</span>
+      <h2 id="changelog-title">Version history</h2>
+      <p>Selected releases that changed how the extension works, newest first.</p>
+    </div>
+    <div class="timeline">
+      <article class="timeline-item reveal"><time>2026-10-04</time><div><strong>v0.2.55</strong><h3>Personal Account mode added</h3><p>Added personal follow-relationship checks alongside the existing community blocklist.</p></div></article>
+      <article class="timeline-item reveal"><time>2026-09-27</time><div><strong>v0.2.25</strong><h3>Community Blocklist improvements</h3><p>Improved batch pacing, cooldowns and handling of problematic accounts.</p></div></article>
+      <article class="timeline-item reveal"><time>2026-09-23</time><div><strong>v0.2.16</strong><h3>Early public release: Community Blocklist</h3><p>Introduced a shared list for users to review, verify and act on voluntarily.</p></div></article>
+    </div>
+  </section>
+
+  <aside class="deal-poster reveal" aria-labelledby="dealPosterTitle"><div class="deal-poster-copy"><span class="deal-poster-kicker">Creator rate estimate · Free</span><h2 id="dealPosterTitle">What could one sponsored post<br><em>from your account be worth?</em></h2><p>Estimate a potential sponsorship rate range using platform, audience size, engagement and content category.</p><div class="deal-poster-platforms"><span>X</span><span>Threads</span><span>YouTube</span><span>TikTok</span></div></div><div class="deal-poster-action"><span class="deal-poster-price"><small>Estimated sponsorship value</small><strong>$ ?</strong></span><a class="deal-poster-button" href="https://jiedanfadan.com/en/value-check">Try the free calculator <span aria-hidden="true">↗</span></a></div></aside>
+
+  <section class="section articles-section" aria-labelledby="articles-title">
+    <div class="articles-head">
+      <h2 id="articles-title">Read more</h2>
+    </div>
+
+    <div class="articles-list">
+      <a class="article-item" href="article/x-twitter-unfollow-checker-community-list/">
+        <span class="article-item-title">How to find non-followers: the two modes explained</span>
+        <span class="article-item-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a class="article-item" href="article/quguangou-x-unfollow-guide/">
+        <span class="article-item-title">Can you see who unfollowed you? What Followback Watchdog actually checks</span>
+        <span class="article-item-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
 </main>
-<footer><div class="wrap foot"><span>© Followback Watchdog · Independent extension for X</span><div class="footlinks"><a href="privacy.html">Privacy</a><a href="https://ko-fi.com/wuhuwang" target="_blank" rel="noopener noreferrer">Support on Ko-fi</a><a href="https://jiedanfadan.com/en/value-check" target="_blank" rel="noopener noreferrer">English rate calculator</a></div></div></footer>
-</body>
-</html>
+<footer class="site-footer"><div class="footer-top"><div><strong>Followback Watchdog</strong><span>Check non-followers, review community lists, block or unfollow</span></div><div class="footer-links"><a href="#privacy">Privacy notice</a><a href="https://jiedanfadan.com/en/">Brand Deal Buddy</a><a href="https://jiedanfadan.com/en/value-check">Rate calculator</a><a href="https://x.com/woyongyuangeson/status/2098974760801870134?s=20" target="_blank" rel="noopener noreferrer">Feedback</a></div></div><details class="compliance"><summary>Additional notes</summary><div class="compliance-copy"><p>Followback Watchdog is not affiliated with X. A non-follower result reflects current follow relationships only; it does not establish that someone previously unfollowed you.</p><p>The extension reads and interacts with X web pages, so interface updates and loading failures can affect its operation. Actions are paced deliberately, but X may still restrict automated activity.</p><p>Before using automated actions, review <a href="https://help.x.com/en/rules-and-policies/x-automation" target="_blank" rel="noopener noreferrer">X's automation rules</a>。</p></div></details></footer>
+<script src="app.js" defer></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"52970abb04f5446e87ad08dc6fbe6f1e","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body></html>
