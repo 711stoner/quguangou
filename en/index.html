@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Followback Watchdog — Non-Follower Checker &amp; Community Blocklists for X</title>
+  <meta name="description" content="Check who does not currently follow you back on X, review a community blocklist, and handle selected accounts in paced batches with confirmation.">
+  <link rel="canonical" href="https://711stoner.github.io/quguangou/en/">
+  <link rel="icon" href="../assets/icon-32.png" sizes="32x32">
+  <meta property="og:title" content="Followback Watchdog | X Non-Follower Checker">
+  <meta property="og:description" content="Personal follower comparisons, community blocklists, and user-confirmed actions in paced batches.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://711stoner.github.io/quguangou/en/">
+  <style>
+    :root{color-scheme:light;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#29231d;background:#fffcf7}
+    *{box-sizing:border-box}body{margin:0;line-height:1.6}a{color:inherit;text-decoration-thickness:1px;text-underline-offset:3px}
+    .wrap{max-width:1020px;margin:auto;padding:0 24px}header{border-bottom:1px solid #eadfd2;background:#fff9ef}
+    nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:16px;font-weight:850;letter-spacing:-.02em}
+    .brand img{width:42px;height:42px;border-radius:12px}.links{display:flex;align-items:center;gap:22px;font-size:13px;font-weight:650}
+    .links a{white-space:nowrap}.hero{padding:88px 0 68px;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:40px}
+    .eyebrow{color:#9c4d18;text-transform:uppercase;letter-spacing:.1em;font-size:12px;font-weight:850;margin:0 0 16px}
+    h1{font-size:clamp(38px,5.5vw,65px);line-height:1.08;letter-spacing:-.06em;margin:0 0 24px}
+    .lede{font-size:17px;color:#5d554e;max-width:600px;margin:0 0 30px}
+    .actions{display:flex;flex-wrap:wrap;gap:12px}.button{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:12px;font-size:14px;font-weight:760;text-decoration:none}
+    .primary{background:#bd4f12;color:white}.secondary{background:#fff;border:1px solid #ddcbbb}
+    .hero-art{background:#fff0da;border:1px solid #edd5bb;border-radius:26px;padding:44px 20px;text-align:center}
+    .hero-art img{width:min(70%,240px);height:auto;filter:drop-shadow(0 12px 18px #8b501925)}
+    .hero-art p{font-size:13px;font-weight:700;color:#85512f;margin:18px 0 0}
+    .note{padding:16px 20px;border-radius:12px;background:#f8efe4;border:1px solid #f1dfcb;color:#6f4930;font-size:13px;margin:0 0 60px}
+    section.content{padding:0 0 80px}h2{font-size:29px;letter-spacing:-.04em;margin:0 0 25px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .panel{background:white;border:1px solid #eadfd2;padding:26px;border-radius:19px}
+    .panel small{display:block;color:#ac5e28;font-weight:800;margin-bottom:9px;text-transform:uppercase;letter-spacing:.08em}
+    .panel h3{font-size:22px;margin:0 0 12px;line-height:1.3}.panel p{color:#5d554e;margin:0}
+    .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}
+    .step{border-top:2px solid #c85b1a;padding-top:17px}.step b{font-size:16px}.step p{color:#625b54;font-size:14px}
+    .caution{border-left:3px solid #b96024;padding:17px 20px;margin:0 0 72px;background:#fff7ed;font-size:14px;color:#5d534a}
+    footer{background:#f6eee4;border-top:1px solid #e9dac9;padding:31px 0;color:#67574b;font-size:13px}
+    .foot{display:flex;gap:20px;justify-content:space-between;flex-wrap:wrap}.footlinks{display:flex;gap:20px;flex-wrap:wrap}
+    @media(max-width:720px){nav{height:auto;min-height:75px;padding:12px 0}.links{gap:14px}.hero{grid-template-columns:1fr;padding:54px 0 40px}.hero-art{padding:22px}.hero-art img{width:160px}.grid,.steps{grid-template-columns:1fr}.note{margin-bottom:45px}h2{font-size:26px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav aria-label="Main navigation">
+      <a class="brand" href="./"><img src="../assets/icon-128.png" alt="">Followback Watchdog</a>
+      <div class="links"><a href="#features">Features</a><a href="privacy.html">Privacy</a><a href="https://x.com/woyongyuangeson" target="_blank" rel="noopener noreferrer">Contact</a></div>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">X (formerly Twitter) · Browser extension</p>
+      <h1>Know who doesn’t follow you back.</h1>
+      <p class="lede">Followback Watchdog compares your current Following and Followers lists, lets you review a community blocklist, and gives you control over what happens next.</p>
+      <div class="actions">
+        <a class="button primary" href="https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=en" target="_blank" rel="noopener noreferrer">View on Chrome Web Store ↗</a>
+        <a class="button secondary" href="https://github.com/711stoner/quguangou/releases/latest" target="_blank" rel="noopener noreferrer">See releases ↗</a>
+      </div>
+    </div>
+    <div class="hero-art"><img src="../assets/icon-128.png" alt="Followback Watchdog dog icon"><p>A calmer way to review your X account</p></div>
+  </div>
+  <p class="note"><strong>Language availability:</strong> The English interface is included in the bilingual test build. The public Chrome Web Store listing may still show the older Chinese release until the bilingual update is approved.</p>
+  <section class="content" id="features">
+    <p class="eyebrow">What it does</p><h2>Two modes, one extension</h2>
+    <div class="grid">
+      <article class="panel"><small>Personal Account</small><h3>Check current non-followers</h3><p>Compare your signed-in X account’s Following and Followers lists. Review who you follow but who does not currently follow you back. This is not a historical unfollow tracker.</p></article>
+      <article class="panel"><small>Community Blocklist</small><h3>Review a shared account list</h3><p>Browse a maintained community blocklist, then choose whether to process listed accounts. Submissions are reviewed; inclusion is not proof that an account has violated X rules.</p></article>
+    </div>
+    <div class="steps">
+      <div class="step"><b>1. Choose a mode</b><p>Start a personal scan or open the shared community list.</p></div>
+      <div class="step"><b>2. Review the accounts</b><p>Check the results and choose the accounts you want to act on.</p></div>
+      <div class="step"><b>3. Confirm an action</b><p>Blocks or unfollows are user-confirmed, paced one by one and subject to batch cooldowns.</p></div>
+    </div>
+  </section>
+  <p class="caution"><strong>Important:</strong> The extension does not identify who recently unfollowed you, and it is not affiliated with or endorsed by X. Automated interactions may be restricted by X and could result in account limits or suspension. Review X’s terms and use the extension at your discretion.</p>
+  <section class="content">
+    <p class="eyebrow">Useful links</p>
+    <h2>Help, privacy and support</h2>
+    <div class="grid">
+      <article class="panel"><h3>Privacy details</h3><p>Read what the extension stores locally, when community submissions are made, and what permissions are used.</p><p style="margin-top:14px"><a href="privacy.html">Read the English privacy notice ↗</a></p></article>
+      <article class="panel"><h3>Get in touch</h3><p>Send a question, bug report, correction request or feature suggestion to the developer on X.</p><p style="margin-top:14px"><a href="https://x.com/woyongyuangeson" target="_blank" rel="noopener noreferrer">Contact on X ↗</a></p></article>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap foot"><span>© Followback Watchdog · Independent extension for X</span><div class="footlinks"><a href="privacy.html">Privacy</a><a href="https://ko-fi.com/wuhuwang" target="_blank" rel="noopener noreferrer">Support on Ko-fi</a><a href="https://jiedanfadan.com/en/value-check" target="_blank" rel="noopener noreferrer">English rate calculator</a></div></div></footer>
+</body>
+</html>
