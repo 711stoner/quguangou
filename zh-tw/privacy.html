@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-TW"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>取關狗｜隱私權說明</title><link rel="canonical" href="https://711stoner.github.io/quguangou/zh-tw/privacy.html">
+<link rel="stylesheet" href="styles.css"><style>body{background:#fffcf8}.privacy-main{max-width:850px;padding-top:45px;padding-bottom:90px}.privacy-main h1{font-size:clamp(32px,5vw,49px)}.privacy-main h2{font-size:25px;margin:38px 0 12px}.privacy-main p,.privacy-main li{font-size:15px;color:#5e5149}.privacy-main ul{padding-left:23px}.privacy-main li{margin:9px 0}.privacy-main a{color:#a75120}.privacy-main code{word-break:break-word;font-size:13px}.privacy-main .updated{color:#88786d;font-size:13px}</style>
+</head><body>
+<header class="topbar"><a class="brand" href="./"><img src="../assets/logo.svg" alt=""><span>取關狗</span></a><a href="./">← 返回繁體中文首頁</a></header>
+<main class="privacy-main">
+<h1>取關狗｜隱私權說明</h1><p class="updated">資料內容依現有擴充功能行為整理；最後核對：2026 年 11 月 1 日。</p>
+<h2>會處理哪些資訊？</h2>
+<p>取關狗提供「社群封鎖名單」及「個人帳號」兩種模式。在社群模式開始任務後，擴充功能會開啟 X（x.com）帳號頁面，以查找操作按鈕、封鎖選定帳號並檢查結果。在個人帳號模式按下「開始檢查」後，擴充功能會讀取目前登入帳號的公開個人資料、追蹤名單及粉絲名單，找出你目前追蹤、但沒有回追你的帳號。</p>
+<p>個人模式不追蹤歷史變化，也無法判斷誰最近取消追蹤你。擴充功能不會要求、讀取或儲存你的 X 密碼、驗證 Cookie、私人訊息或貼文內容。</p>
+<h2>資料保存在何處？</h2>
+<p>瀏覽器本機儲存空間可能保存處理進度、目標帳號、執行結果、個人掃描狀態、追蹤名單分頁位置（cursor）及最後開啟的介面，以便面板關閉或背景程序中斷後繼續操作。分頁位置僅供從中斷處繼續讀取。授權資訊、Cookie 與 CSRF 請求標頭不會寫入本機掃描紀錄。</p>
+<p>掃描期間，追蹤名單與粉絲名單會暫時保存在本機，以支援中斷恢復。掃描完成後會清除完整的暫存名單；僅保留顯示結果所需的帳號名稱、統計資料與未回追候選名單等內容。解除安裝擴充功能或清除其資料可移除本機紀錄。</p>
+<h2>社群共享與資料傳送</h2>
+<p>社群封鎖名單由隨附紀錄與使用者主動提交、經管理員審核的資料組成。在冷卻期間或特定處理階段，擴充功能可能詢問你是否要共享這次成功封鎖或取消追蹤的帳號。</p>
+<p>只有你明確按下「全部加入」等提交確認按鈕後，本次成功處理的 X 使用者名稱才會送出。系統另會提交本機隨機產生的匿名識別碼以減少重複；它不是你的 X 帳號，也不能用來登入。提交內容須經審核才可能出現在公開名單中。</p>
+<p>擴充功能不會因你使用個人帳號模式，就自動上傳你的 X 使用者名稱、密碼、Cookie、私人訊息、貼文內容或未經同意的整份掃描結果。</p>
+<h2>為什麼需要權限？</h2>
+<ul>
+<li><code>storage</code>：在本機保存社群任務進度與個人掃描狀態。</li>
+<li><code>alarms</code>：必要時喚醒背景程序，恢復長時間的掃描。</li>
+<li><code>sidePanel</code>（Chrome）：在側邊面板顯示擴充功能。</li>
+<li><code>scripting</code>：讀取必要的 X 頁面狀態，並在你確認後執行封鎖或取消追蹤。</li>
+<li><code>https://x.com/*</code>：存取目前帳號、追蹤名單及要處理的帳號頁面。</li>
+<li><code>https://quguangou-community-api.juejiangfm.workers.dev/*</code>：讀取社群名單，及提交你確認共享的處理結果。</li>
+</ul>
+<h2>操作由你掌控</h2>
+<p>掃描、封鎖、取消追蹤及社群提交都不會在未經你操作的情況下自行啟動。個人掃描須由你按下開始；掃描完成後，可以查看並選取候選帳號。封鎖與取消追蹤另有確認步驟，並依批次執行。社群資料提交亦需明確選擇。</p>
+<h2>資料使用限制</h2>
+<p>透過瀏覽器權限取得的資訊，僅用於本說明所述功能，並遵守適用的瀏覽器商店使用者資料及用途限制規定。</p>
+<h2>可選的廣告報價試算連結</h2>
+<p>在冷卻期間或任務完成後，擴充功能可能提供前往商单搭档廣告價值試算工具的連結（<code>jiedanfadan.com/en/value-check</code>）。只有點擊後才會開啟，現有連結頁面為英文。擴充功能不會自動把你的 X 帳號資訊、掃描結果或任務紀錄傳送至該網站；連結只帶固定的活動來源參數。</p>
+<h2>聯絡開發者</h2>
+<p>開發者：siyiwang。可前往 <a href="https://x.com/woyongyuangeson" target="_blank" rel="noopener noreferrer">X 聯絡頁面</a> 或返回 <a href="./">取關狗繁體中文網站</a>。</p>
+</main></body></html>
