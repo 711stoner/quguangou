@@ -5,7 +5,7 @@ src=Path(__file__).resolve().parent.parent
 destinations=[src/'dist']
 languages=('zh_CN','zh_TW','zh_HK','en','ja','ko','fr','es','ms','vi','id')
 m=json.loads((src/'manifest.json').read_text())
-assert m['version']=='0.2.74'
+assert re.fullmatch(r'\d+\.\d+\.\d+', m['version']), 'Invalid manifest version'
 assert m['default_locale']=='zh_CN'
 assert m['name']=='__MSG_extensionName__'
 assets=[]
@@ -35,7 +35,7 @@ for locale in ['ja','ko','fr','es','ms','vi','id']:
 for target in destinations:
  target.mkdir(parents=True,exist_ok=True)
  for browser in ['chrome','edge','firefox']:
-  name=f'quguangou-{browser}-v0.2.74-zh-cn-zh-tw-en-ja-ko-fr-es-ms-vi-id.zip'
+  name=f'quguangou-{browser}.zip'
   out=target/name
   # Firefox uses a background module and an action popup, NOT the Chromium
   # sidePanel permission, side_panel manifest field or service_worker key.
@@ -74,7 +74,7 @@ for target in destinations:
    assert 'manifest.json' in names
    assert len(names)==len(set(names))
    archived_manifest=json.loads(archive.read('manifest.json'))
-   assert archived_manifest['version']=='0.2.74'
+   assert archived_manifest['version']==m['version']
    if browser=='firefox':
     assert 'sidePanel' not in archived_manifest['permissions']
     assert 'side_panel' not in archived_manifest
@@ -90,15 +90,18 @@ for target in destinations:
     assert f'_locales/{lang}/messages.json' in names
   print('PACKAGE',out,'files',len(assets),'size',out.stat().st_size,'sha256',hashlib.sha256(out.read_bytes()).hexdigest()[:24])
 
-# Copy the exact validated ZIP bytes to the release drive. Rebuilding twice
-# can produce different archive timestamps even when all source files match.
-if len(destinations)>=2:
+# The three fixed filenames are updated in place. No versioned ZIPs are created.
+release_parent=Path('/Volumes/15055751248/vibe的脚本/04-发布包')
+if release_parent.is_dir():
  from shutil import copyfile
+ release_dir=release_parent/'取关狗'
+ release_dir.mkdir(parents=True, exist_ok=True)
  for browser in ['chrome','edge','firefox']:
-  name=f'quguangou-{browser}-v0.2.74-zh-cn-zh-tw-en-ja-ko-fr-es-ms-vi-id.zip'
+  name=f'quguangou-{browser}.zip'
   original=destinations[0]/name
-  for release_dir in destinations[1:]:
-   published=release_dir/name
-   copyfile(original,published)
-   assert hashlib.sha256(original.read_bytes()).digest()==hashlib.sha256(published.read_bytes()).digest()
-   print('VERIFIED_COPY',published)
+  published=release_dir/name
+  copyfile(original,published)
+  assert hashlib.sha256(original.read_bytes()).digest()==hashlib.sha256(published.read_bytes()).digest()
+  print('FIXED_RELEASE_UPDATED',published,'version',m['version'])
+else:
+ print('NOTE: 外置硬盘未连接，只更新了桌面取关狗/dist 下的固定安装包。')
