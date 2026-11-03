@@ -2604,7 +2604,9 @@ async function performProfileActionInPage(target, mode = "community", sourceUser
 
   const pageText = () => document.body?.innerText || "";
   const unavailablePattern = /This account doesn.?t exist|Account suspended|账号不存在|帳戶不存在|账号已被冻结|アカウントは存在しません/i;
-  const restrictedPattern = /This account is temporarily restricted|Caution:\s*This account is temporarily restricted|此账户已被暂时限制使用|此帐户已被暂时限制使用|此账号已被暂时限制使用|此帳戶已被暫時限制使用/i;
+  // X may split this heading across lines/elements. Treat whitespace as a separator.
+  const restrictedPattern = /This\s+account\s+is\s+temporarily\s+restricted|此账户已被暂时限制使用|此帐户已被暂时限制使用|此账号已被暂时限制使用|此帳戶已被暫時限制使用/i;
+  const restrictedGateVisible = () => restrictedPattern.test(pageText().replace(/\s+/g, " "));
   const loginPattern = /Log in to X|Sign in to X|登录 X|登入 X/i;
   const blockPattern = /^(Block\b|拉黑|封鎖|ブロック|차단|Bloquear\b|Bloquer\b|Blockieren\b|Заблокировать)/i;
   const unblockPattern = /^(Unblock\b|取消拉黑|解除封鎖|ブロック解除|차단 해제|Desbloquear\b|Débloquer\b|Entsperren\b|Разблокировать)/i;
@@ -2673,11 +2675,18 @@ async function performProfileActionInPage(target, mode = "community", sourceUser
     }
   }
 
-  if (mode === "personal" && action === "unfollow" && restrictedPattern.test(pageText())) {
-    // X may put a restricted-profile notice in front of the target account.
-    // Do not accept generic cookie, legal, payment or subscription agreements.
-    // Only the actual X restricted-profile gate, on the verified target URL,
-    // is eligible for one automatic acknowledgement.
+  if (mode === "personal" && action === "unfollow") {
+    // X can display a loading skeleton first. Wait briefly for either its
+    // restricted gate or an actual profile control before deciding what to do.
+    await waitFor(() => {
+      if (restrictedGateVisible()) return true;
+      if (document.querySelector('[data-testid$="-unfollow"], [data-testid$="-follow"]')) return true;
+      return [...document.querySelectorAll('button, [role="button"]')]
+        .some((node) => visible(node) && /^(Following|正在关注|正在關注|フォロー中|팔로잉)$/i.test((node.innerText || "").trim()));
+    }, 8000);
+  }
+
+  if (mode === "personal" && action === "unfollow" && restrictedGateVisible()) {
     const skipRestricted = (reason) => ({
       status: "skipped_restricted",
       failureKind: "restricted",
@@ -2685,29 +2694,50 @@ async function performProfileActionInPage(target, mode = "community", sourceUser
       reason: reason || "X 限制了该账号的资料页，暂时无法安全取关。已跳过，请稍后手动处理。"
     });
     if (consentPreviouslyClicked) {
-      return skipRestricted("点击同意后仍未进入目标主页，无法确认关注状态。为避免误操作，已跳过。");
+      // Clicking "Yes, view profile" can trigger a slow React transition.
+      // Do not skip immediately after reinjection just because the gate is
+      // still visible for a moment. Never click consent twice.
+      const profileReady = await waitFor(() => {
+        if (restrictedGateVisible()) return null;
+        const action = document.querySelector('[data-testid$="-unfollow"], [data-testid$="-follow"]');
+        if (action && visible(action)) return true;
+        return [...document.querySelectorAll('button, [role="button"]')]
+          .some((node) => visible(node) && /^(Following|正在关注|正在關注|フォロー中|팔로잉)$/i.test((node.innerText || "").trim())) || null;
+      }, 10000);
+      if (!profileReady) {
+        return skipRestricted("已经点击 X 的「查看主页」，但页面仍未显示可核验的关注状态。已跳过，建议稍后手动处理。");
+      }
+    } else {
+      // A generic agreement might authorize unrelated terms or purchases.
+      // Click only a profile-view action on X's verified restricted notice.
+      const viewProfileLabel = /^(?:Yes,?\s*view(?:\s+this)?\s+profile|Yes,?\s*show\s+profile|View\s+profile|是的[，,]?查看(?:个人资料|個人資料|主页|主頁)|同意并查看(?:主页|个人资料)|同意並查看(?:主頁|個人資料)|继续查看(?:主页|个人资料)|繼續查看(?:主頁|個人資料)|プロフィールを表示|このプロフィールを表示|프로필 보기|Ver perfil|Voir le profil|Lihat profil|Xem hồ sơ)$/i;
+      const containers = [...document.querySelectorAll('[role="dialog"], [data-testid="primaryColumn"], main, [data-testid="cellInnerDiv"]')]
+        .filter(visible)
+        .filter((node) => restrictedPattern.test(String(node.innerText || "").replace(/\s+/g, " ")));
+      const inside = containers.length ? containers : [document.body];
+      const candidates = (nodes) => [...new Set(nodes.flatMap((node) => [...node.querySelectorAll('button, [role="button"]')]))]
+        .filter(visible)
+        .filter((node) => {
+          const label = ((node.innerText || "").trim() || (node.getAttribute("aria-label") || "").trim()).replace(/\s+/g, " ");
+          return viewProfileLabel.test(label);
+        });
+      let buttons = candidates(inside);
+      // Some X versions render the warning in main, but portal its CTA under
+      // a sibling node. Exact CTA text + confirmed warning is still required.
+      if (!buttons.length && inside[0] !== document.body) buttons = candidates([document.body]);
+      if (buttons.length !== 1) {
+        return skipRestricted("X 显示账号限制提示，但未能确认唯一的「查看主页」按钮。已跳过，不会点击其他同意或授权按钮。");
+      }
+      await humanPauseInPage(400, 750);
+      buttons[0].click();
+      // The background worker must verify owner, target and whitelist again.
+      // Clicking View Profile is not an unfollow success.
+      return {
+        status: "retry_profile_after_restricted_consent",
+        failureKind: "restricted_consent",
+        reason: "已点击 X 的「查看主页」，正在加载账号并重新核对关注状态"
+      };
     }
-    const agreeLabel = /^(?:Agree|I agree|Yes, view profile|Yes, view this profile|Yes, show profile|View profile|Yes, continue|同意|我同意|是的，查看个人资料|仍要查看|继续查看|查看个人资料|查看个人主页|檢視個人資料|同意並繼續|同意并继续|表示する|プロフィールを表示|동의|프로필 보기|Acepto|Ver perfil|J’accepte|Voir le profil|Setuju|Lihat profil|Đồng ý|Xem hồ sơ)$/i;
-    const scopes = [...document.querySelectorAll('[role="dialog"], [data-testid="primaryColumn"], main')]
-      .filter(visible)
-      .filter((node) => restrictedPattern.test(node.innerText || ""));
-    const agreeButton = scopes.flatMap((node) => [...node.querySelectorAll('button, [role="button"]')])
-      .filter(visible)
-      .find((node) => {
-        const label = ((node.innerText || "").trim() || (node.getAttribute("aria-label") || "").trim()).replace(/\s+/g, " ");
-        return agreeLabel.test(label);
-      });
-    if (!agreeButton) return skipRestricted("X 显示账号限制提示，但未找到明确的「同意／查看个人主页」按钮。已跳过，不会点击其他授权或订阅按钮。");
-    await humanPauseInPage(400, 750);
-    agreeButton.click();
-    // The app may navigate the same tab. A one-time reinjection from the
-    // background verifies the account, target, whitelist, and Following state.
-    // Clicking Agree is never reported as an unfollow success.
-    return {
-      status: "retry_profile_after_restricted_consent",
-      failureKind: "restricted_consent",
-      reason: "已点击 X 账号限制提示中的同意，正在重新确认目标主页和关注状态"
-    };
   }
 
   if (mode === "personal" && action === "unfollow") {
