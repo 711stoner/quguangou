@@ -61,9 +61,10 @@
             <div class="progress-track"><div id="personalProgressBar"></div></div>
             <p id="personalProgressText" class="progress-text"></p>
           </div>
+          <p id="personalStallHelp" class="personal-note personal-stall-help hidden" role="status" aria-live="polite"></p>
           <button id="personalScanButton" class="primary" type="button">スキャン開始</button>
-          <button id="personalCancelScanButton" class="secondary hidden" type="button">スキャンを一時停止（進捗を保存）</button>
           <button id="personalForceRestartButton" class="secondary personal-force-restart hidden" type="button">スキャン画面を強制的に開き直す（進捗を保持）</button>
+          <button id="personalCancelScanButton" class="secondary hidden" type="button">スキャンを一時停止（進捗を保存）</button>
           <p id="personalRecoveryHint" class="personal-note hidden" role="status"></p>
           <p class="personal-note">Xでエラーが発生すると、拡張機能は数回だけ再試行します。読み込みが回復しない場合は進捗を保存して停止します。Xのリストが正常に表示されるようになったら「スキャン再開」を選んでください。</p>
           <p id="personalScanNote" class="personal-note">スキャン中はXの専用ウィンドウが開きます。対象が多い場合は時間がかかります。現在の処理が終わるまでウィンドウを閉じたり、タブを切り替えたりしないでください。</p>

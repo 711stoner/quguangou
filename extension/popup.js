@@ -1,4 +1,5 @@
 import { getScanRestartText } from "./lib/scan-restart-text.js";
+import { scanStallKind } from "./lib/scan-stall-help.js";
 import { getCompletedScanCountMismatch } from "./lib/relations.js";
 import { getValuePromoProbability } from "./lib/value-promo.js";
 import { planCommunityPromptSchedule } from "./lib/community-share.js";
@@ -12,6 +13,7 @@ let blocklist = null;
 let blocklistPromise = null;
 let currentJob = null;
 let currentPersonalScan = null;
+let scanWindowHealth = null;
 let selectedPersonalScanId = null;
 const selectedPersonalHandles = new Set();
 let pendingPersonalAction = "block";
@@ -416,6 +418,15 @@ function renderPersonalScan(scan = currentPersonalScan) {
         : "";
 
   const restartCopy = getScanRestartText(document.documentElement.lang);
+  const stallKind = scanStallKind(scan, scanWindowHealth);
+  const recoveryHelp = $("#personalStallHelp");
+  recoveryHelp.classList.toggle("hidden", !running && !paused);
+  recoveryHelp.classList.toggle("personal-help-attention", stallKind === "missing" || stallKind === "stalled");
+  recoveryHelp.textContent = rateLimitCooling ? restartCopy.helpCooling
+    : paused ? restartCopy.helpPaused
+    : stallKind === "missing" ? restartCopy.helpMissing
+    : stallKind === "stalled" ? restartCopy.helpStalled
+    : restartCopy.helpNormal;
   const forceButton = $("#personalForceRestartButton");
   forceButton.classList.toggle("hidden", !running && !paused);
   forceButton.textContent = rateLimitCooling ? restartCopy.schedule : restartCopy.restart;
@@ -460,12 +471,14 @@ function renderPersonalScan(scan = currentPersonalScan) {
     const cursorFromCheckpoint = Boolean(scan?.progress?.[activeRelation + "CursorResumeFromCheckpoint"]);
     const cursorResumePages = Number(scan?.progress?.[activeRelation + "CursorResumePages"] || 0);
     const cursorCheckpointReady = Boolean(scan?.progress?.[activeRelation + "Cursor"]);
-    const scanPatienceNote = "如果关注数量较多，不建议切换其他页面，请耐心在此等待完成；因为采用拟人化读取方式，读取速度不会特别快。";
+    const scanPatienceNote = "如果进度连续 3 分钟没有变化，或找不到 X 扫描窗口，请看进度条下面的恢复办法。";
 
     $("#personalScanSummary").textContent = rateLimitCooling
       ? "@" + (scan.username || "当前账号") + " · HTTP 429 冷却中，最早恢复：" + retryTime
+      : (stallKind === "missing" || stallKind === "stalled")
+      ? "@" + (scan.username || "当前账号") + " · 读取暂时没有进展"
       : cursorResumeActive
-      ? "@" + (scan.username || "当前账号") + (cursorFromCheckpoint ? " · 正在从上次位置继续" : " · 正在快速读取")
+      ? "@" + (scan.username || "当前账号") + (cursorFromCheckpoint ? " · 正在从上次位置继续" : " · 正在读取")
       : resumeActive
         ? "@" + (scan.username || "当前账号") + " · 正在定位旧版断点"
         : recovering
@@ -551,11 +564,8 @@ function renderPersonalScan(scan = currentPersonalScan) {
     $("#personalScanNote").textContent = "检测只读取当前关注关系，不会自动取关或拉黑任何账号。";
   }
 
-  if (running || paused) {
-    $("#personalScanNote").textContent = rateLimitCooling
-      ? restartCopy.cooling
-      : paused ? restartCopy.paused : restartCopy.running;
-  }
+  // Keep the actual progress/error explanation above; the previous generic
+  // replacement hid the reason for a stalled scan.
 
   $("#personalResultView").classList.toggle("hidden", !completed || completionNeedsValidation || completionNeedsFullRescan);
   if (completed) {
@@ -1020,6 +1030,11 @@ setInterval(async () => {
     const snapshot = await chrome.storage.local.get(PERSONAL_SCAN_STORAGE_KEY);
     const savedScan = snapshot[PERSONAL_SCAN_STORAGE_KEY] || null;
     if (savedScan) acceptPersonalScanUpdate(savedScan);
+    if (currentPersonalScan?.status === "running") {
+      const health = await chrome.runtime.sendMessage({ type: "GET_PERSONAL_SCAN_HEALTH" });
+      if (health?.ok) scanWindowHealth = health;
+      renderPersonalScan(currentPersonalScan);
+    }
   } catch (error) {
     console.warn("[取关狗] 检测进度同步暂时失败", error);
   } finally {

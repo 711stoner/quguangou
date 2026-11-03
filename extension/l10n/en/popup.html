@@ -62,9 +62,10 @@
             <div class="progress-track"><div id="personalProgressBar"></div></div>
             <p id="personalProgressText" class="progress-text"></p>
           </div>
+          <p id="personalStallHelp" class="personal-note personal-stall-help hidden" role="status" aria-live="polite"></p>
           <button id="personalScanButton" class="primary" type="button">Start scan</button>
-          <button id="personalCancelScanButton" class="secondary hidden" type="button">Pause scan (save progress)</button>
           <button id="personalForceRestartButton" class="secondary personal-force-restart hidden" type="button">Force restart scan window (keep progress)</button>
+          <button id="personalCancelScanButton" class="secondary hidden" type="button">Pause scan (save progress)</button>
           <p id="personalRecoveryHint" class="personal-note hidden" role="status"></p>
           <p class="personal-note">If X returns an error, the extension will retry a few times. If X still fails to load, the scan will pause and save your progress. Once the X lists are working again, select Resume scan to pick up where you left off.</p>
           <p id="personalScanNote" class="personal-note">Starting a scan opens a dedicated X window. Large lists can take time to scan. Keep the window open and avoid switching tabs until the current stage finishes.</p>

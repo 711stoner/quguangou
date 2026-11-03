@@ -598,6 +598,21 @@ async function setPersonalScan(scan, notify = true, allowTerminalResume = false)
         Array.isArray(next.partial?.followers) ? next.partial.followers.length : 0
       );
     }
+    // Heartbeat saves happen even when the X list is frozen. Only advance this
+    // timestamp when new account identities are actually saved.
+    if (next?.id && next.status === "running") {
+      const oldCounts = ["following", "followers"].map((relation) => Math.max(
+        Number(existing?.progress?.[relation] || 0),
+        Array.isArray(existing?.partial?.[relation]) ? existing.partial[relation].length : 0
+      ));
+      const newCounts = ["following", "followers"].map((relation) => Math.max(
+        Number(next.progress?.[relation] || 0),
+        Array.isArray(next.partial?.[relation]) ? next.partial[relation].length : 0
+      ));
+      const advanced = existing?.id === next.id && newCounts.some((count, index) => count > oldCounts[index]);
+      next.lastAccountProgressAt = advanced ? Date.now()
+        : Number(next.lastAccountProgressAt || existing?.lastAccountProgressAt || Date.now());
+    }
     if (scan && next !== scan) Object.assign(scan, next);
     await chrome.storage.local.set({ [PERSONAL_SCAN_KEY]: next });
     if (notify) {
@@ -3147,6 +3162,21 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     getBlocklist(message.locale)
       .then((blocklist) => sendResponse({ ok: true, blocklist }))
       .catch((error) => sendResponse({ ok: false, error: error.message }));
+    return true;
+  }
+  if (message?.type === "GET_PERSONAL_SCAN_HEALTH") {
+    // This is a lightweight read: no large checkpoint hydration or network calls.
+    // A numeric tab ID alone cannot prove that the extension's scan window exists.
+    (async () => {
+      const saved = await chrome.storage.local.get(PERSONAL_SCAN_KEY);
+      const scan = saved[PERSONAL_SCAN_KEY] || null;
+      const verified = scan?.status === "running" && scan?.workerTabId
+        ? await getVerifiedPersonalScanWorker(scan)
+        : null;
+      sendResponse({ ok: true, scanId: scan?.id || null,
+        running: scan?.status === "running", windowPresent: Boolean(verified),
+        lastAccountProgressAt: Number(scan?.lastAccountProgressAt || 0) });
+    })().catch((error) => sendResponse({ ok: false, error: error?.message || String(error) }));
     return true;
   }
   if (message?.type === "GET_PERSONAL_SCAN") {

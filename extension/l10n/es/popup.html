@@ -61,9 +61,10 @@
             <div class="progress-track"><div id="personalProgressBar"></div></div>
             <p id="personalProgressText" class="progress-text"></p>
           </div>
+          <p id="personalStallHelp" class="personal-note personal-stall-help hidden" role="status" aria-live="polite"></p>
           <button id="personalScanButton" class="primary" type="button">Iniciar análisis</button>
-          <button id="personalCancelScanButton" class="secondary hidden" type="button">Pausar análisis (guardar avance)</button>
           <button id="personalForceRestartButton" class="secondary personal-force-restart hidden" type="button">Forzar reapertura del análisis (conservar progreso)</button>
+          <button id="personalCancelScanButton" class="secondary hidden" type="button">Pausar análisis (guardar avance)</button>
           <p id="personalRecoveryHint" class="personal-note hidden" role="status"></p>
           <p class="personal-note">Si X devuelve un error, la extensión reintentará unas pocas veces. Si sigue sin cargar, pausará el análisis y guardará el avance. Cuando las listas de X vuelvan a funcionar, selecciona Reanudar análisis.</p>
           <p id="personalScanNote" class="personal-note">Al comenzar se abre una ventana de X exclusiva para el análisis. Las listas grandes pueden tardar. Mantenla abierta y evita cambiar de pestaña hasta terminar la fase actual.</p>

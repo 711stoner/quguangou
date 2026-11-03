@@ -63,9 +63,10 @@
             <div class="progress-track"><div id="personalProgressBar"></div></div>
             <p id="personalProgressText" class="progress-text"></p>
           </div>
+          <p id="personalStallHelp" class="personal-note personal-stall-help hidden" role="status" aria-live="polite"></p>
           <button id="personalScanButton" class="primary" type="button">開始檢查</button>
-          <button id="personalCancelScanButton" class="secondary hidden" type="button">暫停檢查（保留進度）</button>
           <button id="personalForceRestartButton" class="secondary personal-force-restart hidden" type="button">強制重開掃描視窗（保留進度）</button>
+          <button id="personalCancelScanButton" class="secondary hidden" type="button">暫停檢查（保留進度）</button>
           <p id="personalRecoveryHint" class="personal-note hidden" role="status"></p>
           <p class="personal-note">X 列表報錯時擴充功能會限次自動嘗試恢復；若連續失敗則暫停並儲存斷點。等 X 列表恢復正常後，需要手動點擊“繼續檢查（從斷點恢復）”。</p>
           <p id="personalScanNote" class="personal-note">開始檢查後會開啟一個專用 X 掃描視窗。如果追蹤數量較多，不建議切換其他頁面，請耐心在此等待完成；因為採用擬人化讀取，速度不會特別快。</p>
