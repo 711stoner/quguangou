@@ -12,9 +12,9 @@
     "message": "Kiểm tra theo dõi"
   },
   "extensionDescription": {
-    "message": "Kiểm tra tài khoản X không theo dõi lại bạn, quản lý danh sách bảo vệ và danh sách chặn cộng đồng theo từng đợt."
+    "message": "Kiểm tra ai không theo dõi lại bạn trên X (Twitter). So sánh danh sách theo dõi, bảo vệ tài khoản và xem danh sách chặn cộng đồng."
   },
   "extensionDescriptionChrome": {
-    "message": "Kiểm tra tài khoản X không theo dõi lại bạn, quản lý danh sách bảo vệ và danh sách chặn cộng đồng theo từng đợt."
+    "message": "Kiểm tra ai không theo dõi lại bạn trên X (Twitter). So sánh danh sách theo dõi, bảo vệ tài khoản và xem danh sách chặn cộng đồng."
   }
 }

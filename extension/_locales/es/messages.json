@@ -1,20 +1,20 @@
 {
   "extensionName": {
-    "message": "Quién no te sigue en X | Seguimientos"
+    "message": "Quién no me sigue en X (Twitter) | Followback"
   },
   "extensionNameChrome": {
-    "message": "Quién no te sigue en X | Seguimientos"
+    "message": "Quién no me sigue en X (Twitter) | Followback"
   },
   "extensionNameEdge": {
-    "message": "Quién no te sigue en X | Seguimientos"
+    "message": "Quién no me sigue en X (Twitter) | Followback"
   },
   "extensionShortName": {
     "message": "Seguidores X"
   },
   "extensionDescription": {
-    "message": "Detecta quién no te sigue de vuelta en X. Consulta listas comunitarias y bloquea o deja de seguir cuentas en tandas, tras confirmar."
+    "message": "Mira quién no te sigue en X (Twitter). Compara seguidores y seguidos, protege cuentas y revisa las listas de bloqueos."
   },
   "extensionDescriptionChrome": {
-    "message": "Detecta quién no te sigue de vuelta en X. Consulta listas comunitarias y bloquea o deja de seguir cuentas en tandas, tras confirmar."
+    "message": "Mira quién no te sigue en X (Twitter). Compara seguidores y seguidos, protege cuentas y revisa las listas de bloqueos."
   }
 }

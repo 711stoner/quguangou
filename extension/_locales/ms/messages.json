@@ -1,20 +1,20 @@
 {
   "extensionName": {
-    "message": "Semak Ikut Balik di X | Followback Watchdog"
+    "message": "Siapa Tak Follow Balik di X | Followback"
   },
   "extensionNameChrome": {
-    "message": "Semak Ikut Balik di X | Followback Watchdog"
+    "message": "Siapa Tak Follow Balik di X | Followback"
   },
   "extensionNameEdge": {
-    "message": "Semak Ikut Balik di X | Followback Watchdog"
+    "message": "Siapa Tak Follow Balik di X | Followback"
   },
   "extensionShortName": {
     "message": "Semak Ikut Balik"
   },
   "extensionDescription": {
-    "message": "Semak akaun X yang tidak mengikuti anda kembali. Urus senarai perlindungan dan senarai sekatan komuniti secara berperingkat."
+    "message": "Semak siapa yang tidak follow balik di X (Twitter). Bandingkan pengikut, lindungi akaun penting dan lihat senarai sekatan komuniti."
   },
   "extensionDescriptionChrome": {
-    "message": "Semak akaun X yang tidak mengikuti anda kembali. Urus senarai perlindungan dan senarai sekatan komuniti secara berperingkat."
+    "message": "Semak siapa yang tidak follow balik di X (Twitter). Bandingkan pengikut, lindungi akaun penting dan lihat senarai sekatan komuniti."
   }
 }

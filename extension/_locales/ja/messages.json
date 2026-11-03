@@ -1,20 +1,20 @@
 {
   "extensionName": {
-    "message": "フォローバック確認｜Xの片思いフォロー検出"
+    "message": "フォローバック確認｜X・Twitterの片思いフォロー管理"
   },
   "extensionNameChrome": {
-    "message": "フォローバック確認｜Xの片思いフォロー検出"
+    "message": "フォローバック確認｜X・Twitterの片思いフォロー管理"
   },
   "extensionNameEdge": {
-    "message": "フォローバック確認｜Xの片思いフォロー検出"
+    "message": "フォローバック確認｜X・Twitterの片思いフォロー管理"
   },
   "extensionShortName": {
     "message": "フォローバック確認"
   },
   "extensionDescription": {
-    "message": "Xでフォローが返っていない相手を確認。コミュニティのブロックリストも閲覧でき、確認後に対象を選んで間隔を空けてブロック・フォロー解除できます。"
+    "message": "X（旧Twitter）で自分をフォローしていない相手を確認。フォロー中とフォロワーを比較し、保護リストやブロックリストも管理できます。"
   },
   "extensionDescriptionChrome": {
-    "message": "Xでフォローが返っていない相手を確認。コミュニティのブロックリストも閲覧でき、確認後に対象を選んで間隔を空けてブロック・フォロー解除できます。"
+    "message": "X（旧Twitter）で自分をフォローしていない相手を確認。フォロー中とフォロワーを比較し、保護リストやブロックリストも管理できます。"
   }
 }

@@ -1,0 +1,57 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const canonical=JSON.parse(fs.readFileSync(path.join(root,'商店SEO文案.json'),'utf8'));
+const locales=['zh_CN','zh_TW','zh_HK','en','ja','ko','fr','es','ms','vi','id'];
+test('SEO source includes 11 regional configurations without losing either Traditional Chinese locale',()=>{
+  assert.deepEqual(Object.keys(canonical).sort(),locales.slice().sort());
+  assert.deepEqual(canonical.zh_TW,canonical.zh_HK);
+  assert.notDeepEqual(canonical.zh_TW,canonical.zh_CN);
+});
+test('all 11 storefront titles, summaries, and long descriptions satisfy metadata limits',()=>{
+  for(const lang of locales){
+    const e=canonical[lang];
+    assert.ok(e.title.length>=5 && e.title.length<=75,`${lang} name ${e.title.length}`);
+    assert.ok(e.short.length>=20 && e.short.length<=132,`${lang} short ${e.short.length}`);
+    assert.ok(e.long.length>=250 && e.long.length<=10000,`${lang} full desc ${e.long.length}`);
+    assert.ok(!e.long.match(/(?:##|#keyword|\bSEO\b)/),`${lang} unnatural long description`);
+    assert.ok(!e.short.match(/\n/),`${lang} short description newlines`);
+  }
+});
+test('Edge search terms comply with max 7, <=30 chars per term, <=21 words total',()=>{
+  for(const lang of locales){
+    const terms=canonical[lang].edge_search_terms;
+    assert.ok(terms.length>=1 && terms.length<=7,lang);
+    assert.equal(new Set(terms).size,terms.length,lang);
+    assert.ok(terms.every(term=>term.length>=1 && term.length<=30),lang);
+    assert.ok(terms.reduce((n,term)=>n+term.trim().split(/\s+/).length,0)<=21,lang);
+  }
+});
+test('store metadata inside all 11 _locales matches canonical human-written copy',()=>{
+  for(const lang of locales){
+    const dir=path.join(root,'_locales',lang,'messages.json');
+    const m=JSON.parse(fs.readFileSync(dir,'utf8'));
+    for(const key of ['extensionName','extensionNameChrome','extensionNameEdge'])
+      assert.equal(m[key].message,canonical[lang].title,`${lang} ${key}`);
+    for(const key of ['extensionDescription','extensionDescriptionChrome'])
+      assert.equal(m[key].message,canonical[lang].short,`${lang} ${key}`);
+  }
+});
+test('every locale has its own meaningful copy, apart from the shared zh_TW/zh_HK pair',()=>{
+  for(const lang of locales){
+    if(lang==='zh_HK')continue;
+    for(const other of locales){
+      if(other===lang || other==='zh_HK')continue;
+      assert.notEqual(canonical[lang].long,canonical[other].long,`${lang}/${other} duplicated copy`);
+    }
+  }
+});
+test('current listing guide has all languages and explicitly describes history and upload workflow',()=>{
+  const doc=fs.readFileSync(path.join(root,'商店SEO上架文案.md'),'utf8');
+  for(const loc of locales)assert.ok(doc.includes('— '+loc),loc);
+  assert.ok(doc.includes('不会因为上传 ZIP 自动填好'));
+  assert.ok(doc.includes('历史'));
+});

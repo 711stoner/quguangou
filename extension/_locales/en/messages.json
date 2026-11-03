@@ -16,11 +16,11 @@
     "description": "Short extension name"
   },
   "extensionDescription": {
-    "message": "Check current non-followers on X (Twitter), review community blocklists, then block or unfollow selected accounts in paced batches.",
+    "message": "See who doesn't follow you back on X (Twitter). Compare followers and following, protect accounts, and review community blocklists.",
     "description": "Localized summary for installed extension and store listing"
   },
   "extensionDescriptionChrome": {
-    "message": "Check current non-followers on X (Twitter), review community blocklists, then block or unfollow selected accounts in paced batches.",
+    "message": "See who doesn't follow you back on X (Twitter). Compare followers and following, protect accounts, and review community blocklists.",
     "description": "Localized summary for installed extension and store listing"
   }
 }

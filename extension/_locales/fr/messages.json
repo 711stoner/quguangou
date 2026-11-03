@@ -1,20 +1,20 @@
 {
   "extensionName": {
-    "message": "Abonnements réciproques | Vérifier X"
+    "message": "Qui ne me suit pas sur X ? | Followback"
   },
   "extensionNameChrome": {
-    "message": "Abonnements réciproques | Vérifier X"
+    "message": "Qui ne me suit pas sur X ? | Followback"
   },
   "extensionNameEdge": {
-    "message": "Abonnements réciproques | Vérifier X"
+    "message": "Qui ne me suit pas sur X ? | Followback"
   },
   "extensionShortName": {
     "message": "Abonnements X"
   },
   "extensionDescription": {
-    "message": "Repérez les comptes X qui ne vous suivent pas. Consultez les listes communautaires, puis bloquez ou désabonnez-vous par lots."
+    "message": "Repérez qui ne vous suit pas sur X (Twitter). Comparez vos abonnements, protégez des comptes et consultez les listes de blocage."
   },
   "extensionDescriptionChrome": {
-    "message": "Repérez les comptes X qui ne vous suivent pas. Consultez les listes communautaires, puis bloquez ou désabonnez-vous par lots."
+    "message": "Repérez qui ne vous suit pas sur X (Twitter). Comparez vos abonnements, protégez des comptes et consultez les listes de blocage."
   }
 }

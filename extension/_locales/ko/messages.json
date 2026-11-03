@@ -1,20 +1,20 @@
 {
   "extensionName": {
-    "message": "맞팔 확인 | X 맞팔 아닌 계정 찾기"
+    "message": "맞팔 확인 | X(트위터) 맞팔 아닌 계정 찾기"
   },
   "extensionNameChrome": {
-    "message": "맞팔 확인 | X 맞팔 아닌 계정 찾기"
+    "message": "맞팔 확인 | X(트위터) 맞팔 아닌 계정 찾기"
   },
   "extensionNameEdge": {
-    "message": "맞팔 확인 | X 맞팔 아닌 계정 찾기"
+    "message": "맞팔 확인 | X(트위터) 맞팔 아닌 계정 찾기"
   },
   "extensionShortName": {
     "message": "맞팔 확인"
   },
   "extensionDescription": {
-    "message": "X에서 나를 맞팔하지 않는 계정을 확인하고 커뮤니티 차단 목록을 살펴보세요. 계정을 선택하고 확인한 뒤 일정 간격으로 차단하거나 언팔로우할 수 있습니다."
+    "message": "X(트위터)에서 나를 팔로우하지 않는 계정을 확인하세요. 팔로잉·팔로워 비교, 보호 목록, 커뮤니티 차단 목록을 제공합니다."
   },
   "extensionDescriptionChrome": {
-    "message": "X에서 나를 맞팔하지 않는 계정을 확인하고 커뮤니티 차단 목록을 살펴보세요. 계정을 선택하고 확인한 뒤 일정 간격으로 차단하거나 언팔로우할 수 있습니다."
+    "message": "X(트위터)에서 나를 팔로우하지 않는 계정을 확인하세요. 팔로잉·팔로워 비교, 보호 목록, 커뮤니티 차단 목록을 제공합니다."
   }
 }

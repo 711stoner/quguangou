@@ -1,7 +1,9 @@
 from pathlib import Path
 from zipfile import ZipFile,ZIP_DEFLATED
-import json,hashlib,re
+import json,hashlib,re,subprocess,sys
 src=Path(__file__).resolve().parent.parent
+# Keep store metadata synchronized with the canonical, reviewed SEO copy.
+subprocess.run([sys.executable,str(src/"scripts/sync-store-seo.py")],check=True)
 destinations=[src/'dist']
 languages=('zh_CN','zh_TW','zh_HK','en','ja','ko','fr','es','ms','vi','id')
 m=json.loads((src/'manifest.json').read_text())

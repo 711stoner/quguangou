@@ -1,22 +1,22 @@
 {
   "extensionDescription": {
-    "message": "在 X（Twitter）检测当前未回关账号，查看社区共享黑名单；选择后分批拉黑或取关。提供白名单保护，不追踪历史取关。",
+    "message": "查看 X（Twitter）谁没有回关你，对比当前关注与粉丝列表；支持白名单保护、社区黑名单，确认后分批取关或拉黑。",
     "description": "Localized summary for installed extension and store listing"
   },
   "extensionDescriptionChrome": {
-    "message": "在 X（Twitter）检测当前未回关账号，查看社区共享黑名单；选择后分批拉黑或取关。提供白名单保护，不追踪历史取关。",
+    "message": "查看 X（Twitter）谁没有回关你，对比当前关注与粉丝列表；支持白名单保护、社区黑名单，确认后分批取关或拉黑。",
     "description": "Localized summary for installed extension and store listing"
   },
   "extensionName": {
-    "message": "取关狗｜X/Twitter 未回关检测、黑名单与分批拉黑",
+    "message": "取关狗｜X/Twitter 未回关检测与取关管理",
     "description": "Localized searchable extension title for all store platforms"
   },
   "extensionNameChrome": {
-    "message": "取关狗｜X/Twitter 未回关检测、黑名单与分批拉黑",
+    "message": "取关狗｜X/Twitter 未回关检测与取关管理",
     "description": "Localized searchable extension title for all store platforms"
   },
   "extensionNameEdge": {
-    "message": "取关狗｜X/Twitter 未回关检测、黑名单与分批拉黑",
+    "message": "取关狗｜X/Twitter 未回关检测与取关管理",
     "description": "Localized searchable extension title for all store platforms"
   },
   "extensionShortName": {
