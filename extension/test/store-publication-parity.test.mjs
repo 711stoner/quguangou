@@ -1,0 +1,45 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {spawnSync} from 'node:child_process';
+const root=path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const report=fs.readFileSync(path.join(root,'商店线上语言核验.md'),'utf8');
+const locales=['zh-CN','zh-TW','en','ja','ko','fr','es','ms','vi','id'];
+
+test('published-store report distinguishes 10 supported languages from 11 project regional configs',()=>{
+ assert.match(report,/LIVE_CHROME_STORE_LOCALES_START/);
+ assert.match(report,/LIVE_CHROME_STORE_LOCALES_END/);
+ assert.match(report,/LOCALIZED_CHROME_IMAGE_REVIEW_START/);
+ assert.match(report,/LOCALIZED_CHROME_IMAGE_REVIEW_END/);
+ for(const lang of locales){
+  assert.ok(report.includes(`?hl=${lang}`),lang);
+  assert.ok(report.includes(`\`${lang}\``),lang);
+ }
+ assert.match(report,/zh_HK.*zh_TW/);
+ assert.match(report,/待逐张对照最新版/);
+ assert.match(report,/8 种语言|八种语言/);
+ assert.match(report,/搜索.*语言/);
+});
+
+test('source project retains a single fixed set of supported store titles and a language-safe canonical manifest',()=>{
+ const m=JSON.parse(fs.readFileSync(path.join(root,'manifest.json'),'utf8'));
+ const seo=JSON.parse(fs.readFileSync(path.join(root,'商店SEO文案.json'),'utf8'));
+ assert.equal(m.name,'__MSG_extensionName__');
+ assert.equal(m.description,'__MSG_extensionDescription__');
+ assert.equal(m.default_locale,'zh_CN');
+ assert.equal(Object.keys(seo).length,11);
+ assert.deepEqual(seo.zh_HK,seo.zh_TW);
+ for(const loc of ['zh_CN','zh_TW','en','ja','ko','fr','es','ms','vi','id']){
+  const messages=JSON.parse(fs.readFileSync(path.join(root,'_locales',loc,'messages.json'),'utf8'));
+  assert.equal(messages.extensionName.message,seo[loc].title,loc);
+  assert.equal(messages.extensionDescription.message,seo[loc].short,loc);
+ }
+});
+
+test('live-store metadata classifier separates a Japanese storefront suffix from a Japanese extension name',()=>{
+ const result=spawnSync('python3',[path.join(root,'scripts','audit-chrome-store-locales.py'),'--self-test'],{encoding:'utf8',timeout:12000});
+ assert.equal(result.status,0,result.stderr);
+ assert.match(result.stdout,/OFFLINE_TESTS_PASS/);
+});
