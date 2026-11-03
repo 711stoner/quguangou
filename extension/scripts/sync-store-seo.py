@@ -17,9 +17,10 @@ for locale in locales:
  e=entries[locale]
  title=e['title'].strip();short=e['short'].strip();long=e['long'].strip()
  terms=e['edge_search_terms']
- assert 5<=len(title)<=75,(locale,'title',len(title))
+ assert 5<=len(title)<=45,(locale,'cross-store name limit (Edge/AMO ≤45)',len(title))
  assert 20<=len(short)<=132,(locale,'short description',len(short))
  assert 250<=len(long)<=10000,(locale,'Edge description',len(long))
+ assert len(short)<=250,(locale,'Firefox AMO listing summary >250',len(short))
  assert 1<=len(terms)<=7 and len(set(terms))==len(terms),(locale,'Edge search terms')
  assert all(1<=len(t)<=30 for t in terms),(locale,'search term >30 chars')
  assert sum(len(t.split()) for t in terms)<=21,(locale,'>21 words across Edge terms')
@@ -53,7 +54,12 @@ notes=[
  '- **重新上传版本号：** 三个浏览器的发布 ZIP 始终只保留固定文件名，但代码／manifest 更新后，若商店已发布版本号 ≥ 当前包的 `manifest.version`，下次上架必须先提高包内版本号，再覆盖这三个固定文件并提交审核；否则 Chrome 商店会拒绝上传。不要为了修复文案创建新的商店商品或新的 ZIP 名称。',
  '- 本文件的标题和简短介绍已写入 `_locales/<locale>/messages.json`，构建 ZIP 时包含；详细介绍和 Edge 搜索词仍需到开发者后台逐语言填写，**不会因为上传 ZIP 自动填好**。',
  '- SEO 重点是「X / Twitter + 谁没有回关 / follow back / non-followers + 真实功能」。自然表述而非重复关键词；不要宣称可查谁刚刚取关、过去退关历史、100% 成功或 X 官方授权。',
- '- Edge 每个语言最多 7 条搜索词，每条不超过 30 字符，合计不超过 21 个词；以下均经过校验。Edge 的完整介绍 250–10000 字符。',
+ '- **标题长度（官方 2026-11-04 复核）：** Chrome Web Store ≤75 字符；Microsoft Edge Add-ons、Firefox AMO ≤45 字符。同一份本地化标题在三端通用，因此取更严格的 ≤45，不能把 Chrome 的 75 当成三端通用限制。',
+ '- **短摘要：** Chrome manifest description ≤132 字符；Firefox AMO 上架页面的独立 Summary ≤250 字符。这里实际共用一份 ≤132 的摘要，所以两者都满足。',
+ '- **详细介绍：** Edge 每个上架语言的完整版介绍必须是 **250–10,000 字符**；Chrome 要求自然准确、不可关键词堆砌；Firefox AMO 完整描述没有同样的 10,000 字符上限。三端完整介绍必须在商店后台填写，ZIP 不自动提交。',
+ '- **Edge 搜索词：** 每个语言最多 7 条，每条不超过 30 字符，合计不超过 21 个词；以下均经过校验。这是 Edge 的独立 SEO 字段，不能复制到 Chrome 作为关键词堆砌。',
+ '- **截图与素材：** Chrome 每个上架语言建议 1–5 张截图，1280×800 或 640×400；Edge 每种语言需上传扩展 Logo，详细介绍必填，截图可选（最多 6 张，1280×800 或 640×480），440×280 小型宣传图片与 1400×560 大型宣传图可选。Firefox AMO 页面只允许一组共用截图，可分别本地化截图描述，不会切换独立语言截图集。历史图片不是新版本画面验收。',
+ '- **关键词与功能真实性：** 按用户真实搜索意图自然写入“谁没有回关／非互相关注／X 账号关系”。不能宣称能查到谁刚刚取关，不能把社区名单的拉黑能力说成可直接批量取关；不可把浏览器语言切换与商店 Listing 语言选择混同。',
  '- Firefox AMO 可本地化名称、摘要和介绍；摘要建议尽量精炼，最多 250 字符；**Firefox 页面只有一组共用截图**，不应声称会按语言自动切换截图。',
  '- Chrome Web Store 禁止关键词堆砌。已有图片若不是当前界面，必须在上传前核对截图与实际功能是否一致。',
  '',
@@ -63,6 +69,8 @@ notes=[
  '- Chrome：https://developer.chrome.com/docs/webstore/program-policies/listing-requirements',
  '- Edge：https://learn.microsoft.com/en-us/microsoft-edge/extensions/publish/publish-extension',
  '- Firefox：https://extensionworkshop.com/documentation/develop/create-an-appealing-listing/',
+ '- Firefox AMO 45 字符与 Chrome/Edge 名称上限：https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/name',
+ '- Chrome 截图与摘要：https://developer.chrome.com/docs/webstore/best-listing',
  '',
 ]
 # Explicit language-specific CWS entry points are the only link-level
@@ -71,6 +79,16 @@ notes.extend(['## Chrome 商店多语言直达链接（无须修改浏览器设�
  '以下链接都指向同一个插件 ID；不会新增商品。可用于官网/SEO 落地页。**仅确保商店界面选择对应语言，不代表该语言的 Listing 已经发布，未发布会回退。**',''])
 for lc,tag in [('简体中文','zh-CN'),('繁體中文','zh-TW'),('English','en'),('日本語','ja'),('한국어','ko'),('Français','fr'),('Español','es'),('Bahasa Melayu','ms'),('Tiếng Việt','vi'),('Bahasa Indonesia','id')]:
  notes.append(f'- {lc}：https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl={tag}')
+# Runtime source audit table. This is factual, not a claim that the public
+# storefront has accepted every language listing or screenshot.
+notes.extend(['', '## 三端官方规则与本地 SEO 长度核对（2026-11-04）', '',
+ '| 地区 | 标题长度（≤45） | 短摘要（≤132） | 完整介绍（Edge 250–10000） | Edge 搜索词数（≤7） | Edge 总词数（≤21） |',
+ '|---|---:|---:|---:|---:|---:|'])
+for locale in locales:
+ e=entries[locale]
+ notes.append(f"| `{locale}` | {len(e['title'])} | {len(e['short'])} | {len(e['long'])} | {len(e['edge_search_terms'])} | {sum(len(t.split()) for t in e['edge_search_terms'])} |")
+notes.extend(['', '这些是**本地源码的静态校验结果**。Firefox `zh_HK` 是兼容地区资料，Chrome/Edge 实际上传包没有独立 `zh_HK`，由 `zh_TW` 承担繁体。',
+ '本地字数、关键词合规不代表审核已通过或搜索排名有保障；需上传新版、在各商店完成对应语言 Listing 和实际截图验收。', ''])
 notes.extend(['','---',''])
 locale_names={'zh_CN':'简体中文','zh_TW':'繁體中文（台灣）','zh_HK':'繁體中文（香港兼容資料／非獨立 Chrome 商店語言）','en':'English','ja':'日本語','ko':'한국어','fr':'Français','es':'Español','ms':'Bahasa Melayu','vi':'Tiếng Việt','id':'Bahasa Indonesia'}
 for locale in locales:
