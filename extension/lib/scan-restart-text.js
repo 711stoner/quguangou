@@ -4,6 +4,7 @@
  */
 const copy = {
  "zh-CN": {
+  emptyWhitelistConfirm:"注意：这份插件里目前没有保存任何白名单账号。如果以前加过白名单，请先检查是否加载了另一份「取关狗」，不要直接批量取关或拉黑。确认继续表示你知道本次没有白名单保护。",
   whitelistNotLoaded:"白名单还没有读取成功。请先在下方确认白名单已加载，再开始批量取关或拉黑。",
   completedNote:"结果只反映本次扫描时的当前关注关系，不代表历史上谁刚刚取关了你。",
   needsValidationNote:"上次检测还没确认粉丝列表是否完整，不能作为最终名单。点击「继续检测」会沿用已保存的进度，不会重扫第一阶段。",
@@ -31,6 +32,7 @@ const copy = {
   fail:"窗口没有成功重开，原来的扫描数据仍保留。请重试。"
  },
  "zh-TW": {
+  emptyWhitelistConfirm:"注意：這份擴充功能目前沒有儲存任何白名單帳號。如果先前加入過白名單，請先確認是否載入了另一份「取關狗」，不要直接批次取消追蹤或封鎖。確認繼續代表你知道這次沒有白名單保護。",
   whitelistNotLoaded:"白名單還沒讀取成功。請先確認下方的白名單已載入，再進行批次取消追蹤或封鎖。",
   completedNote:"結果只反映本次掃描時的追蹤關係，無法知道誰剛剛取消追蹤你。",
   needsValidationNote:"上次檢查還沒確認粉絲名單是否完整，不能當成最終結果。點「繼續檢查」會保留目前進度，不必重新讀取第一階段。",
@@ -58,6 +60,7 @@ const copy = {
   fail:"視窗未能重新開啟，原有掃描資料仍保留。請再試一次。"
  },
  en: {
+  emptyWhitelistConfirm:"Important: this extension installation has no saved whitelist accounts. If you protected accounts before, check whether you loaded a different copy of Followback Watchdog before running a bulk action. Continuing confirms that you understand no whitelist protection is available here.",
   whitelistNotLoaded:"The saved whitelist has not loaded successfully. Check it below before starting bulk unfollow or block actions.",
   completedNote:"Results show follow relationships at the time of scanning. They cannot tell you who recently unfollowed you.",
   needsValidationNote:"The previous scan could not confirm that the follower list was complete. This is not a final result. Select Resume scan to continue from saved progress without restarting stage 1.",
@@ -85,6 +88,7 @@ const copy = {
   fail:"Could not reopen the window. Your previous scan progress is still saved."
  },
  ja: {
+  emptyWhitelistConfirm:"注意：この拡張機能には保護リストが保存されていません。以前アカウントを保護した場合は、別の「取关狗」を読み込んでいないか確認してから一括操作を行ってください。続行すると、今回は保護リストがないことを了承したものとみなされます。",
   whitelistNotLoaded:"保護リストの読み込みが完了していません。下のリストを確認してから、一括フォロー解除やブロックを始めてください。",
   completedNote:"結果はスキャン時点のフォロー関係を示すもので、最近誰がフォローを外したかは分かりません。",
   needsValidationNote:"前回のスキャンではフォロワー一覧を最後まで確認できませんでした。確定結果としては使えません。「スキャンを再開」を押すと、第1段階をやり直さず保存位置から続行します。",
@@ -112,6 +116,7 @@ const copy = {
   fail:"スキャン画面を開き直せませんでした。これまでの進捗は保存されています。"
  },
  ko: {
+  emptyWhitelistConfirm:"주의: 현재 이 확장 프로그램에는 저장된 보호 목록이 없습니다. 이전에 보호한 계정이 있다면 다른 확장 프로그램을 불러온 것은 아닌지 먼저 확인하세요. 계속 진행하면 이번 작업에 보호 목록이 없다는 사실을 확인하는 것입니다.",
   whitelistNotLoaded:"저장된 보호 목록을 아직 불러오지 못했습니다. 아래 목록을 확인한 뒤 일괄 언팔로우나 차단을 시작하세요.",
   completedNote:"이 결과는 검사 당시의 팔로우 관계를 보여 줍니다. 최근 누가 언팔로우했는지는 알 수 없습니다.",
   needsValidationNote:"이전 검사에서 팔로워 목록이 모두 읽혔는지 확인하지 못했습니다. 최종 결과로 사용할 수 없습니다. ‘검사 계속하기’를 누르면 1단계부터 다시 시작하지 않고 저장된 지점부터 이어집니다.",
@@ -139,6 +144,7 @@ const copy = {
   fail:"스캔 창을 다시 열지 못했습니다. 이전 진행 상황은 그대로 저장되어 있습니다."
  },
  fr: {
+  emptyWhitelistConfirm:"Attention : aucune liste de protection n’est enregistrée dans cette installation. Si vous aviez déjà protégé des comptes, vérifiez d’abord si une autre copie de l’extension est chargée. Continuer signifie que vous savez qu’aucune liste ne protégera les comptes pendant cette opération.",
   whitelistNotLoaded:"La liste de protection n’a pas pu être chargée. Vérifiez-la ci-dessous avant de lancer des désabonnements ou des blocages groupés.",
   completedNote:"Les résultats reflètent les abonnements au moment de l’analyse. Ils ne permettent pas de savoir qui s’est désabonné récemment.",
   needsValidationNote:"La dernière analyse n’a pas pu vérifier que la liste des abonnés était complète. Ce résultat n’est pas définitif. Reprenez l’analyse depuis les données enregistrées sans recommencer la première étape.",
@@ -166,6 +172,7 @@ const copy = {
   fail:"Impossible de rouvrir la fenêtre. Les données déjà analysées sont conservées."
  },
  es: {
+  emptyWhitelistConfirm:"Atención: esta instalación no tiene ninguna cuenta guardada en la lista de protección. Si antes protegiste cuentas, comprueba que no estés usando otra copia de la extensión antes de actuar en masa. Al continuar, confirmas que esta operación no cuenta con esa protección.",
   whitelistNotLoaded:"La lista de protección aún no se ha cargado correctamente. Compruébala antes de bloquear o dejar de seguir cuentas en masa.",
   completedNote:"Los resultados reflejan las relaciones de seguimiento al analizar la cuenta. No permiten saber quién dejó de seguirte recientemente.",
   needsValidationNote:"El análisis anterior no pudo confirmar que la lista de seguidores estuviera completa. No es un resultado definitivo. Pulsa « Continuar » para retomar desde los datos guardados sin repetir la primera fase.",
@@ -193,6 +200,7 @@ const copy = {
   fail:"No se pudo reabrir la ventana. Los datos del análisis siguen guardados."
  },
  ms: {
+  emptyWhitelistConfirm:"Perhatian: pemasangan sambungan ini tidak mempunyai akaun dalam senarai perlindungan. Jika anda pernah melindungi akaun, semak dahulu sama ada anda menggunakan salinan sambungan yang lain. Dengan meneruskan, anda mengesahkan bahawa tindakan ini tidak mempunyai perlindungan senarai tersebut.",
   whitelistNotLoaded:"Senarai perlindungan belum berjaya dimuatkan. Semak senarai di bawah sebelum melakukan tindakan berhenti mengikuti atau menyekat secara pukal.",
   completedNote:"Hasil menunjukkan hubungan mengikuti ketika imbasan dibuat. Ia tidak menunjukkan siapa yang baru berhenti mengikuti anda.",
   needsValidationNote:"Imbasan terdahulu belum dapat mengesahkan senarai pengikut yang lengkap. Ini bukan hasil akhir. Pilih Sambung untuk meneruskan dari data tersimpan tanpa mengulang peringkat pertama.",
@@ -220,6 +228,7 @@ const copy = {
   fail:"Tidak dapat membuka semula tetingkap. Kemajuan imbasan terdahulu masih disimpan."
  },
  vi: {
+  emptyWhitelistConfirm:"Lưu ý: bản cài đặt tiện ích này hiện không có tài khoản nào trong danh sách bảo vệ. Nếu trước đây bạn đã bảo vệ tài khoản, hãy kiểm tra xem có đang dùng một bản cài đặt khác không trước khi thao tác hàng loạt. Tiếp tục nghĩa là bạn xác nhận lần này không có danh sách bảo vệ.",
   whitelistNotLoaded:"Danh sách bảo vệ chưa tải thành công. Hãy kiểm tra danh sách bên dưới trước khi bỏ theo dõi hoặc chặn hàng loạt.",
   completedNote:"Kết quả chỉ phản ánh quan hệ theo dõi tại thời điểm quét, không cho biết ai vừa bỏ theo dõi bạn.",
   needsValidationNote:"Lần quét trước chưa xác nhận được danh sách người theo dõi đã đầy đủ. Đây chưa phải kết quả cuối cùng. Nhấn Tiếp tục để quét từ tiến độ đã lưu mà không phải làm lại bước đầu.",
@@ -247,6 +256,7 @@ const copy = {
   fail:"Không thể mở lại cửa sổ. Tiến độ quét trước đó vẫn được lưu."
  },
  id: {
+  emptyWhitelistConfirm:"Perhatian: instalasi ekstensi ini tidak memiliki akun yang tersimpan di daftar perlindungan. Jika sebelumnya Anda melindungi akun, pastikan Anda tidak sedang memakai salinan ekstensi yang berbeda sebelum melakukan tindakan massal. Melanjutkan berarti Anda memahami bahwa tidak ada perlindungan daftar tersebut kali ini.",
   whitelistNotLoaded:"Daftar perlindungan belum berhasil dimuat. Periksa daftar di bawah sebelum berhenti mengikuti atau memblokir akun secara massal.",
   completedNote:"Hasil ini mencerminkan hubungan mengikuti saat pemindaian, bukan riwayat siapa yang baru saja berhenti mengikuti Anda.",
   needsValidationNote:"Pemindaian sebelumnya belum dapat memastikan daftar pengikut sudah lengkap. Hasil ini belum final. Pilih Lanjutkan untuk meneruskan dari progres tersimpan tanpa mengulang tahap pertama.",

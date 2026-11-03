@@ -18,6 +18,7 @@ let scanWindowHealth = null;
 let selectedPersonalScanId = null;
 const selectedPersonalHandles = new Set();
 let pendingPersonalAction = "block";
+let emptyWhitelistWarningShown = false;
 const PERSONAL_WHITELIST_STORAGE_KEY = "quguangouPersonalWhitelistV1";
 let whitelistOwner = "";
 let personalWhitelistEntries = [];
@@ -938,12 +939,17 @@ function openPersonalActionConfirm(action) {
   const usernames = getSelectedPersonalUsernames();
   if (!usernames.length) return;
   pendingPersonalAction = action === "unfollow" ? "unfollow" : "block";
+  emptyWhitelistWarningShown = whitelistLoadStatus === "ready" && personalWhitelistEntries.length === 0;
   const isUnfollow = pendingPersonalAction === "unfollow";
   $("#personalBlockConfirmTitle").textContent = isUnfollow ? "取关所选账号？" : "拉黑所选账号？";
   $("#personalBlockConfirmCopy").textContent = "你选择了 " + usernames.length + " 个未回关账号。确认后会开始第 1 批，单批最多处理 " + BATCH_SIZE + " 个。";
   $("#personalBlockConfirmWarning").textContent = isUnfollow
     ? "确认后会逐个取消关注这些账号；每批最多 20 个，批次结束后冷却 30 分钟。执行前仍会检查账号与关系状态。"
     : "确认后会逐个拉黑这些账号；每批最多 20 个，批次结束后冷却 30 分钟。执行前仍会检查账号与关系状态。";
+  if (emptyWhitelistWarningShown) {
+    $("#personalBlockConfirmWarning").textContent += " " +
+      getScanRestartText(document.documentElement.lang).emptyWhitelistConfirm;
+  }
   const confirmButton = $("#personalBlockConfirmButton");
   confirmButton.textContent = isUnfollow ? "确认取关并开始第 1 批" : "确认拉黑并开始第 1 批";
   confirmButton.classList.toggle("danger", !isUnfollow);
@@ -1112,6 +1118,7 @@ $("#personalBlockConfirmButton").addEventListener("click", () => void runUiActio
     locale: document.documentElement.lang,
     action: pendingPersonalAction,
     scanId: currentPersonalScan.id,
+    acknowledgeEmptyWhitelist: emptyWhitelistWarningShown && whitelistLoadStatus === "ready",
     usernames
   });
 

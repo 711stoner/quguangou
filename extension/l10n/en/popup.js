@@ -18,6 +18,7 @@ let scanWindowHealth = null;
 let selectedPersonalScanId = null;
 const selectedPersonalHandles = new Set();
 let pendingPersonalAction = "block";
+let emptyWhitelistWarningShown = false;
 const PERSONAL_WHITELIST_STORAGE_KEY = "quguangouPersonalWhitelistV1";
 let whitelistOwner = "";
 let personalWhitelistEntries = [];
@@ -942,12 +943,17 @@ function openPersonalActionConfirm(action) {
   const usernames = getSelectedPersonalUsernames();
   if (!usernames.length) return;
   pendingPersonalAction = action === "unfollow" ? "unfollow" : "block";
+  emptyWhitelistWarningShown = whitelistLoadStatus === "ready" && personalWhitelistEntries.length === 0;
   const isUnfollow = pendingPersonalAction === "unfollow";
   $("#personalBlockConfirmTitle").textContent = isUnfollow ? "Unfollow selected accounts?" : "Block selected accounts?";
   $("#personalBlockConfirmCopy").textContent = "You selected " + usernames.length + " non-followers. After confirmation, batch 1 will start, processing up to " + BATCH_SIZE + " accounts.";
   $("#personalBlockConfirmWarning").textContent = isUnfollow
     ? "After confirmation, accounts will be unfollowed one by one. Each batch processes up to 20 accounts, followed by a 30-minute cooldown. Account identity and follow relationships are rechecked before action."
     : "After confirmation, accounts will be blocked one by one. Each batch processes up to 20 accounts, followed by a 30-minute cooldown. Account identity and follow relationships are rechecked before action.";
+  if (emptyWhitelistWarningShown) {
+    $("#personalBlockConfirmWarning").textContent += " " +
+      getScanRestartText(document.documentElement.lang).emptyWhitelistConfirm;
+  }
   const confirmButton = $("#personalBlockConfirmButton");
   confirmButton.textContent = isUnfollow ? "Confirm unfollow and start batch 1" : "Confirm block and start batch 1";
   confirmButton.classList.toggle("danger", !isUnfollow);
@@ -1116,6 +1122,7 @@ $("#personalBlockConfirmButton").addEventListener("click", () => void runUiActio
     locale: document.documentElement.lang,
     action: pendingPersonalAction,
     scanId: currentPersonalScan.id,
+    acknowledgeEmptyWhitelist: emptyWhitelistWarningShown && whitelistLoadStatus === "ready",
     usernames
   });
 

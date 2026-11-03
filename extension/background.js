@@ -3636,6 +3636,15 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       ]));
       await personalWhitelistWriteQueue.catch(() => {});
       const whitelist = await readPersonalWhitelist(scan.username);
+      // Guard a replaced/reinstalled unpacked extension: a fresh extension ID
+      // cannot see the old ID's whitelist, even in the same Chrome profile.
+      // The user must explicitly see the zero-whitelist warning in the
+      // confirmation dialog before any personal bulk action can start.
+      if (!whitelist.length && message.acknowledgeEmptyWhitelist !== true) {
+        sendResponse({ ok: false,
+          error: "当前插件没有读取到任何白名单。请先确认是否换过插件安装实例，并在确认框中明确确认无白名单保护。" });
+        return;
+      }
       const requested = [];
       const seen = new Set();
       for (const raw of message.usernames) {

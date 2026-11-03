@@ -101,3 +101,21 @@ test('bulk actions cannot start while the whitelist is loading or unreadable',as
    assert.ok(getScanRestartText(lang).whitelistNotLoaded.length>25,lang);
  }
 });
+
+test('empty-whitelist bulk operation requires an explicit in-dialog acknowledgement in all controllers',async()=>{
+ const fs=await import('node:fs');
+ const path=await import('node:path');
+ const root=path.dirname(path.dirname((await import('node:url')).fileURLToPath(import.meta.url)));
+ const bg=fs.readFileSync(path.join(root,'background.js'),'utf8');
+ assert.match(bg,/if \(!whitelist\.length && message\.acknowledgeEmptyWhitelist !== true\)/);
+ for(const rel of ['popup.js','l10n/en/popup.js','l10n/zh-TW/popup.js']){
+  const source=fs.readFileSync(path.join(root,rel),'utf8');
+  assert.match(source,/emptyWhitelistWarningShown = whitelistLoadStatus === "ready" && personalWhitelistEntries\.length === 0/,rel);
+  assert.match(source,/\.emptyWhitelistConfirm/,rel);
+  assert.match(source,/acknowledgeEmptyWhitelist: emptyWhitelistWarningShown && whitelistLoadStatus === "ready"/,rel);
+ }
+ const {getScanRestartText}=await import('../lib/scan-restart-text.js');
+ for(const lang of ['zh-CN','zh-TW','en','ja','ko','fr','es','ms','vi','id']){
+  assert.ok(getScanRestartText(lang).emptyWhitelistConfirm?.length>60,lang);
+ }
+});

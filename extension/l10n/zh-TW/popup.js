@@ -18,6 +18,7 @@ let scanWindowHealth = null;
 let selectedPersonalScanId = null;
 const selectedPersonalHandles = new Set();
 let pendingPersonalAction = "block";
+let emptyWhitelistWarningShown = false;
 const PERSONAL_WHITELIST_STORAGE_KEY = "quguangouPersonalWhitelistV1";
 let whitelistOwner = "";
 let personalWhitelistEntries = [];
@@ -934,12 +935,17 @@ function openPersonalActionConfirm(action) {
   const usernames = getSelectedPersonalUsernames();
   if (!usernames.length) return;
   pendingPersonalAction = action === "unfollow" ? "unfollow" : "block";
+  emptyWhitelistWarningShown = whitelistLoadStatus === "ready" && personalWhitelistEntries.length === 0;
   const isUnfollow = pendingPersonalAction === "unfollow";
   $("#personalBlockConfirmTitle").textContent = isUnfollow ? "取消追蹤所選帳號？" : "封鎖所選帳號？";
   $("#personalBlockConfirmCopy").textContent = "你選擇了 " + usernames.length + " 個未回追帳號。確認後會開始第 1 批，單批最多處理 " + BATCH_SIZE + " 個。";
   $("#personalBlockConfirmWarning").textContent = isUnfollow
     ? "確認後會逐個取消追蹤這些帳號；每批最多 20 個，批次結束後冷卻 30 分鐘。執行前仍會檢查帳號與關係狀態。"
     : "確認後會逐個封鎖這些帳號；每批最多 20 個，批次結束後冷卻 30 分鐘。執行前仍會檢查帳號與關係狀態。";
+  if (emptyWhitelistWarningShown) {
+    $("#personalBlockConfirmWarning").textContent += " " +
+      getScanRestartText(document.documentElement.lang).emptyWhitelistConfirm;
+  }
   const confirmButton = $("#personalBlockConfirmButton");
   confirmButton.textContent = isUnfollow ? "確認取消追蹤並開始第 1 批" : "確認封鎖並開始第 1 批";
   confirmButton.classList.toggle("danger", !isUnfollow);
@@ -1108,6 +1114,7 @@ $("#personalBlockConfirmButton").addEventListener("click", () => void runUiActio
     locale: document.documentElement.lang,
     action: pendingPersonalAction,
     scanId: currentPersonalScan.id,
+    acknowledgeEmptyWhitelist: emptyWhitelistWarningShown && whitelistLoadStatus === "ready",
     usernames
   });
 
