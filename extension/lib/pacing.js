@@ -24,7 +24,7 @@ export function reserveAttempt(state = {}, now = Date.now()) {
     ? state.nextBreakAfter
     : count + randomInt(5, 8);
 
-  let delayMs = randomInt(13_000, 27_000);
+  let delayMs = randomInt(16_000, 27_000); // Never issue back-to-back X actions under 16 seconds.
   if (used >= nextBreakAfter) {
     delayMs = randomInt(45_000, 90_000);
     nextBreakAfter = used + randomInt(5, 8);

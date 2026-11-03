@@ -1,13 +1,14 @@
 {
   "name": "quguangou-chrome",
-  "version": "0.2.25",
+  "version": "0.2.75",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test",
+    "test": "node --test test/*.js test/*.mjs",
     "build": "node scripts/build-browser-packages.mjs",
     "build:chrome": "node scripts/build-browser-packages.mjs chrome",
     "build:edge": "node scripts/build-browser-packages.mjs edge",
     "build:firefox": "node scripts/build-browser-packages.mjs firefox"
-  }
+  },
+  "description": "Single source for the Chrome, Edge, Firefox Followback Watchdog extension release."
 }

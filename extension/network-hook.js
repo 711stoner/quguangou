@@ -61,14 +61,10 @@
     return String(input || "");
   };
 
-  const serializeHeaders = (input, init) => {
-    const out = {};
-    try {
-      const headers = new Headers(init?.headers || (input instanceof Request ? input.headers : undefined));
-      for (const [key, value] of headers.entries()) out[key] = value;
-    } catch {}
-    return out;
-  };
+  // Synthetic GraphQL replay has been disabled. Never copy any request
+  // headers (including Authorization, Cookie or CSRF) into extension-owned
+  // state. The scanner uses only X's own responses and DOM observations.
+  const serializeHeaders = () => ({});
 
   const makeTemplate = (input, init) => ({
     url: getUrl(input),
@@ -96,31 +92,8 @@
     } catch { return {}; }
   };
 
-  const withCursor = (template, cursor) => {
-    if (!template || !cursor) return null;
-    const next = {
-      ...template,
-      headers: { ...(template.headers || {}) }
-    };
-
-    if (next.method === "GET" || !next.body) {
-      try {
-        const url = new URL(next.url, location.href);
-        const variables = readVariables(next);
-        variables.cursor = cursor;
-        url.searchParams.set("variables", JSON.stringify(variables));
-        next.url = url.href;
-      } catch { return null; }
-    } else {
-      try {
-        const body = JSON.parse(next.body);
-        if (body?.variables && typeof body.variables === "object") body.variables.cursor = cursor;
-        else body.cursor = cursor;
-        next.body = JSON.stringify(body);
-      } catch { return null; }
-    }
-    return next;
-  };
+  // No cursor replay builder: the X website alone issues pagination.
+  // We still observe request URLs/cursors to reconcile saved progress.
 
   const normalizeUser = (result) => {
     if (!result || typeof result !== "object") return null;
@@ -294,8 +267,8 @@
       return originalOpen.call(this, method, url, ...rest);
     };
 
+    // Forward headers unchanged to the actual X request. Never retain them.
     XHR.prototype.setRequestHeader = function(name, value) {
-      if (this.__qg) this.__qg.headers[String(name).toLowerCase()] = String(value);
       return originalSetRequestHeader.call(this, name, value);
     };
 
@@ -372,49 +345,10 @@
       return { ok: true, items };
     },
 
-    async fetchCursorPage(relation, cursor) {
-      const template = templates.get(relation);
-      if (!template) return { ok: false, error: "TEMPLATE_NOT_READY" };
-      const replay = withCursor(template, cursor);
-      if (!replay) return { ok: false, error: "CURSOR_REQUEST_BUILD_FAILED" };
-
-      try {
-        const response = await originalFetch(replay.url, {
-          method: replay.method,
-          headers: replay.headers,
-          body: replay.method === "GET" || replay.method === "HEAD" ? undefined : replay.body,
-          credentials: replay.credentials || "include",
-          mode: replay.mode || "cors",
-          cache: "no-store"
-        });
-        if (!response.ok) {
-          recordFailure(relation, response.status, "HTTP_" + response.status);
-          return { ok: false, status: response.status, error: "HTTP_" + response.status,
-            retryAfterMs: getRetryAfterMs(response) };
-        }
-        const payload = await response.json();
-        const graphQLError = getGraphQLError(payload);
-        if (graphQLError) {
-          recordFailure(relation, response.status, graphQLError.error);
-          return {
-            ok: false,
-            status: response.status,
-            error: graphQLError.error,
-            graphQLErrorCode: graphQLError.code,
-            graphQLErrorMessage: graphQLError.message
-          };
-        }
-        const page = extractPage(payload);
-        if (page.users.length || page.bottomCursor) clearFailure(relation);
-        return {
-          ok: true,
-          status: response.status,
-          users: page.users,
-          bottomCursor: page.bottomCursor || null
-        };
-      } catch (error) {
-        return { ok: false, error: error?.message || String(error) };
-      }
+    // Legacy API is retained only so an older background caller gets an
+    // explicit safe failure; never replay a captured X request.
+    async fetchCursorPage() {
+      return { ok: false, error: "SYNTHETIC_CURSOR_DISABLED" };
     }
   };
 
