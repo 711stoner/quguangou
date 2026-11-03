@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Followback Watchdog</title>
+    <link rel="stylesheet" href="../../popup.css" />
+    <link rel="stylesheet" href="english.css" />
+    <link rel="stylesheet" href="../../locale-switch.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="brand">
+        <img src="assets/icon-128.png" alt="" />
+        <div>
+          <h1>Followback Watchdog</h1>
+          <p>Check non-followers and explore community blocklists on X</p>
+        </div>
+      </header>
+
+      <section id="modeView">
+        <div class="section-title">
+          <h2>Choose a mode</h2>
+        </div>
+        <p class="description">Community Blocklist processes shared lists in paced batches. Personal Account checks your own follower relationships. These modes are separate.</p>
+        <div class="mode-grid">
+          <button id="communityModeButton" class="mode-card mode-card-community" type="button">
+            <span class="mode-icon" aria-hidden="true">◎</span>
+            <span class="mode-copy">
+              <strong>Community Blocklist</strong>
+              <small>Review a community-maintained blocklist and block accounts in paced batches.</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">›</span>
+          </button>
+          <button id="personalModeButton" class="mode-card mode-card-personal" type="button">
+            <span class="mode-icon" aria-hidden="true">●</span>
+            <span class="mode-copy">
+              <strong>Personal Account <em>NEW</em></strong>
+              <small>Find accounts you follow that don't follow you back.</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">›</span>
+          </button>
+        </div>
+
+      </section>
+
+      <section id="personalView" class="hidden">
+        <button id="personalBackButton" class="back-button" type="button">← Back to mode selection</button>
+        <div class="section-title personal-title">
+          <h2>Personal Account</h2>
+          <span class="version">Signed-in account only</span>
+        </div>
+        <div class="personal-feature">
+          <span class="personal-feature-kicker">Follow relationships</span>
+          <h3>Non-follower check</h3>
+          <p>Find accounts you follow that don't follow you back. Results apply only to the currently signed-in X account.</p>
+          <div class="personal-flow">
+            <span>Scan follow relationships</span><span>→</span><span>Build list</span><span>→</span><span>Choose an action</span>
+          </div>
+          <div id="personalScanSummary" class="personal-scan-summary">Not scanned yet</div>
+          <div id="personalScanProgress" class="hidden">
+            <div class="progress-track"><div id="personalProgressBar"></div></div>
+            <p id="personalProgressText" class="progress-text"></p>
+          </div>
+          <button id="personalScanButton" class="primary" type="button">Start scan</button>
+          <button id="personalCancelScanButton" class="secondary hidden" type="button">Pause scan (save progress)</button>
+          <button id="personalForceRestartButton" class="secondary personal-force-restart hidden" type="button">Force restart scan window (keep progress)</button>
+          <p id="personalRecoveryHint" class="personal-note hidden" role="status"></p>
+          <p class="personal-note">If X returns an error, the extension will retry a few times. If X still fails to load, the scan will pause and save your progress. Once the X lists are working again, select Resume scan to pick up where you left off.</p>
+          <p id="personalScanNote" class="personal-note">Starting a scan opens a dedicated X window. Large lists can take time to scan. Keep the window open and avoid switching tabs until the current stage finishes.</p>
+        </div>
+
+        <details id="personalWhitelistPanel" class="personal-whitelist" open>
+          <summary>Whitelist protection (<span id="personalWhitelistCount">0</span>)</summary>
+          <p class="personal-note">Saved only in this browser. Closing the browser, restarting your computer, or updating the extension normally keeps this list. Uninstalling or clearing extension data may erase it. Protected accounts are skipped during bulk block and unfollow actions.</p>
+          <div id="personalWhitelistList" class="personal-whitelist-list">No protected accounts yet. Add them from your scan results.</div>
+        </details>
+
+        <section id="personalResultView" class="personal-results hidden">
+          <div class="personal-stats">
+            <div><strong id="personalFollowingCount">0</strong><span>Following</span></div>
+            <div><strong id="personalMutualCount">0</strong><span>Mutuals</span></div>
+            <div><strong id="personalNonFollowerCount">0</strong><span>Not following back</span></div>
+          </div>
+          <div class="personal-result-toolbar">
+            <strong>Non-followers</strong>
+            <span>
+              <button id="personalSelectAllButton" class="link-button" type="button">Select all</button>
+              <button id="personalClearSelectionButton" class="link-button" type="button">Clear</button>
+            </span>
+          </div>
+          <div id="personalResultList" class="personal-result-list"></div>
+          <div class="personal-action-grid">
+            <button id="personalBlockSelectedButton" class="danger" type="button" disabled>Block selected</button>
+            <button id="personalUnfollowSelectedButton" class="personal-unfollow" type="button" disabled>Unfollow selected</button>
+          </div>
+          <p id="personalActionHint" class="personal-note">Select accounts, then choose Block or Unfollow. Both actions require confirmation and run in paced batches.</p>
+        </section>
+      </section>
+
+      <section id="blocklistView" class="hidden">
+        <button id="communityBackButton" class="back-button" type="button">← Back to mode selection</button>
+        <div class="section-title">
+          <h2>Community Blocklist</h2>
+
+        </div>
+        <p id="blocklistDescription" class="description"></p>
+        <div id="blocklistSummary" class="summary">Loading list…</div>
+        <div id="batchGuide" class="batch-guide"></div>
+        <p class="return-note">The shared list is updated regularly. Check back for new entries and decide whether to process them in batches.</p>
+        <div id="targetList" class="target-list"></div>
+        <div id="issueList" class="issues"></div>
+        <button id="startButton" class="danger" disabled>Start batch blocking</button>
+        <p class="warning">This community list is reviewed by a moderator. Each batch processes up to 20 accounts, followed by a mandatory 30-minute cooldown.</p>
+
+      </section>
+
+      <section id="progressView" class="hidden">
+        <button id="progressBackButton" class="back-button hidden" type="button">← Back to mode selection</button>
+        <div class="section-title"><h2 id="progressTitle">Processing</h2></div>
+        <div id="batchStatus" class="batch-status"></div>
+        <div class="progress-track"><div id="progressBar"></div></div>
+        <p id="progressText" class="progress-text"></p>
+        <p class="progress-human-note">Actions are intentionally paced. Each batch may take some time to complete.</p>
+        <div id="resultList" class="result-list"></div>
+        <div id="communityContributionPanel" class="community-contribution hidden">
+          <span class="community-contribution-kicker">Community list</span>
+          <strong id="communityContributionTitle">Share these accounts with the community?</strong>
+          <p id="communityContributionCopy">You may submit accounts successfully blocked or unfollowed in this task for community review and future use by others.</p>
+          <p>Privacy: Your own X account details are not submitted or saved.</p>
+          <button id="openCommunitySubmitButton" class="candidate-block" type="button"></button>
+        </div>
+        <div id="valuePromo" class="value-promo hidden">
+          <span class="value-promo-kicker">Done with this batch? Try this</span>
+          <strong>How much could you charge for a sponsored post on X?</strong>
+          <p>Get a quick rate estimate.</p>
+          <a href="https://jiedanfadan.com/en/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=block_complete" target="_blank" rel="noopener noreferrer">Try it ↗</a>
+        </div>
+        <button id="cancelButton" class="secondary">Stop task</button>
+        <button id="endTaskButton" class="end-task hidden" type="button">End this task</button>
+        <button id="newTaskButton" class="primary hidden">New task</button>
+        <p id="cooldownAdvice" class="cooldown-advice hidden">To avoid rapid actions, every 20 accounts are followed by a 30-minute cooldown. Continue the next batch after the break.</p>
+        <button id="skipCooldownButton" class="cooldown-skip hidden" type="button">Skip cooldown and continue (higher risk)</button>
+      </section>
+
+      <div id="endTaskConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-end-backdrop></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="endTaskConfirmTitle" aria-describedby="endTaskConfirmCopy">
+          <button class="support-close" type="button" data-end-cancel aria-label="Close">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="endTaskConfirmTitle">End this task?</h2>
+          <p id="endTaskConfirmCopy" class="support-copy">Completed blocks and unfollows will not be reversed. Only progress for this task will be cleared.</p>
+          <button type="button" class="secondary" data-end-cancel>Cancel</button>
+          <button type="button" class="end-task" data-end-confirm>End task</button>
+        </section>
+      </div>
+
+      <div id="toast" class="toast hidden"></div>
+
+      <aside id="stickyValuePromo" class="sticky-value-promo hidden" aria-label="Creator sponsorship valuation">
+        <span class="sticky-value-kicker">While you wait for the next batch</span>
+        <strong>How much could you charge for a sponsored post on X?</strong>
+        <p>Get a quick rate estimate.</p>
+        <a class="sticky-value-main" href="https://jiedanfadan.com/en/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=cooldown_value" target="_blank" rel="noopener noreferrer">Try it ↗</a>
+      </aside>
+
+      <section class="support-footer" aria-label="Feedback and support">
+        <button id="feedbackToggle" class="support-link" type="button" aria-expanded="false">
+          <span class="support-link-icon">◎</span>
+          <span><strong>Feedback / collaboration</strong><small>Send feedback, suggestions or join the community team</small></span>
+          <span class="support-link-arrow">›</span>
+        </button>
+        <button id="supportToggle" class="support-link" type="button" aria-expanded="false">
+          <span class="support-link-icon">♡</span>
+          <span><strong>Support the developer</strong><small>Help support ongoing development</small></span>
+          <span class="support-link-arrow">›</span>
+        </button>
+      </section>
+
+      <div id="homeValuePromo" class="value-promo home-value-promo hidden">
+        <span class="value-promo-kicker">Creator sponsorship estimate</span>
+        <strong>How much could you charge for a sponsored post on X?</strong>
+        <p>Get a quick rate estimate.</p>
+        <a href="https://jiedanfadan.com/en/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=home_value" target="_blank" rel="noopener noreferrer">Check it out ↗</a>
+      </div>
+
+      <footer>
+        <span>Independent tool, not affiliated with X</span>
+        <a href="https://711stoner.github.io/quguangou/en/" target="_blank" rel="noopener noreferrer">Website (English)</a>
+        <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy notice</a>
+      </footer>
+
+      <div id="personalBlockConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-personal-block-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="personalBlockConfirmTitle">
+          <button id="personalBlockConfirmClose" class="support-close" type="button" aria-label="Close">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="personalBlockConfirmTitle">Process selected accounts?</h2>
+          <p id="personalBlockConfirmCopy" class="support-copy"></p>
+          <p id="personalBlockConfirmWarning" class="personal-block-warning">Actions run sequentially in paced batches of up to 20 accounts, followed by a 30-minute cooldown. They are never performed all at once.</p>
+          <button id="personalBlockConfirmCancel" class="secondary" type="button">Cancel</button>
+          <button id="personalBlockConfirmButton" class="danger personal-confirm-danger" type="button">Confirm and start batch 1</button>
+        </section>
+      </div>
+
+      <div id="communitySubmitConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-community-submit-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="communitySubmitTitle">
+          <button id="communitySubmitClose" class="support-close" type="button" aria-label="Close">×</button>
+          <div class="support-heart" aria-hidden="true">◎</div>
+          <h2 id="communitySubmitTitle">Submit all eligible accounts to the community?</h2>
+          <p id="communitySubmitCopy" class="support-copy"></p>
+          <p class="personal-block-warning">Privacy: Your own X account details are not submitted or saved.</p>
+          <button id="communitySubmitCancel" class="secondary" type="button">Cancel</button>
+          <button id="communitySubmitConfirm" class="candidate-block community-submit-confirm" type="button">Submit all</button>
+        </section>
+      </div>
+
+      <div id="cooldownRiskPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-cooldown-close></div>
+        <section class="support-card cooldown-risk-card" role="dialog" aria-modal="true" aria-labelledby="cooldownRiskTitle">
+          <button id="cooldownRiskClose" class="support-close" type="button" aria-label="Close">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="cooldownRiskTitle">Continue with the next batch now?</h2>
+          <p class="support-copy">Skipping the cooldown increases action frequency and could trigger X rate limits, verification challenges, account restrictions or suspensions.</p>
+          <p class="cooldown-risk-recommend">Waiting the full 30 minutes is safer.</p>
+          <button id="keepCoolingButton" class="primary" type="button">Keep waiting</button>
+          <button id="confirmSkipCooldownButton" class="cooldown-confirm" type="button">Continue now</button>
+        </section>
+      </div>
+
+      <div id="feedbackPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-feedback-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+          <button id="feedbackClose" class="support-close" type="button" aria-label="Close">×</button>
+          <div class="support-heart" aria-hidden="true">◎</div>
+          <h2 id="feedbackTitle">Feedback / Join the community team</h2>
+          <p class="support-copy">Found a bug? Have a suggestion for the community list or a feature idea? Get in touch and help improve Followback Watchdog.</p>
+          <a class="x-contact-button" href="https://x.com/woyongyuangeson?s=11" target="_blank" rel="noopener noreferrer">Message the developer on X</a>
+          <p class="support-thanks">Please briefly explain your feedback or how you'd like to contribute.</p>
+        </section>
+      </div>
+
+      <div id="supportPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-support-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+          <button id="supportClose" class="support-close" type="button" aria-label="Close">×</button>
+          <div class="support-heart" aria-hidden="true">♥</div>
+          <h2 id="supportTitle">Support the developer</h2>
+          <p class="support-copy">If Followback Watchdog helped, consider supporting its upkeep.</p>
+          <a class="x-contact-button" href="https://ko-fi.com/wuhuwang" target="_blank" rel="noopener noreferrer">Support on Ko-fi ↗</a>
+          <p class="support-thanks">Ko-fi is an external support site. You will decide there whether to make a contribution.</p>
+          <p class="support-thanks">Thanks for supporting the maintenance and development of Followback Watchdog.</p>
+        </section>
+      </div>
+    </main>
+    <script src="error-localizer.js"></script>
+    <script src="../../locale-switch.js"></script>
+    <script src="../../lib/confirm-modal.js"></script>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

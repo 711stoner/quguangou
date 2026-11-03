@@ -1,0 +1,20 @@
+{
+  "extensionName": {
+    "message": "Quién no te sigue en X | Seguimientos"
+  },
+  "extensionNameChrome": {
+    "message": "Quién no te sigue en X | Seguimientos"
+  },
+  "extensionNameEdge": {
+    "message": "Quién no te sigue en X | Seguimientos"
+  },
+  "extensionShortName": {
+    "message": "Seguidores X"
+  },
+  "extensionDescription": {
+    "message": "Detecta quién no te sigue de vuelta en X. Consulta listas comunitarias y bloquea o deja de seguir cuentas en tandas, tras confirmar."
+  },
+  "extensionDescriptionChrome": {
+    "message": "Detecta quién no te sigue de vuelta en X. Consulta listas comunitarias y bloquea o deja de seguir cuentas en tandas, tras confirmar."
+  }
+}

@@ -1,26 +1,26 @@
 {
-  "extensionName": {
-    "message": "取关狗",
-    "description": "扩展名称"
-  },
-  "extensionShortName": {
-    "message": "取关狗",
-    "description": "扩展短名称"
-  },
   "extensionDescription": {
-    "message": "X 中文社区黑名单与单向取关线索工具：查看社区名单，核对账号后分批拉黑；不是个人取关检测器。",
-    "description": "扩展简介"
-  },
-  "extensionNameChrome": {
-    "message": "取关狗｜X/Twitter 黑名单、单向取关与分批拉黑",
-    "description": "Chrome 商店 SEO 扩展名称"
+    "message": "在 X（Twitter）检测当前未回关账号，查看社区共享黑名单；选择后分批拉黑或取关。提供白名单保护，不追踪历史取关。",
+    "description": "Localized summary for installed extension and store listing"
   },
   "extensionDescriptionChrome": {
-    "message": "X/Twitter 中文社区黑名单与单向取关线索工具：查看社区名单，核对账号后分批拉黑，并采用拟人化冷却。",
-    "description": "Chrome 商店 SEO 简介"
+    "message": "在 X（Twitter）检测当前未回关账号，查看社区共享黑名单；选择后分批拉黑或取关。提供白名单保护，不追踪历史取关。",
+    "description": "Localized summary for installed extension and store listing"
+  },
+  "extensionName": {
+    "message": "取关狗｜X/Twitter 未回关检测、黑名单与分批拉黑",
+    "description": "Localized searchable extension title for all store platforms"
+  },
+  "extensionNameChrome": {
+    "message": "取关狗｜X/Twitter 未回关检测、黑名单与分批拉黑",
+    "description": "Localized searchable extension title for all store platforms"
   },
   "extensionNameEdge": {
-    "message": "取关狗｜X（Twitter）黑名单、单向取关与分批拉黑",
-    "description": "Edge 商店 SEO 扩展名称"
+    "message": "取关狗｜X/Twitter 未回关检测、黑名单与分批拉黑",
+    "description": "Localized searchable extension title for all store platforms"
+  },
+  "extensionShortName": {
+    "description": "扩展短名称",
+    "message": "取关狗"
   }
 }

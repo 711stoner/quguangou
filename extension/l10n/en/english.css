@@ -1,0 +1,9 @@
+/* English edition layout only. Chinese layout and styling are unchanged. */
+.brand > div { min-width: 0; }
+.brand h1 { font-size: 21px; letter-spacing: -0.01em; line-height: 1.2; overflow-wrap: break-word; }
+.brand p { font-size: 12px; line-height: 1.45; overflow-wrap: break-word; }
+.mode-copy, .mode-copy strong, .mode-copy small { min-width: 0; overflow-wrap: break-word; }
+.mode-copy small { line-height: 1.45; }
+.support-link { min-width: 0; }
+.support-link strong, .support-link small { overflow-wrap: break-word; }
+@media (max-width: 380px) { .brand h1 { font-size: 18px; } .brand p { font-size: 11px; } }

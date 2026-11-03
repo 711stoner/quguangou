@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Followback Watchdog</title>
+    <link rel="stylesheet" href="../../popup.css" />
+    <link rel="stylesheet" href="../../locale-switch.css" />
+    <link rel="stylesheet" href="../../locale-switch.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="brand">
+        <img src="../en/assets/icon-128.png" alt="" />
+        <div>
+          <h1>Followback Watchdog</h1>
+          <p>Kiểm tra ai không theo dõi lại bạn và xem danh sách chặn cộng đồng trên X</p>
+        </div>
+      </header>
+
+      <section id="modeView">
+        <div class="section-title">
+          <h2>Chọn chế độ</h2>
+        </div>
+        <p class="description">Danh sách chặn cộng đồng xử lý các tài khoản được chia sẻ theo từng đợt. Tài khoản cá nhân kiểm tra quan hệ theo dõi của chính bạn. Hai chế độ hoạt động độc lập.</p>
+        <div class="mode-grid">
+          <button id="communityModeButton" class="mode-card mode-card-community" type="button">
+            <span class="mode-icon" aria-hidden="true">◎</span>
+            <span class="mode-copy">
+              <strong>Danh sách chặn cộng đồng</strong>
+              <small>Xem danh sách chặn do cộng đồng quản lý và chặn tài khoản theo từng đợt.</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">›</span>
+          </button>
+          <button id="personalModeButton" class="mode-card mode-card-personal" type="button">
+            <span class="mode-icon" aria-hidden="true">●</span>
+            <span class="mode-copy">
+              <strong>Tài khoản cá nhân <em>MỚI</em></strong>
+              <small>Tìm tài khoản bạn đang theo dõi nhưng họ không theo dõi lại bạn.</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">›</span>
+          </button>
+        </div>
+
+      </section>
+
+      <section id="personalView" class="hidden">
+        <button id="personalBackButton" class="back-button" type="button">← Quay lại chọn chế độ</button>
+        <div class="section-title personal-title">
+          <h2>Tài khoản cá nhân</h2>
+          <span class="version">Chỉ tài khoản đang đăng nhập</span>
+        </div>
+        <div class="personal-feature">
+          <span class="personal-feature-kicker">Quan hệ theo dõi</span>
+          <h3>Kiểm tra không theo dõi lại</h3>
+          <p>Tìm tài khoản bạn theo dõi nhưng không theo dõi lại bạn. Kết quả chỉ áp dụng cho tài khoản X đang đăng nhập.</p>
+          <div class="personal-flow">
+            <span>Quét quan hệ theo dõi</span><span>→</span><span>Tạo danh sách</span><span>→</span><span>Chọn thao tác</span>
+          </div>
+          <div id="personalScanSummary" class="personal-scan-summary">Chưa quét</div>
+          <div id="personalScanProgress" class="hidden">
+            <div class="progress-track"><div id="personalProgressBar"></div></div>
+            <p id="personalProgressText" class="progress-text"></p>
+          </div>
+          <button id="personalScanButton" class="primary" type="button">Bắt đầu quét</button>
+          <button id="personalCancelScanButton" class="secondary hidden" type="button">Tạm dừng quét (lưu tiến độ)</button>
+          <button id="personalForceRestartButton" class="secondary personal-force-restart hidden" type="button">Mở lại cửa sổ quét (giữ tiến độ)</button>
+          <p id="personalRecoveryHint" class="personal-note hidden" role="status"></p>
+          <p class="personal-note">Nếu X gặp lỗi, tiện ích sẽ thử lại một số lần có giới hạn. Nếu vẫn không tải được danh sách, việc quét sẽ tạm dừng và lưu tiến độ. Khi danh sách X hoạt động bình thường, hãy chọn Tiếp tục quét.</p>
+          <p id="personalScanNote" class="personal-note">Việc quét mở một cửa sổ X riêng. Danh sách dài có thể mất thời gian. Hãy giữ cửa sổ mở và không chuyển thẻ cho tới khi bước hiện tại hoàn tất.</p>
+        </div>
+
+        <details id="personalWhitelistPanel" class="personal-whitelist" open>
+          <summary>Danh sách bảo vệ (<span id="personalWhitelistCount">0</span>)</summary>
+          <p class="personal-note">Chỉ lưu trên trình duyệt này. Danh sách thường được giữ khi khởi động lại hoặc cập nhật tiện ích, nhưng có thể mất khi gỡ tiện ích hoặc xóa dữ liệu. Tài khoản được bảo vệ sẽ bị bỏ qua khi chặn hoặc bỏ theo dõi hàng loạt.</p>
+          <div id="personalWhitelistList" class="personal-whitelist-list">Chưa có tài khoản được bảo vệ. Bạn có thể thêm từ kết quả quét.</div>
+        </details>
+
+        <section id="personalResultView" class="personal-results hidden">
+          <div class="personal-stats">
+            <div><strong id="personalFollowingCount">0</strong><span>Đang theo dõi</span></div>
+            <div><strong id="personalMutualCount">0</strong><span>Theo dõi lẫn nhau</span></div>
+            <div><strong id="personalNonFollowerCount">0</strong><span>Không theo dõi lại</span></div>
+          </div>
+          <div class="personal-result-toolbar">
+            <strong>Tài khoản không theo dõi lại</strong>
+            <span>
+              <button id="personalSelectAllButton" class="link-button" type="button">Chọn tất cả</button>
+              <button id="personalClearSelectionButton" class="link-button" type="button">Bỏ chọn</button>
+            </span>
+          </div>
+          <div id="personalResultList" class="personal-result-list"></div>
+          <div class="personal-action-grid">
+            <button id="personalBlockSelectedButton" class="danger" type="button" disabled>Chặn tài khoản đã chọn</button>
+            <button id="personalUnfollowSelectedButton" class="personal-unfollow" type="button" disabled>Bỏ theo dõi tài khoản đã chọn</button>
+          </div>
+          <p id="personalActionHint" class="personal-note">Chọn tài khoản, sau đó chọn Chặn hoặc Bỏ theo dõi. Cả hai thao tác đều cần xác nhận và được thực hiện theo từng đợt.</p>
+        </section>
+      </section>
+
+      <section id="blocklistView" class="hidden">
+        <button id="communityBackButton" class="back-button" type="button">← Quay lại chọn chế độ</button>
+        <div class="section-title">
+          <h2>Danh sách chặn cộng đồng</h2>
+
+        </div>
+        <p id="blocklistDescription" class="description"></p>
+        <div id="blocklistSummary" class="summary">Đang tải danh sách…</div>
+        <div id="batchGuide" class="batch-guide"></div>
+        <p class="return-note">Danh sách chung được cập nhật định kỳ. Hãy xem tài khoản mới và quyết định có xử lý theo từng đợt hay không.</p>
+        <div id="targetList" class="target-list"></div>
+        <div id="issueList" class="issues"></div>
+        <button id="startButton" class="danger" disabled>Bắt đầu chặn theo đợt</button>
+        <p class="warning">Danh sách cộng đồng này được người kiểm duyệt xem xét. Mỗi đợt xử lý tối đa 20 tài khoản, sau đó bắt buộc chờ 30 phút.</p>
+
+      </section>
+
+      <section id="progressView" class="hidden">
+        <button id="progressBackButton" class="back-button hidden" type="button">← Quay lại chọn chế độ</button>
+        <div class="section-title"><h2 id="progressTitle">Đang xử lý</h2></div>
+        <div id="batchStatus" class="batch-status"></div>
+        <div class="progress-track"><div id="progressBar"></div></div>
+        <p id="progressText" class="progress-text"></p>
+        <p class="progress-human-note">Các thao tác được giãn cách có chủ đích. Mỗi đợt có thể cần thêm thời gian.</p>
+        <div id="resultList" class="result-list"></div>
+        <div id="communityContributionPanel" class="community-contribution hidden">
+          <span class="community-contribution-kicker">Danh sách cộng đồng</span>
+          <strong id="communityContributionTitle">Chia sẻ những tài khoản này với cộng đồng?</strong>
+          <p id="communityContributionCopy">Bạn có thể gửi các tài khoản đã chặn hoặc bỏ theo dõi thành công trong tác vụ này để cộng đồng xét duyệt.</p>
+          <p>Quyền riêng tư: Không gửi hoặc lưu thông tin tài khoản X của chính bạn.</p>
+          <button id="openCommunitySubmitButton" class="candidate-block" type="button"></button>
+        </div>
+        <div id="valuePromo" class="value-promo hidden">
+          <span class="value-promo-kicker">Xong đợt này? Hãy thử</span>
+          <strong>Bạn có thể nhận bao nhiêu cho một bài đăng tài trợ trên X?</strong>
+          <p>Xem nhanh mức giá tham khảo.</p>
+          <a href="https://jiedanfadan.com/vi/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=block_complete" target="_blank" rel="noopener noreferrer">Xem giá tham khảo ↗</a>
+        </div>
+        <button id="cancelButton" class="secondary">Dừng tác vụ</button>
+        <button id="endTaskButton" class="end-task hidden" type="button">Kết thúc tác vụ này</button>
+        <button id="newTaskButton" class="primary hidden">Tác vụ mới</button>
+        <p id="cooldownAdvice" class="cooldown-advice hidden">Để tránh thao tác quá nhanh, cứ 20 tài khoản sẽ phải chờ 30 phút. Hãy tiếp tục đợt sau khi hết thời gian chờ.</p>
+        <button id="skipCooldownButton" class="cooldown-skip hidden" type="button">Bỏ qua thời gian chờ và tiếp tục (rủi ro cao hơn)</button>
+      </section>
+
+      <div id="endTaskConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-end-backdrop></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="endTaskConfirmTitle" aria-describedby="endTaskConfirmCopy">
+          <button class="support-close" type="button" data-end-cancel aria-label="Đóng">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="endTaskConfirmTitle">Kết thúc tác vụ này?</h2>
+          <p id="endTaskConfirmCopy" class="support-copy">Các thao tác chặn hoặc bỏ theo dõi đã hoàn tất sẽ không được hoàn tác. Chỉ tiến độ của tác vụ này bị xóa.</p>
+          <button type="button" class="secondary" data-end-cancel>Hủy</button>
+          <button type="button" class="end-task" data-end-confirm>Kết thúc tác vụ</button>
+        </section>
+      </div>
+
+      <div id="toast" class="toast hidden"></div>
+
+      <aside id="stickyValuePromo" class="sticky-value-promo hidden" aria-label="Ước tính giá bài đăng tài trợ">
+        <span class="sticky-value-kicker">Trong lúc chờ đợt tiếp theo</span>
+        <strong>Bạn có thể nhận bao nhiêu cho một bài đăng tài trợ trên X?</strong>
+        <p>Xem nhanh mức giá tham khảo.</p>
+        <a class="sticky-value-main" href="https://jiedanfadan.com/vi/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=cooldown_value" target="_blank" rel="noopener noreferrer">Xem giá tham khảo ↗</a>
+      </aside>
+
+      <section class="support-footer" aria-label="Phản hồi và hỗ trợ">
+        <button id="feedbackToggle" class="support-link" type="button" aria-expanded="false">
+          <span class="support-link-icon">◎</span>
+          <span><strong>Phản hồi / hợp tác</strong><small>Gửi góp ý, đề xuất hoặc tham gia nhóm cộng đồng</small></span>
+          <span class="support-link-arrow">›</span>
+        </button>
+        <button id="supportToggle" class="support-link" type="button" aria-expanded="false">
+          <span class="support-link-icon">♡</span>
+          <span><strong>Ủng hộ nhà phát triển</strong><small>Giúp duy trì việc phát triển</small></span>
+          <span class="support-link-arrow">›</span>
+        </button>
+      </section>
+
+      <div id="homeValuePromo" class="value-promo home-value-promo hidden">
+        <span class="value-promo-kicker">Ước tính giá bài đăng tài trợ</span>
+        <strong>Bạn có thể nhận bao nhiêu cho một bài đăng tài trợ trên X?</strong>
+        <p>Xem nhanh mức giá tham khảo.</p>
+        <a href="https://jiedanfadan.com/vi/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=home_value" target="_blank" rel="noopener noreferrer">Kiểm tra giá tham khảo ↗</a>
+      </div>
+
+      <footer>
+        <span>Công cụ độc lập, không liên kết với X</span>
+        <a href="https://711stoner.github.io/quguangou/en/" target="_blank" rel="noopener noreferrer">Trang web (tiếng Anh)</a>
+        <a href="privacy.html" target="_blank" rel="noopener noreferrer">Thông báo quyền riêng tư</a>
+      </footer>
+
+      <div id="personalBlockConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-personal-block-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="personalBlockConfirmTitle">
+          <button id="personalBlockConfirmClose" class="support-close" type="button" aria-label="Đóng">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="personalBlockConfirmTitle">Xử lý các tài khoản đã chọn?</h2>
+          <p id="personalBlockConfirmCopy" class="support-copy"></p>
+          <p id="personalBlockConfirmWarning" class="personal-block-warning">Các thao tác được thực hiện lần lượt, tối đa 20 tài khoản mỗi đợt, sau đó chờ 30 phút. Không xử lý tất cả cùng lúc.</p>
+          <button id="personalBlockConfirmCancel" class="secondary" type="button">Hủy</button>
+          <button id="personalBlockConfirmButton" class="danger personal-confirm-danger" type="button">Xác nhận và bắt đầu đợt 1</button>
+        </section>
+      </div>
+
+      <div id="communitySubmitConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-community-submit-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="communitySubmitTitle">
+          <button id="communitySubmitClose" class="support-close" type="button" aria-label="Đóng">×</button>
+          <div class="support-heart" aria-hidden="true">◎</div>
+          <h2 id="communitySubmitTitle">Gửi tất cả tài khoản đủ điều kiện cho cộng đồng?</h2>
+          <p id="communitySubmitCopy" class="support-copy"></p>
+          <p class="personal-block-warning">Quyền riêng tư: Không gửi hoặc lưu thông tin tài khoản X của chính bạn.</p>
+          <button id="communitySubmitCancel" class="secondary" type="button">Hủy</button>
+          <button id="communitySubmitConfirm" class="candidate-block community-submit-confirm" type="button">Gửi tất cả</button>
+        </section>
+      </div>
+
+      <div id="cooldownRiskPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-cooldown-close></div>
+        <section class="support-card cooldown-risk-card" role="dialog" aria-modal="true" aria-labelledby="cooldownRiskTitle">
+          <button id="cooldownRiskClose" class="support-close" type="button" aria-label="Đóng">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="cooldownRiskTitle">Tiếp tục đợt tiếp theo ngay bây giờ?</h2>
+          <p class="support-copy">Bỏ qua thời gian chờ làm tăng tần suất thao tác và có thể khiến X giới hạn yêu cầu, yêu cầu xác minh, hạn chế hoặc đình chỉ tài khoản.</p>
+          <p class="cooldown-risk-recommend">Chờ đủ 30 phút sẽ an toàn hơn.</p>
+          <button id="keepCoolingButton" class="primary" type="button">Tiếp tục chờ</button>
+          <button id="confirmSkipCooldownButton" class="cooldown-confirm" type="button">Tiếp tục ngay</button>
+        </section>
+      </div>
+
+      <div id="feedbackPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-feedback-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+          <button id="feedbackClose" class="support-close" type="button" aria-label="Đóng">×</button>
+          <div class="support-heart" aria-hidden="true">◎</div>
+          <h2 id="feedbackTitle">Phản hồi / tham gia nhóm cộng đồng</h2>
+          <p class="support-copy">Phát hiện lỗi? Có ý tưởng cho danh sách cộng đồng hoặc tính năng mới? Hãy liên hệ để góp phần cải thiện Followback Watchdog.</p>
+          <a class="x-contact-button" href="https://x.com/woyongyuangeson?s=11" target="_blank" rel="noopener noreferrer">Nhắn tin cho nhà phát triển trên X</a>
+          <p class="support-thanks">Mô tả ngắn gọn góp ý hoặc cách bạn muốn đóng góp.</p>
+        </section>
+      </div>
+
+      <div id="supportPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-support-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+          <button id="supportClose" class="support-close" type="button" aria-label="Đóng">×</button>
+          <div class="support-heart" aria-hidden="true">♥</div>
+          <h2 id="supportTitle">Ủng hộ nhà phát triển</h2>
+          <p class="support-copy">Nếu Followback Watchdog hữu ích, bạn có thể cân nhắc hỗ trợ công việc duy trì tiện ích.</p>
+          <a class="x-contact-button" href="https://ko-fi.com/wuhuwang" target="_blank" rel="noopener noreferrer">Ủng hộ qua Ko-fi ↗</a>
+          <p class="support-thanks">Ko-fi là trang hỗ trợ bên ngoài. Bạn tự quyết định có đóng góp hay không tại đó.</p>
+          <p class="support-thanks">Cảm ơn bạn đã hỗ trợ duy trì và phát triển Followback Watchdog.</p>
+        </section>
+      </div>
+    </main>
+    <script src="ui-runtime.js"></script>
+    <script src="../en/error-localizer.js"></script>
+    <script src="ui-error-hook.js"></script>
+    <script src="../../locale-switch.js"></script>
+    <script src="../../lib/confirm-modal.js"></script>
+    <script type="module" src="../en/popup.js"></script>
+  </body>
+</html>

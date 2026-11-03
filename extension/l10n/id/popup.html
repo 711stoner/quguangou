@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Followback Watchdog</title>
+    <link rel="stylesheet" href="../../popup.css" />
+    <link rel="stylesheet" href="../../locale-switch.css" />
+    <link rel="stylesheet" href="../../locale-switch.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="brand">
+        <img src="../en/assets/icon-128.png" alt="" />
+        <div>
+          <h1>Followback Watchdog</h1>
+          <p>Periksa akun yang tidak mengikuti balik dan lihat daftar blokir komunitas di X</p>
+        </div>
+      </header>
+
+      <section id="modeView">
+        <div class="section-title">
+          <h2>Pilih mode</h2>
+        </div>
+        <p class="description">Daftar Blokir Komunitas memproses akun bersama secara bertahap. Akun Pribadi memeriksa hubungan pengikut akun Anda. Kedua mode bekerja terpisah.</p>
+        <div class="mode-grid">
+          <button id="communityModeButton" class="mode-card mode-card-community" type="button">
+            <span class="mode-icon" aria-hidden="true">◎</span>
+            <span class="mode-copy">
+              <strong>Daftar Blokir Komunitas</strong>
+              <small>Tinjau daftar blokir yang dikelola komunitas dan blokir akun secara bertahap.</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">›</span>
+          </button>
+          <button id="personalModeButton" class="mode-card mode-card-personal" type="button">
+            <span class="mode-icon" aria-hidden="true">●</span>
+            <span class="mode-copy">
+              <strong>Akun Pribadi <em>BARU</em></strong>
+              <small>Temukan akun yang Anda ikuti tetapi tidak mengikuti Anda balik.</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">›</span>
+          </button>
+        </div>
+
+      </section>
+
+      <section id="personalView" class="hidden">
+        <button id="personalBackButton" class="back-button" type="button">← Kembali ke pilihan mode</button>
+        <div class="section-title personal-title">
+          <h2>Akun Pribadi</h2>
+          <span class="version">Hanya akun yang sedang masuk</span>
+        </div>
+        <div class="personal-feature">
+          <span class="personal-feature-kicker">Hubungan mengikuti</span>
+          <h3>Periksa yang tidak mengikuti balik</h3>
+          <p>Temukan akun yang Anda ikuti tetapi tidak mengikuti balik. Hasil hanya berlaku untuk akun X yang sedang masuk.</p>
+          <div class="personal-flow">
+            <span>Pindai hubungan mengikuti</span><span>→</span><span>Buat daftar</span><span>→</span><span>Pilih tindakan</span>
+          </div>
+          <div id="personalScanSummary" class="personal-scan-summary">Belum dipindai</div>
+          <div id="personalScanProgress" class="hidden">
+            <div class="progress-track"><div id="personalProgressBar"></div></div>
+            <p id="personalProgressText" class="progress-text"></p>
+          </div>
+          <button id="personalScanButton" class="primary" type="button">Mulai pindai</button>
+          <button id="personalCancelScanButton" class="secondary hidden" type="button">Jeda pemindaian (simpan progres)</button>
+          <button id="personalForceRestartButton" class="secondary personal-force-restart hidden" type="button">Buka ulang jendela pemindaian (progres tersimpan)</button>
+          <p id="personalRecoveryHint" class="personal-note hidden" role="status"></p>
+          <p class="personal-note">Jika X mengalami kesalahan, ekstensi akan mencoba kembali beberapa kali. Jika daftar masih gagal dimuat, pemindaian dijeda dan progres disimpan. Setelah daftar X kembali berfungsi, pilih Lanjutkan pemindaian.</p>
+          <p id="personalScanNote" class="personal-note">Pemindaian membuka jendela X khusus. Daftar panjang dapat memerlukan waktu. Biarkan jendela terbuka dan jangan berpindah tab sampai tahap saat ini selesai.</p>
+        </div>
+
+        <details id="personalWhitelistPanel" class="personal-whitelist" open>
+          <summary>Daftar terlindungi (<span id="personalWhitelistCount">0</span>)</summary>
+          <p class="personal-note">Hanya disimpan di browser ini. Daftar biasanya tetap ada setelah browser dimulai ulang atau ekstensi diperbarui, tetapi bisa hilang jika ekstensi dihapus atau datanya dibersihkan. Akun terlindungi dilewati saat blokir atau berhenti mengikuti massal.</p>
+          <div id="personalWhitelistList" class="personal-whitelist-list">Belum ada akun terlindungi. Tambahkan dari hasil pemindaian.</div>
+        </details>
+
+        <section id="personalResultView" class="personal-results hidden">
+          <div class="personal-stats">
+            <div><strong id="personalFollowingCount">0</strong><span>Mengikuti</span></div>
+            <div><strong id="personalMutualCount">0</strong><span>Saling mengikuti</span></div>
+            <div><strong id="personalNonFollowerCount">0</strong><span>Tidak mengikuti balik</span></div>
+          </div>
+          <div class="personal-result-toolbar">
+            <strong>Akun yang tidak mengikuti balik</strong>
+            <span>
+              <button id="personalSelectAllButton" class="link-button" type="button">Pilih semua</button>
+              <button id="personalClearSelectionButton" class="link-button" type="button">Hapus pilihan</button>
+            </span>
+          </div>
+          <div id="personalResultList" class="personal-result-list"></div>
+          <div class="personal-action-grid">
+            <button id="personalBlockSelectedButton" class="danger" type="button" disabled>Blokir yang dipilih</button>
+            <button id="personalUnfollowSelectedButton" class="personal-unfollow" type="button" disabled>Berhenti mengikuti yang dipilih</button>
+          </div>
+          <p id="personalActionHint" class="personal-note">Pilih akun, lalu pilih Blokir atau Berhenti mengikuti. Keduanya memerlukan konfirmasi dan dijalankan secara bertahap.</p>
+        </section>
+      </section>
+
+      <section id="blocklistView" class="hidden">
+        <button id="communityBackButton" class="back-button" type="button">← Kembali ke pilihan mode</button>
+        <div class="section-title">
+          <h2>Daftar Blokir Komunitas</h2>
+
+        </div>
+        <p id="blocklistDescription" class="description"></p>
+        <div id="blocklistSummary" class="summary">Memuat daftar…</div>
+        <div id="batchGuide" class="batch-guide"></div>
+        <p class="return-note">Daftar bersama diperbarui secara berkala. Periksa entri baru dan putuskan apakah akan memprosesnya secara bertahap.</p>
+        <div id="targetList" class="target-list"></div>
+        <div id="issueList" class="issues"></div>
+        <button id="startButton" class="danger" disabled>Mulai pemblokiran bertahap</button>
+        <p class="warning">Daftar komunitas ini ditinjau moderator. Setiap tahap memproses hingga 20 akun, lalu wajib menunggu 30 menit.</p>
+
+      </section>
+
+      <section id="progressView" class="hidden">
+        <button id="progressBackButton" class="back-button hidden" type="button">← Kembali ke pilihan mode</button>
+        <div class="section-title"><h2 id="progressTitle">Memproses</h2></div>
+        <div id="batchStatus" class="batch-status"></div>
+        <div class="progress-track"><div id="progressBar"></div></div>
+        <p id="progressText" class="progress-text"></p>
+        <p class="progress-human-note">Tindakan sengaja diberi jeda. Setiap tahap mungkin membutuhkan waktu.</p>
+        <div id="resultList" class="result-list"></div>
+        <div id="communityContributionPanel" class="community-contribution hidden">
+          <span class="community-contribution-kicker">Daftar komunitas</span>
+          <strong id="communityContributionTitle">Bagikan akun ini kepada komunitas?</strong>
+          <p id="communityContributionCopy">Anda dapat mengirim akun yang berhasil diblokir atau berhenti diikuti dalam tugas ini untuk ditinjau komunitas.</p>
+          <p>Privasi: Detail akun X Anda sendiri tidak dikirim atau disimpan.</p>
+          <button id="openCommunitySubmitButton" class="candidate-block" type="button"></button>
+        </div>
+        <div id="valuePromo" class="value-promo hidden">
+          <span class="value-promo-kicker">Selesai tahap ini? Coba juga</span>
+          <strong>Berapa perkiraan tarif untuk postingan bersponsor di X?</strong>
+          <p>Lihat perkiraan tarif dengan cepat.</p>
+          <a href="https://jiedanfadan.com/id/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=block_complete" target="_blank" rel="noopener noreferrer">Lihat perkiraan tarif ↗</a>
+        </div>
+        <button id="cancelButton" class="secondary">Hentikan tugas</button>
+        <button id="endTaskButton" class="end-task hidden" type="button">Akhiri tugas ini</button>
+        <button id="newTaskButton" class="primary hidden">Tugas baru</button>
+        <p id="cooldownAdvice" class="cooldown-advice hidden">Untuk menghindari tindakan terlalu cepat, setiap 20 akun harus diikuti jeda 30 menit. Lanjutkan tahap berikutnya setelah jeda.</p>
+        <button id="skipCooldownButton" class="cooldown-skip hidden" type="button">Lewati jeda dan lanjutkan (risiko lebih tinggi)</button>
+      </section>
+
+      <div id="endTaskConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-end-backdrop></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="endTaskConfirmTitle" aria-describedby="endTaskConfirmCopy">
+          <button class="support-close" type="button" data-end-cancel aria-label="Tutup">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="endTaskConfirmTitle">Akhiri tugas ini?</h2>
+          <p id="endTaskConfirmCopy" class="support-copy">Pemblokiran dan tindakan berhenti mengikuti yang sudah selesai tidak dapat dibatalkan. Hanya progres tugas ini yang akan dihapus.</p>
+          <button type="button" class="secondary" data-end-cancel>Batal</button>
+          <button type="button" class="end-task" data-end-confirm>Akhiri tugas</button>
+        </section>
+      </div>
+
+      <div id="toast" class="toast hidden"></div>
+
+      <aside id="stickyValuePromo" class="sticky-value-promo hidden" aria-label="Perkiraan tarif postingan bersponsor">
+        <span class="sticky-value-kicker">Sambil menunggu tahap berikutnya</span>
+        <strong>Berapa perkiraan tarif untuk postingan bersponsor di X?</strong>
+        <p>Lihat perkiraan tarif dengan cepat.</p>
+        <a class="sticky-value-main" href="https://jiedanfadan.com/id/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=cooldown_value" target="_blank" rel="noopener noreferrer">Lihat perkiraan tarif ↗</a>
+      </aside>
+
+      <section class="support-footer" aria-label="Masukan dan dukungan">
+        <button id="feedbackToggle" class="support-link" type="button" aria-expanded="false">
+          <span class="support-link-icon">◎</span>
+          <span><strong>Masukan / kerja sama</strong><small>Kirim masukan, saran, atau bergabung dengan tim komunitas</small></span>
+          <span class="support-link-arrow">›</span>
+        </button>
+        <button id="supportToggle" class="support-link" type="button" aria-expanded="false">
+          <span class="support-link-icon">♡</span>
+          <span><strong>Dukung pengembang</strong><small>Bantu pengembangan berkelanjutan</small></span>
+          <span class="support-link-arrow">›</span>
+        </button>
+      </section>
+
+      <div id="homeValuePromo" class="value-promo home-value-promo hidden">
+        <span class="value-promo-kicker">Perkiraan tarif postingan bersponsor</span>
+        <strong>Berapa perkiraan tarif untuk postingan bersponsor di X?</strong>
+        <p>Lihat perkiraan tarif dengan cepat.</p>
+        <a href="https://jiedanfadan.com/id/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=home_value" target="_blank" rel="noopener noreferrer">Cek perkiraan tarif ↗</a>
+      </div>
+
+      <footer>
+        <span>Alat independen, tidak berafiliasi dengan X</span>
+        <a href="https://711stoner.github.io/quguangou/en/" target="_blank" rel="noopener noreferrer">Situs web (Inggris)</a>
+        <a href="privacy.html" target="_blank" rel="noopener noreferrer">Pemberitahuan privasi</a>
+      </footer>
+
+      <div id="personalBlockConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-personal-block-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="personalBlockConfirmTitle">
+          <button id="personalBlockConfirmClose" class="support-close" type="button" aria-label="Tutup">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="personalBlockConfirmTitle">Proses akun yang dipilih?</h2>
+          <p id="personalBlockConfirmCopy" class="support-copy"></p>
+          <p id="personalBlockConfirmWarning" class="personal-block-warning">Tindakan dijalankan satu per satu, maksimal 20 akun per tahap, dilanjutkan jeda 30 menit. Tidak semua akun diproses sekaligus.</p>
+          <button id="personalBlockConfirmCancel" class="secondary" type="button">Batal</button>
+          <button id="personalBlockConfirmButton" class="danger personal-confirm-danger" type="button">Konfirmasi dan mulai tahap 1</button>
+        </section>
+      </div>
+
+      <div id="communitySubmitConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-community-submit-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="communitySubmitTitle">
+          <button id="communitySubmitClose" class="support-close" type="button" aria-label="Tutup">×</button>
+          <div class="support-heart" aria-hidden="true">◎</div>
+          <h2 id="communitySubmitTitle">Kirim semua akun yang memenuhi syarat kepada komunitas?</h2>
+          <p id="communitySubmitCopy" class="support-copy"></p>
+          <p class="personal-block-warning">Privasi: Detail akun X Anda sendiri tidak dikirim atau disimpan.</p>
+          <button id="communitySubmitCancel" class="secondary" type="button">Batal</button>
+          <button id="communitySubmitConfirm" class="candidate-block community-submit-confirm" type="button">Kirim semua</button>
+        </section>
+      </div>
+
+      <div id="cooldownRiskPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-cooldown-close></div>
+        <section class="support-card cooldown-risk-card" role="dialog" aria-modal="true" aria-labelledby="cooldownRiskTitle">
+          <button id="cooldownRiskClose" class="support-close" type="button" aria-label="Tutup">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="cooldownRiskTitle">Lanjutkan tahap berikutnya sekarang?</h2>
+          <p class="support-copy">Melewati jeda meningkatkan frekuensi tindakan dan dapat memicu batas permintaan X, verifikasi, pembatasan akun, atau penangguhan.</p>
+          <p class="cooldown-risk-recommend">Menunggu selama 30 menit penuh lebih aman.</p>
+          <button id="keepCoolingButton" class="primary" type="button">Tetap menunggu</button>
+          <button id="confirmSkipCooldownButton" class="cooldown-confirm" type="button">Lanjutkan sekarang</button>
+        </section>
+      </div>
+
+      <div id="feedbackPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-feedback-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+          <button id="feedbackClose" class="support-close" type="button" aria-label="Tutup">×</button>
+          <div class="support-heart" aria-hidden="true">◎</div>
+          <h2 id="feedbackTitle">Masukan / bergabung dengan tim komunitas</h2>
+          <p class="support-copy">Menemukan bug? Punya saran untuk daftar komunitas atau ide fitur baru? Hubungi kami dan bantu tingkatkan Followback Watchdog.</p>
+          <a class="x-contact-button" href="https://x.com/woyongyuangeson?s=11" target="_blank" rel="noopener noreferrer">Kirim pesan ke pengembang di X</a>
+          <p class="support-thanks">Jelaskan secara singkat masukan Anda atau cara Anda ingin berkontribusi.</p>
+        </section>
+      </div>
+
+      <div id="supportPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-support-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+          <button id="supportClose" class="support-close" type="button" aria-label="Tutup">×</button>
+          <div class="support-heart" aria-hidden="true">♥</div>
+          <h2 id="supportTitle">Dukung pengembang</h2>
+          <p class="support-copy">Jika Followback Watchdog bermanfaat, pertimbangkan untuk mendukung pemeliharaannya.</p>
+          <a class="x-contact-button" href="https://ko-fi.com/wuhuwang" target="_blank" rel="noopener noreferrer">Dukung melalui Ko-fi ↗</a>
+          <p class="support-thanks">Ko-fi adalah situs dukungan eksternal. Anda bebas menentukan apakah akan memberi kontribusi di sana.</p>
+          <p class="support-thanks">Terima kasih telah mendukung pemeliharaan dan pengembangan Followback Watchdog.</p>
+        </section>
+      </div>
+    </main>
+    <script src="ui-runtime.js"></script>
+    <script src="../en/error-localizer.js"></script>
+    <script src="ui-error-hook.js"></script>
+    <script src="../../locale-switch.js"></script>
+    <script src="../../lib/confirm-modal.js"></script>
+    <script type="module" src="../en/popup.js"></script>
+  </body>
+</html>

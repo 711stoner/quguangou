@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Followback Watchdog</title>
+    <link rel="stylesheet" href="../../popup.css" />
+    <link rel="stylesheet" href="../../locale-switch.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="brand">
+        <img src="../en/assets/icon-128.png" alt="" />
+        <div>
+          <h1>Followback Watchdog</h1>
+          <p>Comprueba quién te sigue de vuelta y consulta las listas comunitarias en X</p>
+        </div>
+      </header>
+
+      <section id="modeView">
+        <div class="section-title">
+          <h2>Elige un modo</h2>
+        </div>
+        <p class="description">La lista comunitaria procesa cuentas compartidas en tandas espaciadas. Cuenta personal revisa tus propias relaciones de seguimiento. Son funciones independientes.</p>
+        <div class="mode-grid">
+          <button id="communityModeButton" class="mode-card mode-card-community" type="button">
+            <span class="mode-icon" aria-hidden="true">◎</span>
+            <span class="mode-copy">
+              <strong>Lista de bloqueo comunitaria</strong>
+              <small>Revisa la lista gestionada por la comunidad y bloquea cuentas en tandas espaciadas.</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">›</span>
+          </button>
+          <button id="personalModeButton" class="mode-card mode-card-personal" type="button">
+            <span class="mode-icon" aria-hidden="true">●</span>
+            <span class="mode-copy">
+              <strong>Cuenta personal <em>NOVEDAD</em></strong>
+              <small>Encuentra las cuentas a las que sigues pero que no te siguen.</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">›</span>
+          </button>
+        </div>
+
+      </section>
+
+      <section id="personalView" class="hidden">
+        <button id="personalBackButton" class="back-button" type="button">← Volver a elegir modo</button>
+        <div class="section-title personal-title">
+          <h2>Cuenta personal</h2>
+          <span class="version">Solo la cuenta con sesión iniciada</span>
+        </div>
+        <div class="personal-feature">
+          <span class="personal-feature-kicker">Relaciones de seguimiento</span>
+          <h3>Comprobar quién no te sigue</h3>
+          <p>Identifica las cuentas que sigues pero que no te siguen de vuelta. Los resultados se refieren únicamente a la cuenta de X con sesión iniciada.</p>
+          <div class="personal-flow">
+            <span>Analizar seguimientos</span><span>→</span><span>Crear lista</span><span>→</span><span>Elegir acción</span>
+          </div>
+          <div id="personalScanSummary" class="personal-scan-summary">Aún no has realizado un análisis</div>
+          <div id="personalScanProgress" class="hidden">
+            <div class="progress-track"><div id="personalProgressBar"></div></div>
+            <p id="personalProgressText" class="progress-text"></p>
+          </div>
+          <button id="personalScanButton" class="primary" type="button">Iniciar análisis</button>
+          <button id="personalCancelScanButton" class="secondary hidden" type="button">Pausar análisis (guardar avance)</button>
+          <button id="personalForceRestartButton" class="secondary personal-force-restart hidden" type="button">Forzar reapertura del análisis (conservar progreso)</button>
+          <p id="personalRecoveryHint" class="personal-note hidden" role="status"></p>
+          <p class="personal-note">Si X devuelve un error, la extensión reintentará unas pocas veces. Si sigue sin cargar, pausará el análisis y guardará el avance. Cuando las listas de X vuelvan a funcionar, selecciona Reanudar análisis.</p>
+          <p id="personalScanNote" class="personal-note">Al comenzar se abre una ventana de X exclusiva para el análisis. Las listas grandes pueden tardar. Mantenla abierta y evita cambiar de pestaña hasta terminar la fase actual.</p>
+        </div>
+
+        <details id="personalWhitelistPanel" class="personal-whitelist" open>
+          <summary>Lista de protegidos (<span id="personalWhitelistCount">0</span>)</summary>
+          <p class="personal-note">Esta lista se guarda solo en este navegador. Normalmente se conserva tras reiniciar o actualizar, pero puede perderse al desinstalar la extensión o borrar sus datos. Las cuentas protegidas se omiten al bloquear o dejar de seguir en lote.</p>
+          <div id="personalWhitelistList" class="personal-whitelist-list">Aún no hay cuentas protegidas. Añádelas desde los resultados.</div>
+        </details>
+
+        <section id="personalResultView" class="personal-results hidden">
+          <div class="personal-stats">
+            <div><strong id="personalFollowingCount">0</strong><span>Siguiendo</span></div>
+            <div><strong id="personalMutualCount">0</strong><span>Seguimiento mutuo</span></div>
+            <div><strong id="personalNonFollowerCount">0</strong><span>No te siguen</span></div>
+          </div>
+          <div class="personal-result-toolbar">
+            <strong>Cuentas que no te siguen</strong>
+            <span>
+              <button id="personalSelectAllButton" class="link-button" type="button">Seleccionar todo</button>
+              <button id="personalClearSelectionButton" class="link-button" type="button">Borrar selección</button>
+            </span>
+          </div>
+          <div id="personalResultList" class="personal-result-list"></div>
+          <div class="personal-action-grid">
+            <button id="personalBlockSelectedButton" class="danger" type="button" disabled>Bloquear seleccionadas</button>
+            <button id="personalUnfollowSelectedButton" class="personal-unfollow" type="button" disabled>Dejar de seguir seleccionadas</button>
+          </div>
+          <p id="personalActionHint" class="personal-note">Selecciona las cuentas y elige Bloquear o Dejar de seguir. Ambas acciones requieren confirmación y se realizan por tandas espaciadas.</p>
+        </section>
+      </section>
+
+      <section id="blocklistView" class="hidden">
+        <button id="communityBackButton" class="back-button" type="button">← Volver a elegir modo</button>
+        <div class="section-title">
+          <h2>Lista de bloqueo comunitaria</h2>
+
+        </div>
+        <p id="blocklistDescription" class="description"></p>
+        <div id="blocklistSummary" class="summary">Cargando lista…</div>
+        <div id="batchGuide" class="batch-guide"></div>
+        <p class="return-note">La lista compartida se actualiza periódicamente. Vuelve para ver nuevas entradas y decidir si quieres procesarlas por tandas.</p>
+        <div id="targetList" class="target-list"></div>
+        <div id="issueList" class="issues"></div>
+        <button id="startButton" class="danger" disabled>Iniciar bloqueo por tandas</button>
+        <p class="warning">Un moderador revisa esta lista. Cada tanda procesa hasta 20 cuentas y después aplica una pausa obligatoria de 30 minutos.</p>
+
+      </section>
+
+      <section id="progressView" class="hidden">
+        <button id="progressBackButton" class="back-button hidden" type="button">← Volver a elegir modo</button>
+        <div class="section-title"><h2 id="progressTitle">Procesando</h2></div>
+        <div id="batchStatus" class="batch-status"></div>
+        <div class="progress-track"><div id="progressBar"></div></div>
+        <p id="progressText" class="progress-text"></p>
+        <p class="progress-human-note">Las acciones se espacian deliberadamente. Cada tanda puede tardar unos minutos.</p>
+        <div id="resultList" class="result-list"></div>
+        <div id="communityContributionPanel" class="community-contribution hidden">
+          <span class="community-contribution-kicker">Lista comunitaria</span>
+          <strong id="communityContributionTitle">¿Compartir estas cuentas con la comunidad?</strong>
+          <p id="communityContributionCopy">Puedes enviar para su revisión las cuentas que hayas bloqueado o dejado de seguir correctamente durante esta tarea.</p>
+          <p>Privacidad: no se envían ni guardan los datos de tu propia cuenta de X.</p>
+          <button id="openCommunitySubmitButton" class="candidate-block" type="button"></button>
+        </div>
+        <div id="valuePromo" class="value-promo hidden">
+          <span class="value-promo-kicker">¿Terminaste la tanda? También puedes…</span>
+          <strong>¿Cuánto cobrar por una publicación patrocinada en X?</strong>
+          <p>Consulta una estimación orientativa de tu tarifa.</p>
+          <a href="https://jiedanfadan.com/es/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=block_complete" target="_blank" rel="noopener noreferrer">Probar ↗</a>
+        </div>
+        <button id="cancelButton" class="secondary">Detener tarea</button>
+        <button id="endTaskButton" class="end-task hidden" type="button">Finalizar esta tarea</button>
+        <button id="newTaskButton" class="primary hidden">Nueva tarea</button>
+        <p id="cooldownAdvice" class="cooldown-advice hidden">Para evitar acciones demasiado rápidas, se aplica una pausa de 30 minutos por cada 20 cuentas. Continúa después del descanso.</p>
+        <button id="skipCooldownButton" class="cooldown-skip hidden" type="button">Saltar la pausa y continuar (más riesgo)</button>
+      </section>
+
+      <div id="endTaskConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-end-backdrop></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="endTaskConfirmTitle" aria-describedby="endTaskConfirmCopy">
+          <button class="support-close" type="button" data-end-cancel aria-label="Cerrar">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="endTaskConfirmTitle">¿Finalizar esta tarea?</h2>
+          <p id="endTaskConfirmCopy" class="support-copy">Los bloqueos y las acciones de dejar de seguir ya completados no se revertirán. Solo se borrará el avance de esta tarea.</p>
+          <button type="button" class="secondary" data-end-cancel>Cancelar</button>
+          <button type="button" class="end-task" data-end-confirm>Finalizar tarea</button>
+        </section>
+      </div>
+
+      <div id="toast" class="toast hidden"></div>
+
+      <aside id="stickyValuePromo" class="sticky-value-promo hidden" aria-label="Estimación de la tarifa patrocinada">
+        <span class="sticky-value-kicker">Mientras esperas a la siguiente tanda</span>
+        <strong>¿Cuánto cobrar por una publicación patrocinada en X?</strong>
+        <p>Consulta una estimación orientativa de tu tarifa.</p>
+        <a class="sticky-value-main" href="https://jiedanfadan.com/es/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=cooldown_value" target="_blank" rel="noopener noreferrer">Probar ↗</a>
+      </aside>
+
+      <section class="support-footer" aria-label="Comentarios y ayuda">
+        <button id="feedbackToggle" class="support-link" type="button" aria-expanded="false">
+          <span class="support-link-icon">◎</span>
+          <span><strong>Comentarios y colaboración</strong><small>Envía errores, sugerencias o participa en el equipo comunitario</small></span>
+          <span class="support-link-arrow">›</span>
+        </button>
+        <button id="supportToggle" class="support-link" type="button" aria-expanded="false">
+          <span class="support-link-icon">♡</span>
+          <span><strong>Apoyar al desarrollador</strong><small>Ayuda a mantener el proyecto</small></span>
+          <span class="support-link-arrow">›</span>
+        </button>
+      </section>
+
+      <div id="homeValuePromo" class="value-promo home-value-promo hidden">
+        <span class="value-promo-kicker">Estimación de tarifa patrocinada</span>
+        <strong>¿Cuánto cobrar por una publicación patrocinada en X?</strong>
+        <p>Consulta una estimación orientativa de tu tarifa.</p>
+        <a href="https://jiedanfadan.com/es/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=home_value" target="_blank" rel="noopener noreferrer">Ver estimación ↗</a>
+      </div>
+
+      <footer>
+        <span>Herramienta independiente, sin relación con X</span>
+        <a href="https://711stoner.github.io/quguangou/en/" target="_blank" rel="noopener noreferrer">Sitio web (en inglés)</a>
+        <a href="privacy.html" target="_blank" rel="noopener noreferrer">Aviso de privacidad</a>
+      </footer>
+
+      <div id="personalBlockConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-personal-block-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="personalBlockConfirmTitle">
+          <button id="personalBlockConfirmClose" class="support-close" type="button" aria-label="Cerrar">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="personalBlockConfirmTitle">¿Procesar las cuentas seleccionadas?</h2>
+          <p id="personalBlockConfirmCopy" class="support-copy"></p>
+          <p id="personalBlockConfirmWarning" class="personal-block-warning">Las acciones se realizan una a una en tandas de hasta 20 cuentas, seguidas de pausas de 30 minutos. Nunca se procesan todas a la vez.</p>
+          <button id="personalBlockConfirmCancel" class="secondary" type="button">Cancelar</button>
+          <button id="personalBlockConfirmButton" class="danger personal-confirm-danger" type="button">Confirmar e iniciar la primera tanda</button>
+        </section>
+      </div>
+
+      <div id="communitySubmitConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-community-submit-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="communitySubmitTitle">
+          <button id="communitySubmitClose" class="support-close" type="button" aria-label="Cerrar">×</button>
+          <div class="support-heart" aria-hidden="true">◎</div>
+          <h2 id="communitySubmitTitle">¿Enviar todas las cuentas aptas a la comunidad?</h2>
+          <p id="communitySubmitCopy" class="support-copy"></p>
+          <p class="personal-block-warning">Privacidad: no se envían ni guardan los datos de tu propia cuenta de X.</p>
+          <button id="communitySubmitCancel" class="secondary" type="button">Cancelar</button>
+          <button id="communitySubmitConfirm" class="candidate-block community-submit-confirm" type="button">Enviar todas</button>
+        </section>
+      </div>
+
+      <div id="cooldownRiskPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-cooldown-close></div>
+        <section class="support-card cooldown-risk-card" role="dialog" aria-modal="true" aria-labelledby="cooldownRiskTitle">
+          <button id="cooldownRiskClose" class="support-close" type="button" aria-label="Cerrar">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="cooldownRiskTitle">¿Continuar con la siguiente tanda ahora?</h2>
+          <p class="support-copy">Saltar la pausa aumenta la frecuencia de acciones y puede provocar límites de X, verificaciones, restricciones o suspensiones de cuenta.</p>
+          <p class="cooldown-risk-recommend">Es más seguro esperar los 30 minutos.</p>
+          <button id="keepCoolingButton" class="primary" type="button">Seguir esperando</button>
+          <button id="confirmSkipCooldownButton" class="cooldown-confirm" type="button">Continuar ahora</button>
+        </section>
+      </div>
+
+      <div id="feedbackPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-feedback-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+          <button id="feedbackClose" class="support-close" type="button" aria-label="Cerrar">×</button>
+          <div class="support-heart" aria-hidden="true">◎</div>
+          <h2 id="feedbackTitle">Comentarios y equipo comunitario</h2>
+          <p class="support-copy">¿Encontraste un error o tienes una sugerencia para la lista comunitaria o una nueva función? Escríbenos para mejorar Followback Watchdog.</p>
+          <a class="x-contact-button" href="https://x.com/woyongyuangeson?s=11" target="_blank" rel="noopener noreferrer">Escribir al desarrollador en X</a>
+          <p class="support-thanks">Explica brevemente tu comentario o cómo te gustaría colaborar.</p>
+        </section>
+      </div>
+
+      <div id="supportPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-support-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+          <button id="supportClose" class="support-close" type="button" aria-label="Cerrar">×</button>
+          <div class="support-heart" aria-hidden="true">♥</div>
+          <h2 id="supportTitle">Apoyar al desarrollador</h2>
+          <p class="support-copy">Si te ha resultado útil, puedes contribuir a su mantenimiento.</p>
+          <a class="x-contact-button" href="https://ko-fi.com/wuhuwang" target="_blank" rel="noopener noreferrer">Apoyar en Ko-fi ↗</a>
+          <p class="support-thanks">Ko-fi es un sitio externo. Tú decides allí si quieres hacer una aportación.</p>
+          <p class="support-thanks">Gracias por apoyar el mantenimiento y desarrollo de Followback Watchdog.</p>
+        </section>
+      </div>
+    </main>
+    <script src="ui-runtime.js"></script>
+    <script src="../en/error-localizer.js"></script>
+    <script src="ui-error-hook.js"></script>
+    <script src="../../locale-switch.js"></script>
+    <script src="../../lib/confirm-modal.js"></script>
+    <script type="module" src="../en/popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "extensionName": {
+    "message": "Cek yang Tidak Mengikuti Balik di X"
+  },
+  "extensionNameChrome": {
+    "message": "Cek yang Tidak Mengikuti Balik di X"
+  },
+  "extensionNameEdge": {
+    "message": "Cek yang Tidak Mengikuti Balik di X"
+  },
+  "extensionShortName": {
+    "message": "Cek Ikuti Balik"
+  },
+  "extensionDescription": {
+    "message": "Periksa akun X yang tidak mengikuti balik. Kelola daftar terlindungi dan daftar blokir komunitas secara bertahap."
+  },
+  "extensionDescriptionChrome": {
+    "message": "Periksa akun X yang tidak mengikuti balik. Kelola daftar terlindungi dan daftar blokir komunitas secara bertahap."
+  }
+}

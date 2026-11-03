@@ -1,15 +1,18 @@
 {
   "manifest_version": 3,
-  "name": "__MSG_extensionNameChrome__",
-  "version": "0.2.25",
-  "description": "__MSG_extensionDescriptionChrome__",
+  "name": "__MSG_extensionName__",
+  "version": "0.2.72",
+  "description": "__MSG_extensionDescription__",
   "permissions": [
     "storage",
-    "scripting"
+    "scripting",
+    "alarms",
+    "sidePanel"
   ],
   "host_permissions": [
     "https://x.com/*",
-    "https://711stoner.github.io/*"
+    "https://quguangou-community-api.juejiangfm.workers.dev/*",
+    "https://quguangou-locale-community.juejiangfm.workers.dev/*"
   ],
   "icons": {
     "16": "assets/icon-16.png",
@@ -21,13 +24,27 @@
     "service_worker": "background.js",
     "type": "module"
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://x.com/*"
+      ],
+      "js": [
+        "network-hook.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ],
   "action": {
     "default_title": "__MSG_extensionName__",
-    "default_popup": "popup.html",
     "default_icon": {
       "16": "assets/icon-16.png",
       "32": "assets/icon-32.png"
     }
+  },
+  "side_panel": {
+    "default_path": "popup.html"
   },
   "short_name": "__MSG_extensionShortName__",
   "default_locale": "zh_CN"

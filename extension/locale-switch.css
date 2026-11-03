@@ -1,0 +1,13 @@
+.brand > div:not(.locale-switcher) { min-width: 0; flex: 1 1 auto; }
+.brand .locale-switcher { position: relative; flex: 0 0 auto; margin-left: auto; align-self: flex-start; z-index: 50; }
+.locale-trigger { display: inline-flex; align-items: center; justify-content: center; gap: 4px; border: 1px solid #dfcfc3; border-radius: 10px; background: rgba(255,255,255,.86); color: #55453e; min-width: 51px; padding: 7px; font-size: 11px; font-weight: 700; cursor: pointer; }
+.locale-trigger:hover, .locale-trigger:focus-visible { border-color: #d98239; background: #fffaf6; outline-offset: 2px; }
+.locale-menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 90; min-width: 132px; border: 1px solid #e1d4ca; border-radius: 11px; background: #fffdfa; box-shadow: 0 6px 18px rgba(45,25,15,.14); padding: 5px; }
+.locale-menu[hidden] { display: none; }
+.locale-option { display: block; width: 100%; text-align: left; font-size: 12px; color: #302822; padding: 9px 10px; background: transparent; border: 0; border-radius: 7px; cursor: pointer; white-space: nowrap; }
+.locale-option:hover, .locale-option:focus-visible { background: #fff0e3; outline: none; }
+.locale-option[aria-checked="true"] { color: #b35816; font-weight: 750; background: #fff5ed; }
+@media (max-width: 390px) { .brand { gap: 8px; } .brand img { width: 40px; height: 40px; } .locale-trigger { padding: 5px; min-width: 44px; } }
+
+.locale-menu { max-height: min(360px, 75vh); overflow-y:auto; min-width: 148px; overscroll-behavior: contain; }
+.locale-option { min-height: 36px; }

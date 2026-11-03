@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Followback Watchdog | X Non-Follower Checker",
+    "description": "Localized searchable extension title for all store platforms"
+  },
+  "extensionNameChrome": {
+    "message": "Followback Watchdog | X Non-Follower Checker",
+    "description": "Localized searchable extension title for all store platforms"
+  },
+  "extensionNameEdge": {
+    "message": "Followback Watchdog | X Non-Follower Checker",
+    "description": "Localized searchable extension title for all store platforms"
+  },
+  "extensionShortName": {
+    "message": "Followback",
+    "description": "Short extension name"
+  },
+  "extensionDescription": {
+    "message": "Check current non-followers on X (Twitter), review community blocklists, then block or unfollow selected accounts in paced batches.",
+    "description": "Localized summary for installed extension and store listing"
+  },
+  "extensionDescriptionChrome": {
+    "message": "Check current non-followers on X (Twitter), review community blocklists, then block or unfollow selected accounts in paced batches.",
+    "description": "Localized summary for installed extension and store listing"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "extensionName": {
+    "message": "Ai không theo dõi lại trên X | Followback"
+  },
+  "extensionNameChrome": {
+    "message": "Ai không theo dõi lại trên X | Followback"
+  },
+  "extensionNameEdge": {
+    "message": "Ai không theo dõi lại trên X | Followback"
+  },
+  "extensionShortName": {
+    "message": "Kiểm tra theo dõi"
+  },
+  "extensionDescription": {
+    "message": "Kiểm tra tài khoản X không theo dõi lại bạn, quản lý danh sách bảo vệ và danh sách chặn cộng đồng theo từng đợt."
+  },
+  "extensionDescriptionChrome": {
+    "message": "Kiểm tra tài khoản X không theo dõi lại bạn, quản lý danh sách bảo vệ và danh sách chặn cộng đồng theo từng đợt."
+  }
+}

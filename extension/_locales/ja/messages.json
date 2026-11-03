@@ -1,0 +1,20 @@
+{
+  "extensionName": {
+    "message": "フォローバック確認｜Xの片思いフォロー検出"
+  },
+  "extensionNameChrome": {
+    "message": "フォローバック確認｜Xの片思いフォロー検出"
+  },
+  "extensionNameEdge": {
+    "message": "フォローバック確認｜Xの片思いフォロー検出"
+  },
+  "extensionShortName": {
+    "message": "フォローバック確認"
+  },
+  "extensionDescription": {
+    "message": "Xでフォローが返っていない相手を確認。コミュニティのブロックリストも閲覧でき、確認後に対象を選んで間隔を空けてブロック・フォロー解除できます。"
+  },
+  "extensionDescriptionChrome": {
+    "message": "Xでフォローが返っていない相手を確認。コミュニティのブロックリストも閲覧でき、確認後に対象を選んで間隔を空けてブロック・フォロー解除できます。"
+  }
+}

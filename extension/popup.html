@@ -3,23 +3,106 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="locale-redirect.js"></script>
     <title>取关狗</title>
     <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="locale-switch.css" />
   </head>
   <body>
     <main class="shell">
       <header class="brand">
-        <img src="assets/logo.svg" alt="" />
+        <img src="assets/icon-128.png" alt="" />
         <div>
           <h1>取关狗</h1>
-          <p>X 中文社区取关名单 · 非取关检测</p>
+          <p>X 账号关系与社区名单工具</p>
         </div>
       </header>
 
-      <section id="blocklistView">
+      <section id="modeView">
         <div class="section-title">
-          <h2>社区取关名单</h2>
-          <span id="blocklistVersion" class="version"></span>
+          <h2>选择使用模式</h2>
+        </div>
+        <p class="description">社区共享名单用于分批拉黑；私人账号模式用于分析自己的关注关系，两种模式分开操作。</p>
+        <div class="mode-grid">
+          <button id="communityModeButton" class="mode-card mode-card-community" type="button">
+            <span class="mode-icon" aria-hidden="true">◎</span>
+            <span class="mode-copy">
+              <strong>社区名单模式</strong>
+              <small>查看社区整理的共享拉黑名单，进行分批拉黑。</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">›</span>
+          </button>
+          <button id="personalModeButton" class="mode-card mode-card-personal" type="button">
+            <span class="mode-icon" aria-hidden="true">●</span>
+            <span class="mode-copy">
+              <strong>私人账号模式 <em>新</em></strong>
+              <small>分析你自己的关注关系，找出你关注但没有回关你的账号。</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">›</span>
+          </button>
+        </div>
+
+      </section>
+
+      <section id="personalView" class="hidden">
+        <button id="personalBackButton" class="back-button" type="button">← 返回模式选择</button>
+        <div class="section-title personal-title">
+          <h2>私人账号模式</h2>
+          <span class="version">仅分析当前登录账号</span>
+        </div>
+        <div class="personal-feature">
+          <span class="personal-feature-kicker">关注关系</span>
+          <h3>未回关检测</h3>
+          <p>找出“你关注了 TA，但 TA 没有关注你”的账号。检测结果只针对当前登录的 X 账号。</p>
+          <div class="personal-flow">
+            <span>扫描关注关系</span><span>→</span><span>生成名单</span><span>→</span><span>选择处理</span>
+          </div>
+          <div id="personalScanSummary" class="personal-scan-summary">尚未检测</div>
+          <div id="personalScanProgress" class="hidden">
+            <div class="progress-track"><div id="personalProgressBar"></div></div>
+            <p id="personalProgressText" class="progress-text"></p>
+          </div>
+          <button id="personalScanButton" class="primary" type="button">开始检测</button>
+          <button id="personalCancelScanButton" class="secondary hidden" type="button">暂停检测（保留进度）</button>
+          <button id="personalForceRestartButton" class="secondary personal-force-restart hidden" type="button">强制重开扫描窗口（保留进度）</button>
+          <p id="personalRecoveryHint" class="personal-note hidden" role="status"></p>
+          <p class="personal-note">X 列表报错时插件会限次自动尝试恢复；若连续失败则暂停并保存断点。等 X 列表恢复正常后，需要手动点击“继续检测（从断点恢复）”。</p>
+          <p id="personalScanNote" class="personal-note">开始检测后会打开一个专用 X 扫描窗口。如果关注数量较多，不建议切换其他页面，请耐心在此等待完成；因为采用拟人化读取，速度不会特别快。</p>
+        </div>
+
+        <details id="personalWhitelistPanel" class="personal-whitelist" open>
+          <summary>白名单保护 (<span id="personalWhitelistCount">0</span>)</summary>
+          <p class="personal-note">白名单只保存在当前浏览器。关闭浏览器、重启电脑或正常更新插件不会丢失；卸载插件或清除扩展数据可能导致名单丢失。加入后，批量拉黑和取关都会自动跳过这些账号。</p>
+          <div id="personalWhitelistList" class="personal-whitelist-list">尚无白名单账号。检测完成后可在未回关名单中添加。</div>
+        </details>
+
+        <section id="personalResultView" class="personal-results hidden">
+          <div class="personal-stats">
+            <div><strong id="personalFollowingCount">0</strong><span>我关注</span></div>
+            <div><strong id="personalMutualCount">0</strong><span>互相关注</span></div>
+            <div><strong id="personalNonFollowerCount">0</strong><span>未回关</span></div>
+          </div>
+          <div class="personal-result-toolbar">
+            <strong>未回关名单</strong>
+            <span>
+              <button id="personalSelectAllButton" class="link-button" type="button">全选</button>
+              <button id="personalClearSelectionButton" class="link-button" type="button">清空</button>
+            </span>
+          </div>
+          <div id="personalResultList" class="personal-result-list"></div>
+          <div class="personal-action-grid">
+            <button id="personalBlockSelectedButton" class="danger" type="button" disabled>一键拉黑</button>
+            <button id="personalUnfollowSelectedButton" class="personal-unfollow" type="button" disabled>一键取关对方</button>
+          </div>
+          <p id="personalActionHint" class="personal-note">先勾选要处理的账号，再选择“拉黑”或“取关”。两种操作都会先二次确认，并使用拟人化分批执行。</p>
+        </section>
+      </section>
+
+      <section id="blocklistView" class="hidden">
+        <button id="communityBackButton" class="back-button" type="button">← 返回模式选择</button>
+        <div class="section-title">
+          <h2>社区共享名单</h2>
+
         </div>
         <p id="blocklistDescription" class="description"></p>
         <div id="blocklistSummary" class="summary">正在读取名单…</div>
@@ -28,26 +111,49 @@
         <div id="targetList" class="target-list"></div>
         <div id="issueList" class="issues"></div>
         <button id="startButton" class="danger" disabled>开始分批拉黑</button>
-        <p class="warning">这不是你的个人取关检测结果。每批最多自动处理 20 个账号，完成后会强制冷却 30 分钟；冷却结束后需要你手动继续下一批。请先在当前浏览器登录 X。</p>
+        <p class="warning">这是人工审核后的正式社区名单。每批最多自动处理 20 个账号，完成后会强制冷却 30 分钟。</p>
+
       </section>
 
       <section id="progressView" class="hidden">
+        <button id="progressBackButton" class="back-button hidden" type="button">← 返回模式选择</button>
         <div class="section-title"><h2 id="progressTitle">正在执行</h2></div>
         <div id="batchStatus" class="batch-status"></div>
         <div class="progress-track"><div id="progressBar"></div></div>
         <p id="progressText" class="progress-text"></p>
+        <p class="progress-human-note">取关会模拟真人操作节奏，速度会稍慢，请耐心等待 :)</p>
         <div id="resultList" class="result-list"></div>
+        <div id="communityContributionPanel" class="community-contribution hidden">
+          <span class="community-contribution-kicker">社区名单</span>
+          <strong id="communityContributionTitle">是否上传到社区名单？</strong>
+          <p id="communityContributionCopy">你可以选择把这次已经拉黑或取关的账号加入社区名单，供其他用户参考和一键拉黑。</p>
+          <p>隐私提示：这并不会提交和保存你本人的 X 账号信息。</p>
+          <button id="openCommunitySubmitButton" class="candidate-block" type="button"></button>
+        </div>
         <div id="valuePromo" class="value-promo hidden">
           <span class="value-promo-kicker">名单处理完了，顺手看看</span>
           <strong>你的一条 X 推文，能有多少钱的广告价值？</strong>
           <p>30 秒估个价。</p>
-          <a href="https://jiedanfadan.com/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=block_complete" target="_blank" rel="noopener noreferrer">测一下 ↗</a>
+          <a href="https://jiedanfadan.com/zh-cn/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=block_complete" target="_blank" rel="noopener noreferrer">测一下 ↗</a>
         </div>
         <button id="cancelButton" class="secondary">停止任务</button>
+        <button id="endTaskButton" class="end-task hidden" type="button">结束本次任务</button>
         <button id="newTaskButton" class="primary hidden">新建任务</button>
-        <p id="cooldownAdvice" class="cooldown-advice hidden">拟人化操作：每处理 20 个账号，自动冷却 30 分钟。冷却结束后再继续下一批。</p>
-        <button id="skipCooldownButton" class="cooldown-skip hidden" type="button">我知道风险，仍要跳过冷却</button>
+        <p id="cooldownAdvice" class="cooldown-advice hidden">为了避免操作过快，每处理 20 个账号会休息 30 分钟。休息结束后再继续下一批。</p>
+        <button id="skipCooldownButton" class="cooldown-skip hidden" type="button">跳过休息，继续下一批（风险更高）</button>
       </section>
+
+      <div id="endTaskConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-end-backdrop></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="endTaskConfirmTitle" aria-describedby="endTaskConfirmCopy">
+          <button class="support-close" type="button" data-end-cancel aria-label="关闭">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="endTaskConfirmTitle">确定结束这次任务吗？</h2>
+          <p id="endTaskConfirmCopy" class="support-copy">已经完成的拉黑或取关不会撤销，只会清除本次任务进度。</p>
+          <button type="button" class="secondary" data-end-cancel>取消</button>
+          <button type="button" class="end-task" data-end-confirm>结束任务</button>
+        </section>
+      </div>
 
       <div id="toast" class="toast hidden"></div>
 
@@ -55,7 +161,7 @@
         <span class="sticky-value-kicker">等下一批的时候，顺手看看</span>
         <strong>你的一条 X 推文，能有多少钱的广告价值？</strong>
         <p>30 秒估个价。</p>
-        <a class="sticky-value-main" href="https://jiedanfadan.com/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=cooldown_value" target="_blank" rel="noopener noreferrer">测一下 ↗</a>
+        <a class="sticky-value-main" href="https://jiedanfadan.com/zh-cn/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=cooldown_value" target="_blank" rel="noopener noreferrer">测一下 ↗</a>
       </aside>
 
       <section class="support-footer" aria-label="反馈与支持">
@@ -71,21 +177,54 @@
         </button>
       </section>
 
+      <div id="homeValuePromo" class="value-promo home-value-promo hidden">
+        <span class="value-promo-kicker">商单搭档 · 账号估价</span>
+        <strong>你的一条 X 推文，能有多少钱的广告价值？</strong>
+        <p>30 秒估个价。</p>
+        <a href="https://jiedanfadan.com/zh-cn/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=home_value" target="_blank" rel="noopener noreferrer">测一测 ↗</a>
+      </div>
+
       <footer>
         <span>非 X 官方产品</span>
-        <a href="https://jiedanfadan.com/quguangou/privacy" target="_blank" rel="noopener noreferrer">隐私说明</a>
+        <a href="https://jiedanfadan.com/quguangou/#privacy" target="_blank" rel="noopener noreferrer">隐私说明</a>
       </footer>
+
+      <div id="personalBlockConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-personal-block-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="personalBlockConfirmTitle">
+          <button id="personalBlockConfirmClose" class="support-close" type="button" aria-label="关闭">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="personalBlockConfirmTitle">处理所选账号？</h2>
+          <p id="personalBlockConfirmCopy" class="support-copy"></p>
+          <p id="personalBlockConfirmWarning" class="personal-block-warning">确认后会使用拟人化分批流程：每批最多 20 个，批次结束后冷却 30 分钟，不会一次性同时操作。</p>
+          <button id="personalBlockConfirmCancel" class="secondary" type="button">取消</button>
+          <button id="personalBlockConfirmButton" class="danger personal-confirm-danger" type="button">确认并开始第 1 批</button>
+        </section>
+      </div>
+
+      <div id="communitySubmitConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-community-submit-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="communitySubmitTitle">
+          <button id="communitySubmitClose" class="support-close" type="button" aria-label="关闭">×</button>
+          <div class="support-heart" aria-hidden="true">◎</div>
+          <h2 id="communitySubmitTitle">确认全部加入社区名单？</h2>
+          <p id="communitySubmitCopy" class="support-copy"></p>
+          <p class="personal-block-warning">隐私提示：这并不会提交和保存你本人的 X 账号信息。</p>
+          <button id="communitySubmitCancel" class="secondary" type="button">取消</button>
+          <button id="communitySubmitConfirm" class="candidate-block community-submit-confirm" type="button">全部加入</button>
+        </section>
+      </div>
 
       <div id="cooldownRiskPanel" class="support-modal" hidden>
         <div class="support-backdrop" data-cooldown-close></div>
         <section class="support-card cooldown-risk-card" role="dialog" aria-modal="true" aria-labelledby="cooldownRiskTitle">
           <button id="cooldownRiskClose" class="support-close" type="button" aria-label="关闭">×</button>
           <div class="support-heart" aria-hidden="true">!</div>
-          <h2 id="cooldownRiskTitle">确定跳过 30 分钟冷却吗？</h2>
+          <h2 id="cooldownRiskTitle">确定现在继续下一批吗？</h2>
           <p class="support-copy">跳过冷却会提高连续自动操作频率，可能增加触发 X 频率限制、验证码、账号功能受限或暂停等风控的概率。</p>
-          <p class="cooldown-risk-recommend">建议继续等待完整的 30 分钟。</p>
+          <p class="cooldown-risk-recommend">建议等满 30 分钟再继续，这样更稳妥。</p>
           <button id="keepCoolingButton" class="primary" type="button">继续等待</button>
-          <button id="confirmSkipCooldownButton" class="cooldown-confirm" type="button">仍然跳过并继续下一批</button>
+          <button id="confirmSkipCooldownButton" class="cooldown-confirm" type="button">现在继续下一批</button>
         </section>
       </div>
 
@@ -108,12 +247,14 @@
           <div class="support-heart" aria-hidden="true">♥</div>
           <h2 id="supportTitle">支持作者</h2>
           <p class="support-copy">如果取关狗帮到了你，可以请作者喝杯咖啡。</p>
-          <div class="support-qr"><img src="assets/alipay-support.jpg" alt="支付宝收款二维码" /></div>
-          <div class="support-pay-label">支付宝扫一扫</div>
+          <a class="x-contact-button" href="https://ko-fi.com/wuhuwang" target="_blank" rel="noopener noreferrer">前往 Ko-fi 英文赞助页面 ↗</a>
+          <p class="support-thanks">Ko-fi 是外部英文赞助网站，是否赞助由你自己决定。</p>
           <p class="support-thanks">感谢你的支持，这会用于插件维护和后续功能更新。</p>
         </section>
       </div>
     </main>
+    <script src="locale-switch.js"></script>
+    <script src="lib/confirm-modal.js"></script>
     <script type="module" src="popup.js"></script>
   </body>
 </html>

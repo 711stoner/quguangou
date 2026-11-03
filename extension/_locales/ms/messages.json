@@ -1,0 +1,20 @@
+{
+  "extensionName": {
+    "message": "Semak Ikut Balik di X | Followback Watchdog"
+  },
+  "extensionNameChrome": {
+    "message": "Semak Ikut Balik di X | Followback Watchdog"
+  },
+  "extensionNameEdge": {
+    "message": "Semak Ikut Balik di X | Followback Watchdog"
+  },
+  "extensionShortName": {
+    "message": "Semak Ikut Balik"
+  },
+  "extensionDescription": {
+    "message": "Semak akaun X yang tidak mengikuti anda kembali. Urus senarai perlindungan dan senarai sekatan komuniti secara berperingkat."
+  },
+  "extensionDescriptionChrome": {
+    "message": "Semak akaun X yang tidak mengikuti anda kembali. Urus senarai perlindungan dan senarai sekatan komuniti secara berperingkat."
+  }
+}

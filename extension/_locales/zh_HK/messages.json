@@ -1,0 +1,26 @@
+{
+  "extensionDescription": {
+    "message": "在 X（Twitter）檢查目前未回追帳號，查看社群封鎖名單；選取後分批封鎖或取消追蹤。提供白名單保護，不追蹤歷史變化。",
+    "description": "Localized summary for installed extension and store listing"
+  },
+  "extensionDescriptionChrome": {
+    "message": "在 X（Twitter）檢查目前未回追帳號，查看社群封鎖名單；選取後分批封鎖或取消追蹤。提供白名單保護，不追蹤歷史變化。",
+    "description": "Localized summary for installed extension and store listing"
+  },
+  "extensionName": {
+    "message": "取關狗｜X/Twitter 未回追檢查、封鎖名單與分批封鎖",
+    "description": "Localized searchable extension title for all store platforms"
+  },
+  "extensionNameChrome": {
+    "message": "取關狗｜X/Twitter 未回追檢查、封鎖名單與分批封鎖",
+    "description": "Localized searchable extension title for all store platforms"
+  },
+  "extensionNameEdge": {
+    "message": "取關狗｜X/Twitter 未回追檢查、封鎖名單與分批封鎖",
+    "description": "Localized searchable extension title for all store platforms"
+  },
+  "extensionShortName": {
+    "description": "擴充功能短名稱",
+    "message": "取關狗"
+  }
+}

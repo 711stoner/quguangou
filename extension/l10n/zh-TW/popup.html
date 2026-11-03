@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>取關狗</title>
+    <link rel="stylesheet" href="../../popup.css" />
+    <link rel="stylesheet" href="traditional.css" />
+    <link rel="stylesheet" href="../../locale-switch.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="brand">
+        <img src="../../assets/icon-128.png" alt="" />
+        <div>
+          <h1>取關狗</h1>
+          <p>X 帳號關係與社群名單工具</p>
+        </div>
+      </header>
+
+      <section id="modeView">
+        <div class="section-title">
+          <h2>選擇使用模式</h2>
+        </div>
+        <p class="description">社群共享名單用於分批封鎖；個人帳號模式用於分析自己的追蹤關係，兩種模式分開操作。</p>
+        <div class="mode-grid">
+          <button id="communityModeButton" class="mode-card mode-card-community" type="button">
+            <span class="mode-icon" aria-hidden="true">◎</span>
+            <span class="mode-copy">
+              <strong>社群名單模式</strong>
+              <small>查看社群整理的共享封鎖名單，進行分批封鎖。</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">›</span>
+          </button>
+          <button id="personalModeButton" class="mode-card mode-card-personal" type="button">
+            <span class="mode-icon" aria-hidden="true">●</span>
+            <span class="mode-copy">
+              <strong>個人帳號模式 <em>新</em></strong>
+              <small>分析你自己的追蹤關係，找出你追蹤但沒有回追你的帳號。</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">›</span>
+          </button>
+        </div>
+
+      </section>
+
+      <section id="personalView" class="hidden">
+        <button id="personalBackButton" class="back-button" type="button">← 返回模式選取</button>
+        <div class="section-title personal-title">
+          <h2>個人帳號模式</h2>
+          <span class="version">僅分析當前登入帳號</span>
+        </div>
+        <div class="personal-feature">
+          <span class="personal-feature-kicker">追蹤關係</span>
+          <h3>未回追檢查</h3>
+          <p>找出“你追蹤了 TA，但 TA 沒有追蹤你”的帳號。檢查結果只針對當前登入的 X 帳號。</p>
+          <div class="personal-flow">
+            <span>掃描追蹤關係</span><span>→</span><span>生成名單</span><span>→</span><span>選擇處理</span>
+          </div>
+          <div id="personalScanSummary" class="personal-scan-summary">尚未檢查</div>
+          <div id="personalScanProgress" class="hidden">
+            <div class="progress-track"><div id="personalProgressBar"></div></div>
+            <p id="personalProgressText" class="progress-text"></p>
+          </div>
+          <button id="personalScanButton" class="primary" type="button">開始檢查</button>
+          <button id="personalCancelScanButton" class="secondary hidden" type="button">暫停檢查（保留進度）</button>
+          <button id="personalForceRestartButton" class="secondary personal-force-restart hidden" type="button">強制重開掃描視窗（保留進度）</button>
+          <p id="personalRecoveryHint" class="personal-note hidden" role="status"></p>
+          <p class="personal-note">X 列表報錯時擴充功能會限次自動嘗試恢復；若連續失敗則暫停並儲存斷點。等 X 列表恢復正常後，需要手動點擊“繼續檢查（從斷點恢復）”。</p>
+          <p id="personalScanNote" class="personal-note">開始檢查後會開啟一個專用 X 掃描視窗。如果追蹤數量較多，不建議切換其他頁面，請耐心在此等待完成；因為採用擬人化讀取，速度不會特別快。</p>
+        </div>
+
+        <details id="personalWhitelistPanel" class="personal-whitelist" open>
+          <summary>白名單保護 (<span id="personalWhitelistCount">0</span>)</summary>
+          <p class="personal-note">白名單只儲存在當前瀏覽器。關閉瀏覽器、重啟電腦或正常更新擴充功能不會丟失；解除安裝擴充功能或清除擴充功能資料可能導致名單丟失。加入後，批次封鎖和取消追蹤都會自動跳過這些帳號。</p>
+          <div id="personalWhitelistList" class="personal-whitelist-list">尚無白名單帳號。檢查完成後可在未回追名單中新增。</div>
+        </details>
+
+        <section id="personalResultView" class="personal-results hidden">
+          <div class="personal-stats">
+            <div><strong id="personalFollowingCount">0</strong><span>我追蹤</span></div>
+            <div><strong id="personalMutualCount">0</strong><span>互相追蹤</span></div>
+            <div><strong id="personalNonFollowerCount">0</strong><span>未回追</span></div>
+          </div>
+          <div class="personal-result-toolbar">
+            <strong>未回追名單</strong>
+            <span>
+              <button id="personalSelectAllButton" class="link-button" type="button">全選</button>
+              <button id="personalClearSelectionButton" class="link-button" type="button">清空</button>
+            </span>
+          </div>
+          <div id="personalResultList" class="personal-result-list"></div>
+          <div class="personal-action-grid">
+            <button id="personalBlockSelectedButton" class="danger" type="button" disabled>一鍵封鎖</button>
+            <button id="personalUnfollowSelectedButton" class="personal-unfollow" type="button" disabled>一鍵取消追蹤對方</button>
+          </div>
+          <p id="personalActionHint" class="personal-note">先勾選要處理的帳號，再選擇“封鎖”或“取消追蹤”。兩種操作都會先二次確認，並使用擬人化分批執行。</p>
+        </section>
+      </section>
+
+      <section id="blocklistView" class="hidden">
+        <button id="communityBackButton" class="back-button" type="button">← 返回模式選取</button>
+        <div class="section-title">
+          <h2>社群共享名單</h2>
+
+        </div>
+        <p id="blocklistDescription" class="description"></p>
+        <div id="blocklistSummary" class="summary">正在讀取名單…</div>
+        <div id="batchGuide" class="batch-guide"></div>
+        <p class="return-note">名單會持續更新，歡迎偶爾回來看看。發現新名單後，還可以繼續用取關狗分批封鎖。</p>
+        <div id="targetList" class="target-list"></div>
+        <div id="issueList" class="issues"></div>
+        <button id="startButton" class="danger" disabled>開始分批封鎖</button>
+        <p class="warning">這是人工稽核後的正式社群名單。每批最多自動處理 20 個帳號，完成後會強制冷卻 30 分鐘。</p>
+
+      </section>
+
+      <section id="progressView" class="hidden">
+        <button id="progressBackButton" class="back-button hidden" type="button">← 返回模式選取</button>
+        <div class="section-title"><h2 id="progressTitle">正在執行</h2></div>
+        <div id="batchStatus" class="batch-status"></div>
+        <div class="progress-track"><div id="progressBar"></div></div>
+        <p id="progressText" class="progress-text"></p>
+        <p class="progress-human-note">取消追蹤會模擬真人操作節奏，速度會稍慢，請耐心等待 :)</p>
+        <div id="resultList" class="result-list"></div>
+        <div id="communityContributionPanel" class="community-contribution hidden">
+          <span class="community-contribution-kicker">社群名單</span>
+          <strong id="communityContributionTitle">是否上傳到社群名單？</strong>
+          <p id="communityContributionCopy">你可以選擇把這次已經封鎖或取消追蹤的帳號加入社群名單，供其他使用者參考和一鍵封鎖。</p>
+          <p>隱私提示：這並不會提交和儲存你本人的 X 帳號資訊。</p>
+          <button id="openCommunitySubmitButton" class="candidate-block" type="button"></button>
+        </div>
+        <div id="valuePromo" class="value-promo hidden">
+          <span class="value-promo-kicker">名單處理完了，順手看看</span>
+          <strong>你的一條 X 推文，能有多少錢的廣告價值？</strong>
+          <p>30 秒估個價。</p>
+          <a href="https://jiedanfadan.com/zh-hant/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=block_complete" target="_blank" rel="noopener noreferrer">測一下 ↗</a>
+        </div>
+        <button id="cancelButton" class="secondary">停止任務</button>
+        <button id="endTaskButton" class="end-task hidden" type="button">結束本次任務</button>
+        <button id="newTaskButton" class="primary hidden">新建任務</button>
+        <p id="cooldownAdvice" class="cooldown-advice hidden">為了避免操作過快，每處理 20 個帳號會休息 30 分鐘。休息結束後再繼續下一批。</p>
+        <button id="skipCooldownButton" class="cooldown-skip hidden" type="button">跳過休息，繼續下一批（風險更高）</button>
+      </section>
+
+      <div id="endTaskConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-end-backdrop></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="endTaskConfirmTitle" aria-describedby="endTaskConfirmCopy">
+          <button class="support-close" type="button" data-end-cancel aria-label="關閉">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="endTaskConfirmTitle">確定結束這次任務嗎？</h2>
+          <p id="endTaskConfirmCopy" class="support-copy">已完成的封鎖或取消追蹤不會撤銷，只會清除本次任務進度。</p>
+          <button type="button" class="secondary" data-end-cancel>取消</button>
+          <button type="button" class="end-task" data-end-confirm>結束任務</button>
+        </section>
+      </div>
+
+      <div id="toast" class="toast hidden"></div>
+
+      <aside id="stickyValuePromo" class="sticky-value-promo hidden" aria-label="商單搭檔帳號估值">
+        <span class="sticky-value-kicker">等下一批的時候，順手看看</span>
+        <strong>你的一條 X 推文，能有多少錢的廣告價值？</strong>
+        <p>30 秒估個價。</p>
+        <a class="sticky-value-main" href="https://jiedanfadan.com/zh-hant/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=cooldown_value" target="_blank" rel="noopener noreferrer">測一下 ↗</a>
+      </aside>
+
+      <section class="support-footer" aria-label="回饋與支援">
+        <button id="feedbackToggle" class="support-link" type="button" aria-expanded="false">
+          <span class="support-link-icon">◎</span>
+          <span><strong>回饋 / 共創</strong><small>回饋、建議或加入委員會共創</small></span>
+          <span class="support-link-arrow">›</span>
+        </button>
+        <button id="supportToggle" class="support-link" type="button" aria-expanded="false">
+          <span class="support-link-icon">♡</span>
+          <span><strong>支援作者</strong><small>打賞支援擴充功能維護</small></span>
+          <span class="support-link-arrow">›</span>
+        </button>
+      </section>
+
+      <div id="homeValuePromo" class="value-promo home-value-promo hidden">
+        <span class="value-promo-kicker">商單搭檔 · 帳號估價</span>
+        <strong>你的一條 X 推文，能有多少錢的廣告價值？</strong>
+        <p>30 秒估個價。</p>
+        <a href="https://jiedanfadan.com/zh-hant/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=home_value" target="_blank" rel="noopener noreferrer">測一測 ↗</a>
+      </div>
+
+      <footer>
+        <span>非 X 官方產品</span>
+        <a href="https://711stoner.github.io/quguangou/zh-tw/" target="_blank" rel="noopener noreferrer">官方網站</a>
+        <a href="privacy.html" target="_blank" rel="noopener noreferrer">隱私說明</a>
+      </footer>
+
+      <div id="personalBlockConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-personal-block-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="personalBlockConfirmTitle">
+          <button id="personalBlockConfirmClose" class="support-close" type="button" aria-label="關閉">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="personalBlockConfirmTitle">處理所選帳號？</h2>
+          <p id="personalBlockConfirmCopy" class="support-copy"></p>
+          <p id="personalBlockConfirmWarning" class="personal-block-warning">確認後會使用擬人化分批流程：每批最多 20 個，批次結束後冷卻 30 分鐘，不會一次性同時操作。</p>
+          <button id="personalBlockConfirmCancel" class="secondary" type="button">取消</button>
+          <button id="personalBlockConfirmButton" class="danger personal-confirm-danger" type="button">確認並開始第 1 批</button>
+        </section>
+      </div>
+
+      <div id="communitySubmitConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-community-submit-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="communitySubmitTitle">
+          <button id="communitySubmitClose" class="support-close" type="button" aria-label="關閉">×</button>
+          <div class="support-heart" aria-hidden="true">◎</div>
+          <h2 id="communitySubmitTitle">確認全部加入社群名單？</h2>
+          <p id="communitySubmitCopy" class="support-copy"></p>
+          <p class="personal-block-warning">隱私提示：這並不會提交和儲存你本人的 X 帳號資訊。</p>
+          <button id="communitySubmitCancel" class="secondary" type="button">取消</button>
+          <button id="communitySubmitConfirm" class="candidate-block community-submit-confirm" type="button">全部加入</button>
+        </section>
+      </div>
+
+      <div id="cooldownRiskPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-cooldown-close></div>
+        <section class="support-card cooldown-risk-card" role="dialog" aria-modal="true" aria-labelledby="cooldownRiskTitle">
+          <button id="cooldownRiskClose" class="support-close" type="button" aria-label="關閉">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="cooldownRiskTitle">確定現在繼續下一批嗎？</h2>
+          <p class="support-copy">跳過冷卻會提高連續自動操作頻率，可能增加觸發 X 頻率限制、驗證碼、帳號功能受限或暫停等風控的機率。</p>
+          <p class="cooldown-risk-recommend">建議等滿 30 分鐘再繼續，這樣更穩妥。</p>
+          <button id="keepCoolingButton" class="primary" type="button">繼續等待</button>
+          <button id="confirmSkipCooldownButton" class="cooldown-confirm" type="button">現在繼續下一批</button>
+        </section>
+      </div>
+
+      <div id="feedbackPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-feedback-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+          <button id="feedbackClose" class="support-close" type="button" aria-label="關閉">×</button>
+          <div class="support-heart" aria-hidden="true">◎</div>
+          <h2 id="feedbackTitle">回饋 / 加入取關狗委員會</h2>
+          <p class="support-copy">有 Bug、名單建議、功能想法，或者想加入取關狗委員會一起共創，都歡迎直接聯絡。</p>
+          <a class="x-contact-button" href="https://x.com/woyongyuangeson?s=11" target="_blank" rel="noopener noreferrer">在 X 上私訊作者</a>
+          <p class="support-thanks">建議私訊時簡單說明：回饋內容 / 想參與的方向。</p>
+        </section>
+      </div>
+
+      <div id="supportPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-support-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+          <button id="supportClose" class="support-close" type="button" aria-label="關閉">×</button>
+          <div class="support-heart" aria-hidden="true">♥</div>
+          <h2 id="supportTitle">支援作者</h2>
+          <p class="support-copy">如果取關狗幫到了你，可以請作者喝杯咖啡。</p>
+          <a class="x-contact-button" href="https://ko-fi.com/wuhuwang" target="_blank" rel="noopener noreferrer">前往 Ko-fi 英文贊助頁面 ↗</a>
+          <p class="support-thanks">Ko-fi 是外部英文贊助網站，是否贊助由你自行決定。</p>
+          <p class="support-thanks">感謝你的支援，這會用於擴充功能維護和後續功能更新。</p>
+        </section>
+      </div>
+    </main>
+    <script src="traditional-runtime.js"></script>
+    <script src="../../locale-switch.js"></script>
+    <script src="../../lib/confirm-modal.js"></script>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

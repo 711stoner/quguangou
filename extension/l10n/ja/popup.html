@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>フォローバック・ウォッチドッグ</title>
+    <link rel="stylesheet" href="../../popup.css" />
+    <link rel="stylesheet" href="../../locale-switch.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="brand">
+        <img src="../en/assets/icon-128.png" alt="" />
+        <div>
+          <h1>フォローバック・ウォッチドッグ</h1>
+          <p>Xのフォローバック状況を確認し、コミュニティのブロックリストをチェック</p>
+        </div>
+      </header>
+
+      <section id="modeView">
+        <div class="section-title">
+          <h2>利用モードを選択</h2>
+        </div>
+        <p class="description">コミュニティのブロックリストでは共有リストを一定間隔で処理します。個人アカウントでは自分のフォロー関係を調べます。2つの機能は独立しています。</p>
+        <div class="mode-grid">
+          <button id="communityModeButton" class="mode-card mode-card-community" type="button">
+            <span class="mode-icon" aria-hidden="true">◎</span>
+            <span class="mode-copy">
+              <strong>コミュニティのブロックリスト</strong>
+              <small>コミュニティが管理するリストを確認し、対象アカウントを段階的にブロックします。</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">›</span>
+          </button>
+          <button id="personalModeButton" class="mode-card mode-card-personal" type="button">
+            <span class="mode-icon" aria-hidden="true">●</span>
+            <span class="mode-copy">
+              <strong>個人アカウント <em>新機能</em></strong>
+              <small>自分がフォロー中で、相手からはフォローされていないアカウントを探します。</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">›</span>
+          </button>
+        </div>
+
+      </section>
+
+      <section id="personalView" class="hidden">
+        <button id="personalBackButton" class="back-button" type="button">← モード選択へ戻る</button>
+        <div class="section-title personal-title">
+          <h2>個人アカウント</h2>
+          <span class="version">ログイン中のアカウントのみ</span>
+        </div>
+        <div class="personal-feature">
+          <span class="personal-feature-kicker">フォロー関係</span>
+          <h3>フォローバックの確認</h3>
+          <p>自分がフォローしているのに相手からフォローされていないアカウントを調べます。結果は現在Xにログインしているアカウントに限られます。</p>
+          <div class="personal-flow">
+            <span>フォロー関係をスキャン</span><span>→</span><span>リストを作成</span><span>→</span><span>操作を選ぶ</span>
+          </div>
+          <div id="personalScanSummary" class="personal-scan-summary">まだスキャンしていません</div>
+          <div id="personalScanProgress" class="hidden">
+            <div class="progress-track"><div id="personalProgressBar"></div></div>
+            <p id="personalProgressText" class="progress-text"></p>
+          </div>
+          <button id="personalScanButton" class="primary" type="button">スキャン開始</button>
+          <button id="personalCancelScanButton" class="secondary hidden" type="button">スキャンを一時停止（進捗を保存）</button>
+          <button id="personalForceRestartButton" class="secondary personal-force-restart hidden" type="button">スキャン画面を強制的に開き直す（進捗を保持）</button>
+          <p id="personalRecoveryHint" class="personal-note hidden" role="status"></p>
+          <p class="personal-note">Xでエラーが発生すると、拡張機能は数回だけ再試行します。読み込みが回復しない場合は進捗を保存して停止します。Xのリストが正常に表示されるようになったら「スキャン再開」を選んでください。</p>
+          <p id="personalScanNote" class="personal-note">スキャン中はXの専用ウィンドウが開きます。対象が多い場合は時間がかかります。現在の処理が終わるまでウィンドウを閉じたり、タブを切り替えたりしないでください。</p>
+        </div>
+
+        <details id="personalWhitelistPanel" class="personal-whitelist" open>
+          <summary>保護リスト（<span id="personalWhitelistCount">0</span>)</summary>
+          <p class="personal-note">データはこのブラウザー内だけに保存されます。通常の再起動や拡張機能の更新では残りますが、アンインストールやデータ消去では失われることがあります。保護したアカウントは一括ブロックとフォロー解除の対象から除外されます。</p>
+          <div id="personalWhitelistList" class="personal-whitelist-list">保護中のアカウントはありません。スキャン結果から追加できます。</div>
+        </details>
+
+        <section id="personalResultView" class="personal-results hidden">
+          <div class="personal-stats">
+            <div><strong id="personalFollowingCount">0</strong><span>フォロー中</span></div>
+            <div><strong id="personalMutualCount">0</strong><span>相互フォロー</span></div>
+            <div><strong id="personalNonFollowerCount">0</strong><span>フォローバックなし</span></div>
+          </div>
+          <div class="personal-result-toolbar">
+            <strong>フォローバックしていないアカウント</strong>
+            <span>
+              <button id="personalSelectAllButton" class="link-button" type="button">すべて選択</button>
+              <button id="personalClearSelectionButton" class="link-button" type="button">選択解除</button>
+            </span>
+          </div>
+          <div id="personalResultList" class="personal-result-list"></div>
+          <div class="personal-action-grid">
+            <button id="personalBlockSelectedButton" class="danger" type="button" disabled>選択したアカウントをブロック</button>
+            <button id="personalUnfollowSelectedButton" class="personal-unfollow" type="button" disabled>選択したアカウントのフォローを解除</button>
+          </div>
+          <p id="personalActionHint" class="personal-note">対象を選択して、ブロックまたはフォロー解除を実行してください。どちらも確認が必要で、間隔を空けて処理します。</p>
+        </section>
+      </section>
+
+      <section id="blocklistView" class="hidden">
+        <button id="communityBackButton" class="back-button" type="button">← モード選択へ戻る</button>
+        <div class="section-title">
+          <h2>コミュニティのブロックリスト</h2>
+
+        </div>
+        <p id="blocklistDescription" class="description"></p>
+        <div id="blocklistSummary" class="summary">リストを読み込み中…</div>
+        <div id="batchGuide" class="batch-guide"></div>
+        <p class="return-note">共有リストは定期的に更新されます。新しい項目を確認し、段階的に処理するかを選んでください。</p>
+        <div id="targetList" class="target-list"></div>
+        <div id="issueList" class="issues"></div>
+        <button id="startButton" class="danger" disabled>一括ブロック開始</button>
+        <p class="warning">コミュニティリストは管理者が確認しています。1回に最大20件を処理し、その後30分の待機時間が必要です。</p>
+
+      </section>
+
+      <section id="progressView" class="hidden">
+        <button id="progressBackButton" class="back-button hidden" type="button">← モード選択へ戻る</button>
+        <div class="section-title"><h2 id="progressTitle">処理中</h2></div>
+        <div id="batchStatus" class="batch-status"></div>
+        <div class="progress-track"><div id="progressBar"></div></div>
+        <p id="progressText" class="progress-text"></p>
+        <p class="progress-human-note">操作は間隔を空けて実行します。1回の処理には時間がかかることがあります。</p>
+        <div id="resultList" class="result-list"></div>
+        <div id="communityContributionPanel" class="community-contribution hidden">
+          <span class="community-contribution-kicker">コミュニティリスト</span>
+          <strong id="communityContributionTitle">このアカウントをコミュニティに共有しますか？</strong>
+          <p id="communityContributionCopy">今回ブロックまたはフォロー解除に成功したアカウントを審査用に送信し、ほかの利用者の参考にできます。</p>
+          <p>プライバシー：あなた自身のXアカウント情報は送信・保存されません。</p>
+          <button id="openCommunitySubmitButton" class="candidate-block" type="button"></button>
+        </div>
+        <div id="valuePromo" class="value-promo hidden">
+          <span class="value-promo-kicker">この処理が終わったら</span>
+          <strong>Xのスポンサー投稿はいくらで依頼できる？</strong>
+          <p>広告単価の目安をすぐに確認できます。</p>
+          <a href="https://jiedanfadan.com/ja/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=block_complete" target="_blank" rel="noopener noreferrer">試してみる ↗</a>
+        </div>
+        <button id="cancelButton" class="secondary">処理を停止</button>
+        <button id="endTaskButton" class="end-task hidden" type="button">このタスクを終了</button>
+        <button id="newTaskButton" class="primary hidden">新しいタスク</button>
+        <p id="cooldownAdvice" class="cooldown-advice hidden">操作の集中を避けるため、20件ごとに30分の待機時間があります。次の処理は休止後に続けてください。</p>
+        <button id="skipCooldownButton" class="cooldown-skip hidden" type="button">待機をスキップして続ける（リスク増）</button>
+      </section>
+
+      <div id="endTaskConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-end-backdrop></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="endTaskConfirmTitle" aria-describedby="endTaskConfirmCopy">
+          <button class="support-close" type="button" data-end-cancel aria-label="閉じる">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="endTaskConfirmTitle">このタスクを終了しますか？</h2>
+          <p id="endTaskConfirmCopy" class="support-copy">完了したブロックやフォロー解除は取り消されません。このタスクの進捗だけが削除されます。</p>
+          <button type="button" class="secondary" data-end-cancel>キャンセル</button>
+          <button type="button" class="end-task" data-end-confirm>タスクを終了</button>
+        </section>
+      </div>
+
+      <div id="toast" class="toast hidden"></div>
+
+      <aside id="stickyValuePromo" class="sticky-value-promo hidden" aria-label="スポンサー投稿の参考単価">
+        <span class="sticky-value-kicker">次の処理までの待ち時間に</span>
+        <strong>Xのスポンサー投稿はいくらで依頼できる？</strong>
+        <p>広告単価の目安をすぐに確認できます。</p>
+        <a class="sticky-value-main" href="https://jiedanfadan.com/ja/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=cooldown_value" target="_blank" rel="noopener noreferrer">試してみる ↗</a>
+      </aside>
+
+      <section class="support-footer" aria-label="フィードバックとサポート">
+        <button id="feedbackToggle" class="support-link" type="button" aria-expanded="false">
+          <span class="support-link-icon">◎</span>
+          <span><strong>フィードバック・協力</strong><small>不具合や提案の報告、コミュニティ運営への参加</small></span>
+          <span class="support-link-arrow">›</span>
+        </button>
+        <button id="supportToggle" class="support-link" type="button" aria-expanded="false">
+          <span class="support-link-icon">♡</span>
+          <span><strong>開発者を支援する</strong><small>継続的な開発を支援</small></span>
+          <span class="support-link-arrow">›</span>
+        </button>
+      </section>
+
+      <div id="homeValuePromo" class="value-promo home-value-promo hidden">
+        <span class="value-promo-kicker">スポンサー投稿の参考単価</span>
+        <strong>Xのスポンサー投稿はいくらで依頼できる？</strong>
+        <p>広告単価の目安をすぐに確認できます。</p>
+        <a href="https://jiedanfadan.com/ja/value-check?utm_source=quguangou&utm_medium=extension&utm_campaign=home_value" target="_blank" rel="noopener noreferrer">参考単価を確認 ↗</a>
+      </div>
+
+      <footer>
+        <span>Xとは提携していない独立したツールです</span>
+        <a href="https://711stoner.github.io/quguangou/en/" target="_blank" rel="noopener noreferrer">公式サイト（英語）</a>
+        <a href="privacy.html" target="_blank" rel="noopener noreferrer">プライバシーについて</a>
+      </footer>
+
+      <div id="personalBlockConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-personal-block-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="personalBlockConfirmTitle">
+          <button id="personalBlockConfirmClose" class="support-close" type="button" aria-label="閉じる">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="personalBlockConfirmTitle">選択したアカウントを処理しますか？</h2>
+          <p id="personalBlockConfirmCopy" class="support-copy"></p>
+          <p id="personalBlockConfirmWarning" class="personal-block-warning">操作は最大20件ずつ順番に行い、各回の後に30分の待機時間を設けます。一度にまとめて処理することはありません。</p>
+          <button id="personalBlockConfirmCancel" class="secondary" type="button">キャンセル</button>
+          <button id="personalBlockConfirmButton" class="danger personal-confirm-danger" type="button">確認して第1回の処理を開始</button>
+        </section>
+      </div>
+
+      <div id="communitySubmitConfirmPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-community-submit-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="communitySubmitTitle">
+          <button id="communitySubmitClose" class="support-close" type="button" aria-label="閉じる">×</button>
+          <div class="support-heart" aria-hidden="true">◎</div>
+          <h2 id="communitySubmitTitle">対象アカウントをコミュニティにすべて送信しますか？</h2>
+          <p id="communitySubmitCopy" class="support-copy"></p>
+          <p class="personal-block-warning">プライバシー：あなた自身のXアカウント情報は送信・保存されません。</p>
+          <button id="communitySubmitCancel" class="secondary" type="button">キャンセル</button>
+          <button id="communitySubmitConfirm" class="candidate-block community-submit-confirm" type="button">すべて送信</button>
+        </section>
+      </div>
+
+      <div id="cooldownRiskPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-cooldown-close></div>
+        <section class="support-card cooldown-risk-card" role="dialog" aria-modal="true" aria-labelledby="cooldownRiskTitle">
+          <button id="cooldownRiskClose" class="support-close" type="button" aria-label="閉じる">×</button>
+          <div class="support-heart" aria-hidden="true">!</div>
+          <h2 id="cooldownRiskTitle">今すぐ次の処理を開始しますか？</h2>
+          <p class="support-copy">待機時間を飛ばすと操作頻度が上がり、Xによる制限や本人確認、アカウント停止につながるおそれがあります。</p>
+          <p class="cooldown-risk-recommend">30分間待つほうが安全です。</p>
+          <button id="keepCoolingButton" class="primary" type="button">待機を続ける</button>
+          <button id="confirmSkipCooldownButton" class="cooldown-confirm" type="button">今すぐ続ける</button>
+        </section>
+      </div>
+
+      <div id="feedbackPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-feedback-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+          <button id="feedbackClose" class="support-close" type="button" aria-label="閉じる">×</button>
+          <div class="support-heart" aria-hidden="true">◎</div>
+          <h2 id="feedbackTitle">フィードバック・コミュニティに参加</h2>
+          <p class="support-copy">不具合やコミュニティリストへの提案、新機能のアイデアがあればお知らせください。改善へのご協力を歓迎します。</p>
+          <a class="x-contact-button" href="https://x.com/woyongyuangeson?s=11" target="_blank" rel="noopener noreferrer">Xで開発者に連絡</a>
+          <p class="support-thanks">ご意見や協力したい内容を簡単にお知らせください。</p>
+        </section>
+      </div>
+
+      <div id="supportPanel" class="support-modal" hidden>
+        <div class="support-backdrop" data-support-close></div>
+        <section class="support-card" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+          <button id="supportClose" class="support-close" type="button" aria-label="閉じる">×</button>
+          <div class="support-heart" aria-hidden="true">♥</div>
+          <h2 id="supportTitle">開発者を支援する</h2>
+          <p class="support-copy">役立ったと感じたら、今後の運用をご支援ください。</p>
+          <a class="x-contact-button" href="https://ko-fi.com/wuhuwang" target="_blank" rel="noopener noreferrer">Ko-fiで支援 ↗</a>
+          <p class="support-thanks">Ko-fiは外部サービスです。支援するかどうかは移動先で選べます。</p>
+          <p class="support-thanks">開発とメンテナンスへのご支援ありがとうございます。</p>
+        </section>
+      </div>
+    </main>
+    <script src="ui-runtime.js"></script>
+    <script src="../en/error-localizer.js"></script>
+    <script src="ui-error-hook.js"></script>
+    <script src="../../locale-switch.js"></script>
+    <script src="../../lib/confirm-modal.js"></script>
+    <script type="module" src="../en/popup.js"></script>
+  </body>
+</html>
