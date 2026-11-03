@@ -33,7 +33,7 @@
 
 个人账号模式：读取当前登录账号的关注列表和粉丝列表，找出你关注但对方没有关注你的账号。支持查看扫描进度、暂停和从已保存进度继续；扫描需要时间，遇到 X 限流时可能暂停。检测完成后，你可以查看未回关名单，并将重要账号加入仅存于本机的白名单。
 
-社区名单模式：浏览社区提交并经审核的共享名单，自行决定是否处理。拉黑或取关操作不会在未确认的情况下自动开始。每批最多处理 20 个账号，批次之间有 30 分钟冷却时间。
+社区名单模式：查看社区提交并经审核的共享名单，确认后可分批拉黑其中的账号。私人账号模式的未回关名单则支持选择取关或拉黑。所有操作都由你主动确认，每批最多处理 20 个账号，批次之间有 30 分钟冷却时间。
 
 注意：结果只代表扫描时的关注关系，不能判断谁最近取消关注了你，也不会提供历史取关记录。本扩展不是 X 官方产品。
 
@@ -59,7 +59,7 @@
 
 個人帳號模式：比對目前登入帳號的追蹤名單與粉絲名單，列出你已追蹤、對方卻沒有追蹤你的帳號。你可以查看掃描進度、暫停並從儲存的位置繼續；X 限制請求時，掃描可能暫停。重要帳號可加入只儲存在目前瀏覽器的白名單，避免批次操作時誤處理。
 
-社群名單模式：查看由社群提交並經審核的共享封鎖名單。是否封鎖或取消追蹤由你選擇並確認，不會自行啟動。每批最多處理 20 個帳號，批次之間需等待 30 分鐘。
+社群名單模式：查看由社群提交並經審核的共享封鎖名單，確認後可分批封鎖其中的帳號。取消追蹤或封鎖未回追帳號，則是在個人帳號模式中操作。每次都需要你主動確認，每批最多處理 20 個帳號，批次之間需等待 30 分鐘。
 
 注意：檢查結果只反映掃描當下的追蹤關係，不能判斷誰最近取消追蹤你，也不提供歷史退追紀錄。本擴充功能並非 X 官方產品。
 
@@ -85,7 +85,7 @@
 
 個人帳號模式：比對目前登入帳號的追蹤名單與粉絲名單，列出你已追蹤、對方卻沒有追蹤你的帳號。你可以查看掃描進度、暫停並從儲存的位置繼續；X 限制請求時，掃描可能暫停。重要帳號可加入只儲存在目前瀏覽器的白名單，避免批次操作時誤處理。
 
-社群名單模式：查看由社群提交並經審核的共享封鎖名單。是否封鎖或取消追蹤由你選擇並確認，不會自行啟動。每批最多處理 20 個帳號，批次之間需等待 30 分鐘。
+社群名單模式：查看由社群提交並經審核的共享封鎖名單，確認後可分批封鎖其中的帳號。取消追蹤或封鎖未回追帳號，則是在個人帳號模式中操作。每次都需要你主動確認，每批最多處理 20 個帳號，批次之間需等待 30 分鐘。
 
 注意：檢查結果只反映掃描當下的追蹤關係，不能判斷誰最近取消追蹤你，也不提供歷史退追紀錄。本擴充功能並非 X 官方產品。
 
@@ -111,7 +111,7 @@ Who doesn't follow you back on X (formerly Twitter)? Followback Watchdog helps y
 
 Personal account scan: Find people you follow who do not follow you back. Review the progress, pause a scan, and resume from saved progress if X stops loading. Protect selected accounts with a whitelist stored in your browser so they are excluded from bulk actions.
 
-Community blocklist: Browse a community-submitted, reviewed list of accounts. You choose which accounts to block or unfollow and confirm the action before it begins. Actions run in batches of up to 20 accounts, with a 30-minute cooldown between batches.
+Community blocklist: Browse a community-submitted list reviewed before publication. You can choose to block accounts from this list after confirming. To unfollow or block accounts that do not follow you back, use the personal account scan instead. All bulk actions require your confirmation and run in batches of up to 20, with a 30-minute cooldown between batches.
 
 Important: Results show the follow relationships at the time of scanning. This is not a historical unfollower tracker and cannot tell you who recently unfollowed you. Followback Watchdog is independent and not affiliated with X or Twitter.
 
@@ -137,7 +137,7 @@ X（旧Twitter）で、フォローバックされていない「片思いフォ
 
 個人アカウント：自分がフォロー中のアカウントとフォロワーを比較し、相互フォローではない相手を一覧にします。スキャンの進捗を確認でき、一時停止や保存位置からの再開にも対応しています。Xの読み込み制限によりスキャンが止まる場合があります。保護したいアカウントはブラウザー内の保護リストに登録し、一括処理の対象から外せます。
 
-コミュニティリスト：投稿後に審査されたブロックリストを閲覧できます。ブロックやフォロー解除は、自分で対象を選択して確認した場合のみ実行されます。最大20件ずつ処理し、各回の間に30分間の待機時間があります。
+コミュニティリスト：投稿後に審査されたブロックリストを閲覧し、確認したアカウントをまとめてブロックできます。フォロー解除や、フォローバックのない相手のブロックは、個人アカウントのスキャン結果から選べます。どちらのモードも操作前の確認が必要です。最大20件ずつ処理し、各回の間に30分間待機します。
 
 このツールは現在のフォロー関係のみを確認します。最近フォローを外した人や過去の解除履歴は分かりません。X公式の拡張機能ではありません。
 
@@ -163,7 +163,7 @@ X(옛 트위터)에서 내가 팔로우하지만 나를 팔로우하지 않는 �
 
 개인 계정 검사: 팔로잉 목록과 팔로워 목록을 비교해 맞팔이 아닌 계정을 찾습니다. 검사 진행 상황을 확인하고, 중지하거나 저장된 지점에서 이어서 검사할 수 있습니다. X의 요청 제한으로 검사가 잠시 멈출 수도 있습니다. 중요한 계정은 브라우저에만 저장되는 보호 목록에 넣어 일괄 차단·언팔로우 대상에서 제외할 수 있습니다.
 
-커뮤니티 차단 목록: 커뮤니티가 제출하고 검토한 목록을 확인하세요. 차단이나 언팔로우는 계정을 직접 선택하고 확인한 뒤에만 실행됩니다. 한 번에 최대 20개를 처리하며, 다음 작업 전에는 30분간 기다립니다.
+커뮤니티 차단 목록: 커뮤니티에서 제출하고 검토한 계정 목록을 확인한 뒤, 직접 선택한 계정을 일괄 차단할 수 있습니다. 맞팔이 아닌 계정을 언팔로우하거나 차단하는 기능은 개인 계정 검사 결과에서 이용할 수 있습니다. 두 모드 모두 작업 전에 확인이 필요하며, 한 번에 최대 20개씩 처리하고 다음 작업까지 30분간 기다립니다.
 
 결과는 검사 당시의 팔로우 관계만 보여 줍니다. 최근 누가 언팔로우했는지 또는 과거 언팔 기록을 추적하지 않습니다. X의 공식 제품이 아닙니다.
 
@@ -189,7 +189,7 @@ Qui ne me suit pas sur X (anciennement Twitter) ? Followback Watchdog vous aide 
 
 Analyse du compte personnel : consultez les comptes qui ne vous suivent pas en retour. Suivez l’avancement de l’analyse, mettez-la en pause et reprenez depuis les données enregistrées si X interrompt le chargement. Ajoutez les comptes importants à une liste de protection conservée dans votre navigateur pour les exclure des actions groupées.
 
-Liste de blocage communautaire : parcourez des comptes proposés par la communauté et examinés avant leur publication. Vous choisissez les comptes à bloquer ou dont vous souhaitez vous désabonner, puis confirmez chaque traitement. Les actions s’effectuent par lots de 20 comptes au maximum, avec une pause de 30 minutes entre les lots.
+Liste de blocage communautaire : consultez les comptes proposés par la communauté et examinés avant publication. Dans ce mode, vous pouvez bloquer les comptes que vous choisissez, après confirmation. Pour vous désabonner de comptes qui ne vous suivent pas en retour, ou les bloquer, utilisez plutôt l’analyse du compte personnel. Chaque action groupée nécessite votre confirmation et s’effectue par lots de 20 comptes maximum, avec une pause de 30 minutes entre les lots.
 
 Les résultats décrivent uniquement les abonnements au moment de l’analyse. L’extension ne permet pas de savoir qui vient de se désabonner ni de consulter un historique des désabonnements. Elle n’est pas affiliée à X ou Twitter.
 
@@ -215,9 +215,9 @@ Mira quién no te sigue en X (Twitter). Compara seguidores y seguidos, protege c
 
 Análisis de cuenta personal: revisa tus seguidores y encuentra cuentas sin seguimiento recíproco. Puedes ver el avance, pausar el análisis y retomarlo desde los datos guardados si X deja de cargar la lista. Añade cuentas importantes a una lista protegida que se guarda en tu navegador y las excluye de las acciones masivas.
 
-Lista de bloqueos comunitaria: consulta una lista compartida por la comunidad y revisada antes de publicarse. Tú eliges qué cuentas bloquear o dejar de seguir y confirmas la acción antes de empezar. Se procesan hasta 20 cuentas por tanda, con una espera de 30 minutos entre tandas.
+Lista de bloqueos comunitaria: consulta las cuentas compartidas por la comunidad y revisadas antes de publicarse. En este modo puedes bloquear las cuentas que elijas, siempre tras confirmar la acción. Para dejar de seguir o bloquear a quienes no te siguen de vuelta, utiliza el análisis de tu cuenta personal. Las acciones se realizan en tandas de hasta 20 cuentas, con una espera de 30 minutos entre tandas.
 
-El resultado refleja únicamente la relación de seguimiento en el momento del análisis. No indica quién dejó de seguirte recientemente ni ofrece un historial de unfollows. Esta extensión no está afiliada con X ni Twitter.
+El resultado refleja únicamente la relación de seguimiento en el momento del análisis. No indica quién dejó de seguirte recientemente ni ofrece un historial de quién dejó de seguirte. Esta extensión no está afiliada con X ni Twitter.
 
 **Edge 搜索词（逐条填写）**
 
@@ -241,7 +241,7 @@ Siapa yang tidak follow balik anda di X (dahulu Twitter)? Followback Watchdog me
 
 Mod Akaun Peribadi: bandingkan senarai akaun yang anda ikuti dengan pengikut anda untuk mencari akaun yang tidak mengikuti balik. Pantau kemajuan imbasan, jeda dan sambung dari data yang disimpan jika X berhenti memuatkan senarai. Simpan akaun penting dalam senarai perlindungan pada penyemak imbas anda supaya ia tidak termasuk dalam tindakan pukal.
 
-Mod Senarai Sekatan Komuniti: lihat senarai yang dihantar oleh komuniti dan disemak sebelum diterbitkan. Anda sendiri memilih akaun untuk disekat atau berhenti mengikuti dan mengesahkan tindakan dahulu. Setiap kelompok memproses sehingga 20 akaun, diikuti tempoh menunggu selama 30 minit sebelum kelompok berikutnya.
+Mod Senarai Sekatan Komuniti: lihat senarai akaun yang dihantar oleh komuniti dan disemak sebelum diterbitkan. Dalam mod ini, anda boleh memilih akaun untuk disekat selepas mengesahkan tindakan. Untuk berhenti mengikuti atau menyekat akaun yang tidak mengikuti anda kembali, gunakan hasil imbasan Akaun Peribadi. Semua tindakan pukal memerlukan pengesahan anda dan memproses sehingga 20 akaun setiap kelompok, diikuti tempoh menunggu 30 minit.
 
 Keputusan hanya menunjukkan hubungan mengikuti semasa imbasan. Sambungan ini tidak boleh mengenal pasti siapa yang baru berhenti mengikuti anda atau menyimpan sejarah unfollow. Ia bukan produk rasmi X atau Twitter.
 
@@ -267,7 +267,7 @@ Ai không theo dõi lại bạn trên X (trước đây là Twitter)? Followback
 
 Chế độ tài khoản cá nhân: so sánh danh sách bạn đang theo dõi với danh sách người theo dõi bạn để tìm những tài khoản không follow lại. Bạn có thể xem tiến độ quét, tạm dừng và tiếp tục từ dữ liệu đã lưu nếu X ngừng tải danh sách. Thêm các tài khoản quan trọng vào danh sách bảo vệ lưu trong trình duyệt để tránh bị xử lý hàng loạt.
 
-Danh sách chặn cộng đồng: xem các tài khoản do cộng đồng gửi và đã được kiểm duyệt trước khi xuất hiện trong danh sách. Bạn tự chọn tài khoản cần chặn hoặc bỏ theo dõi và xác nhận trước khi thực hiện. Mỗi đợt xử lý tối đa 20 tài khoản, sau đó nghỉ 30 phút trước đợt tiếp theo.
+Danh sách chặn cộng đồng: xem các tài khoản do cộng đồng gửi và đã được kiểm duyệt trước khi hiển thị. Ở chế độ này, bạn có thể chọn tài khoản để chặn sau khi xác nhận. Muốn bỏ theo dõi hoặc chặn những tài khoản không theo dõi lại, hãy sử dụng kết quả quét tài khoản cá nhân. Mọi thao tác hàng loạt đều cần bạn xác nhận, xử lý tối đa 20 tài khoản mỗi đợt và nghỉ 30 phút trước đợt tiếp theo.
 
 Kết quả chỉ phản ánh quan hệ theo dõi tại thời điểm quét. Tiện ích không thể cho biết ai vừa bỏ theo dõi bạn và không lưu lịch sử unfollow. Tiện ích độc lập, không thuộc X hay Twitter.
 
@@ -293,7 +293,7 @@ Siapa yang tidak follow back di X (dulu Twitter)? Followback Watchdog membantu A
 
 Mode Akun Pribadi: bandingkan daftar akun yang Anda ikuti dengan daftar pengikut untuk mengecek siapa yang tidak follow balik. Pantau proses pemindaian, jeda, dan lanjutkan dari data tersimpan jika X berhenti memuat daftar. Tambahkan akun penting ke daftar terlindungi yang disimpan di browser agar tidak masuk tindakan massal.
 
-Mode Daftar Blokir Komunitas: tinjau daftar akun yang dikirim komunitas dan diperiksa moderator sebelum ditampilkan. Anda memilih sendiri akun yang akan diblokir atau berhenti diikuti, lalu mengonfirmasi tindakan terlebih dahulu. Setiap tahap memproses maksimal 20 akun, diikuti jeda 30 menit sebelum tahap berikutnya.
+Mode Daftar Blokir Komunitas: tinjau akun yang dikirim komunitas dan diperiksa moderator sebelum ditampilkan. Dalam mode ini, Anda dapat memilih akun untuk diblokir setelah mengonfirmasi tindakan. Untuk berhenti mengikuti atau memblokir akun yang tidak mengikuti balik, gunakan hasil pemindaian Akun Pribadi. Semua tindakan massal memerlukan konfirmasi Anda dan diproses maksimal 20 akun per tahap, dengan jeda 30 menit sebelum tahap berikutnya.
 
 Hasil hanya menunjukkan hubungan mengikuti saat pemindaian. Ekstensi tidak dapat mengetahui siapa yang baru saja unfollow Anda dan tidak menyediakan riwayat unfollow. Ekstensi ini independen dan bukan produk resmi X atau Twitter.
 

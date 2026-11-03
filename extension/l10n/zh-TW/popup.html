@@ -48,14 +48,14 @@
         <button id="personalBackButton" class="back-button" type="button">← 返回模式選取</button>
         <div class="section-title personal-title">
           <h2>個人帳號模式</h2>
-          <span class="version">僅分析當前登入帳號</span>
+          <span class="version">僅分析目前登入帳號</span>
         </div>
         <div class="personal-feature">
           <span class="personal-feature-kicker">追蹤關係</span>
           <h3>未回追檢查</h3>
-          <p>找出“你追蹤了 TA，但 TA 沒有追蹤你”的帳號。檢查結果只針對當前登入的 X 帳號。</p>
+          <p>找出“你追蹤了 TA，但 TA 沒有追蹤你”的帳號。檢查結果只針對目前登入的 X 帳號。</p>
           <div class="personal-flow">
-            <span>掃描追蹤關係</span><span>→</span><span>生成名單</span><span>→</span><span>選擇處理</span>
+            <span>掃描追蹤關係</span><span>→</span><span>產生名單</span><span>→</span><span>選擇處理</span>
           </div>
           <div id="personalScanSummary" class="personal-scan-summary">尚未檢查</div>
           <div id="personalScanProgress" class="hidden">
@@ -73,7 +73,7 @@
 
         <details id="personalWhitelistPanel" class="personal-whitelist" open>
           <summary>白名單保護 (<span id="personalWhitelistCount">…</span>)</summary>
-          <p class="personal-note">白名單只儲存在當前瀏覽器。關閉瀏覽器、重啟電腦或正常更新擴充功能不會丟失；解除安裝擴充功能或清除擴充功能資料可能導致名單丟失。加入後，批次封鎖和取消追蹤都會自動跳過這些帳號。</p>
+          <p class="personal-note">白名單只儲存在目前瀏覽器。關閉瀏覽器、重啟電腦或正常更新擴充功能不會丟失；解除安裝擴充功能或清除擴充功能資料可能導致名單丟失。加入後，批次封鎖和取消追蹤都會自動跳過這些帳號。</p>
           <div id="personalWhitelistList" class="personal-whitelist-list">尚無白名單帳號。檢查完成後可在未回追名單中新增。</div>
         </details>
 
@@ -112,7 +112,7 @@
         <div id="targetList" class="target-list"></div>
         <div id="issueList" class="issues"></div>
         <button id="startButton" class="danger" disabled>開始分批封鎖</button>
-        <p class="warning">這是人工稽核後的正式社群名單。每批最多自動處理 20 個帳號，完成後會強制冷卻 30 分鐘。</p>
+        <p class="warning">這是人工審核後的正式社群名單。每批最多自動處理 20 個帳號，每批結束後需等待 30 分鐘。</p>
 
       </section>
 

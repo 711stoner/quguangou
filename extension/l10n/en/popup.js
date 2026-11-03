@@ -792,13 +792,19 @@ function renderJob(job) {
       if (["skipped_restricted", "skipped_subscription"].includes(result.status) && result.title) {
         const noticeTitle = document.createElement("small");
         noticeTitle.className = "result-notice-title";
-        noticeTitle.textContent = window.QGDLocalizeError(result.title);
+        noticeTitle.textContent = result.status === "skipped_restricted"
+          ? getScanRestartText(document.documentElement.lang).skipRestrictedTitle
+          : getScanRestartText(document.documentElement.lang).skipSubscriptionTitle;
         detail.append(noticeTitle);
       }
       const reason = document.createElement("small");
+      const nativeReasons = getScanRestartText(document.documentElement.lang);
       reason.textContent = result.status === "failed"
         ? humanizeActionFailureReason(result.reason)
-        : window.QGDLocalizeError(result.reason || "Automatically skipped");
+        : result.status === "skipped_following_back" ? nativeReasons.skipFollowsYou
+        : result.status === "skipped_restricted" ? nativeReasons.skipRestricted
+        : result.status === "skipped_subscription" ? nativeReasons.skipSubscription
+        : "Automatically skipped";
       detail.append(reason);
     }
     const status = document.createElement("span");

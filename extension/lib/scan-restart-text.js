@@ -4,6 +4,12 @@
  */
 const copy = {
  "zh-CN": {
+  skipRestrictedTitle:"这个账号暂时受到 X 限制",
+  skipSubscriptionTitle:"付费订阅页面仍然遮挡主页",
+  skipFollowsYou:"对方已经关注你，已自动跳过，不会取关或拉黑。",
+  skipRestricted:"X 暂时限制了这个账号，无法确认主页或关注状态，已跳过。建议稍后手动处理。",
+  skipSubscription:"X 的付费订阅页面挡住了关注操作，暂时无法安全处理。已跳过，不会订阅或付款。",
+
   emptyWhitelistConfirm:"注意：这份插件里目前没有保存任何白名单账号。如果以前加过白名单，请先检查是否加载了另一份「取关狗」，不要直接批量取关或拉黑。确认继续表示你知道本次没有白名单保护。",
   whitelistNotLoaded:"白名单还没有读取成功。请先在下方确认白名单已加载，再开始批量取关或拉黑。",
   completedNote:"结果只反映本次扫描时的当前关注关系，不代表历史上谁刚刚取关了你。",
@@ -32,6 +38,12 @@ const copy = {
   fail:"窗口没有成功重开，原来的扫描数据仍保留。请重试。"
  },
  "zh-TW": {
+  skipRestrictedTitle:"這個帳號暫時受到 X 限制",
+  skipSubscriptionTitle:"付費訂閱頁面仍然遮住主頁",
+  skipFollowsYou:"對方已經追蹤你，已自動跳過，不會取消追蹤或封鎖。",
+  skipRestricted:"X 暫時限制了這個帳號，無法確認主頁或追蹤狀態，已跳過。建議稍後手動處理。",
+  skipSubscription:"X 的付費訂閱頁面擋住了操作，暫時無法安全取消追蹤。已跳過，不會訂閱或付款。",
+
   emptyWhitelistConfirm:"注意：這份擴充功能目前沒有儲存任何白名單帳號。如果先前加入過白名單，請先確認是否載入了另一份「取關狗」，不要直接批次取消追蹤或封鎖。確認繼續代表你知道這次沒有白名單保護。",
   whitelistNotLoaded:"白名單還沒讀取成功。請先確認下方的白名單已載入，再進行批次取消追蹤或封鎖。",
   completedNote:"結果只反映本次掃描時的追蹤關係，無法知道誰剛剛取消追蹤你。",
@@ -60,6 +72,12 @@ const copy = {
   fail:"視窗未能重新開啟，原有掃描資料仍保留。請再試一次。"
  },
  en: {
+  skipRestrictedTitle:"This account is temporarily restricted by X",
+  skipSubscriptionTitle:"The paid subscription screen still blocks the profile",
+  skipFollowsYou:"This account already follows you back. Skipped without unfollowing or blocking.",
+  skipRestricted:"X currently restricts this account. Its profile or follow status could not be verified, so it was skipped. Check manually later.",
+  skipSubscription:"X’s paid subscription screen prevented a safe action. Skipped without subscribing or paying.",
+
   emptyWhitelistConfirm:"Important: this extension installation has no saved whitelist accounts. If you protected accounts before, check whether you loaded a different copy of Followback Watchdog before running a bulk action. Continuing confirms that you understand no whitelist protection is available here.",
   whitelistNotLoaded:"The saved whitelist has not loaded successfully. Check it below before starting bulk unfollow or block actions.",
   completedNote:"Results show follow relationships at the time of scanning. They cannot tell you who recently unfollowed you.",
@@ -88,7 +106,13 @@ const copy = {
   fail:"Could not reopen the window. Your previous scan progress is still saved."
  },
  ja: {
-  emptyWhitelistConfirm:"注意：この拡張機能には保護リストが保存されていません。以前アカウントを保護した場合は、別の「取关狗」を読み込んでいないか確認してから一括操作を行ってください。続行すると、今回は保護リストがないことを了承したものとみなされます。",
+  skipRestrictedTitle:"このアカウントはXによって一時的に制限されています",
+  skipSubscriptionTitle:"有料サブスクリプション画面がまだ表示されています",
+  skipFollowsYou:"相手はすでにあなたをフォローしています。フォロー解除やブロックはせず、スキップしました。",
+  skipRestricted:"Xによってこのアカウントが一時的に制限されており、プロフィールやフォロー状態を確認できませんでした。安全のためスキップしました。後で手動で確認してください。",
+  skipSubscription:"Xの有料サブスクリプション画面によって操作を確認できませんでした。購入や支払いはせず、スキップしました。",
+
+  emptyWhitelistConfirm:"注意：この拡張機能には保護リストが保存されていません。以前アカウントを保護した場合は、別の拡張機能のコピーを読み込んでいないか確認してから一括操作を行ってください。続行すると、今回は保護リストがないことを了承したものとみなされます。",
   whitelistNotLoaded:"保護リストの読み込みが完了していません。下のリストを確認してから、一括フォロー解除やブロックを始めてください。",
   completedNote:"結果はスキャン時点のフォロー関係を示すもので、最近誰がフォローを外したかは分かりません。",
   needsValidationNote:"前回のスキャンではフォロワー一覧を最後まで確認できませんでした。確定結果としては使えません。「スキャンを再開」を押すと、第1段階をやり直さず保存位置から続行します。",
@@ -116,6 +140,12 @@ const copy = {
   fail:"スキャン画面を開き直せませんでした。これまでの進捗は保存されています。"
  },
  ko: {
+  skipRestrictedTitle:"X에서 이 계정을 일시적으로 제한했습니다",
+  skipSubscriptionTitle:"유료 구독 화면이 프로필을 가리고 있습니다",
+  skipFollowsYou:"상대방이 이미 나를 팔로우하고 있습니다. 언팔로우하거나 차단하지 않고 건너뛰었습니다.",
+  skipRestricted:"X에서 이 계정을 일시적으로 제한하여 프로필이나 팔로우 상태를 확인할 수 없습니다. 안전을 위해 건너뛰었으니 나중에 직접 확인하세요.",
+  skipSubscription:"X의 유료 구독 화면 때문에 안전하게 작업할 수 없었습니다. 구독하거나 결제하지 않고 건너뛰었습니다.",
+
   emptyWhitelistConfirm:"주의: 현재 이 확장 프로그램에는 저장된 보호 목록이 없습니다. 이전에 보호한 계정이 있다면 다른 확장 프로그램을 불러온 것은 아닌지 먼저 확인하세요. 계속 진행하면 이번 작업에 보호 목록이 없다는 사실을 확인하는 것입니다.",
   whitelistNotLoaded:"저장된 보호 목록을 아직 불러오지 못했습니다. 아래 목록을 확인한 뒤 일괄 언팔로우나 차단을 시작하세요.",
   completedNote:"이 결과는 검사 당시의 팔로우 관계를 보여 줍니다. 최근 누가 언팔로우했는지는 알 수 없습니다.",
@@ -144,6 +174,12 @@ const copy = {
   fail:"스캔 창을 다시 열지 못했습니다. 이전 진행 상황은 그대로 저장되어 있습니다."
  },
  fr: {
+  skipRestrictedTitle:"Ce compte est temporairement restreint par X",
+  skipSubscriptionTitle:"La page d’abonnement payant masque toujours le profil",
+  skipFollowsYou:"Ce compte vous suit déjà en retour. Il a été ignoré sans désabonnement ni blocage.",
+  skipRestricted:"X restreint temporairement ce compte. Il n’a pas été possible de vérifier son profil ou la relation de suivi ; il a donc été ignoré. Vérifiez-le manuellement plus tard.",
+  skipSubscription:"La page d’abonnement payant de X empêchait une action sûre. Le compte a été ignoré, sans abonnement payant ni paiement.",
+
   emptyWhitelistConfirm:"Attention : aucune liste de protection n’est enregistrée dans cette installation. Si vous aviez déjà protégé des comptes, vérifiez d’abord si une autre copie de l’extension est chargée. Continuer signifie que vous savez qu’aucune liste ne protégera les comptes pendant cette opération.",
   whitelistNotLoaded:"La liste de protection n’a pas pu être chargée. Vérifiez-la ci-dessous avant de lancer des désabonnements ou des blocages groupés.",
   completedNote:"Les résultats reflètent les abonnements au moment de l’analyse. Ils ne permettent pas de savoir qui s’est désabonné récemment.",
@@ -172,6 +208,12 @@ const copy = {
   fail:"Impossible de rouvrir la fenêtre. Les données déjà analysées sont conservées."
  },
  es: {
+  skipRestrictedTitle:"X ha restringido temporalmente esta cuenta",
+  skipSubscriptionTitle:"La suscripción de pago sigue tapando el perfil",
+  skipFollowsYou:"Esta cuenta ya te sigue. Se ha omitido sin dejar de seguirla ni bloquearla.",
+  skipRestricted:"X ha restringido temporalmente esta cuenta. No se pudo comprobar su perfil o el estado de seguimiento, por lo que se ha omitido. Revísala manualmente más tarde.",
+  skipSubscription:"La pantalla de suscripción de pago de X impedía realizar la acción con seguridad. Se ha omitido sin suscribirse ni pagar.",
+
   emptyWhitelistConfirm:"Atención: esta instalación no tiene ninguna cuenta guardada en la lista de protección. Si antes protegiste cuentas, comprueba que no estés usando otra copia de la extensión antes de actuar en masa. Al continuar, confirmas que esta operación no cuenta con esa protección.",
   whitelistNotLoaded:"La lista de protección aún no se ha cargado correctamente. Compruébala antes de bloquear o dejar de seguir cuentas en masa.",
   completedNote:"Los resultados reflejan las relaciones de seguimiento al analizar la cuenta. No permiten saber quién dejó de seguirte recientemente.",
@@ -200,6 +242,12 @@ const copy = {
   fail:"No se pudo reabrir la ventana. Los datos del análisis siguen guardados."
  },
  ms: {
+  skipRestrictedTitle:"X mengehadkan akaun ini buat sementara waktu",
+  skipSubscriptionTitle:"Halaman langganan berbayar masih menghalang profil",
+  skipFollowsYou:"Akaun ini sudah mengikuti anda kembali. Akaun dilangkau tanpa berhenti mengikuti atau menyekatnya.",
+  skipRestricted:"X mengehadkan akaun ini buat sementara waktu. Profil atau status mengikutinya tidak dapat disahkan, jadi akaun ini dilangkau. Semak secara manual kemudian.",
+  skipSubscription:"Halaman langganan berbayar X menghalang tindakan yang selamat. Akaun dilangkau tanpa melanggan atau membuat bayaran.",
+
   emptyWhitelistConfirm:"Perhatian: pemasangan sambungan ini tidak mempunyai akaun dalam senarai perlindungan. Jika anda pernah melindungi akaun, semak dahulu sama ada anda menggunakan salinan sambungan yang lain. Dengan meneruskan, anda mengesahkan bahawa tindakan ini tidak mempunyai perlindungan senarai tersebut.",
   whitelistNotLoaded:"Senarai perlindungan belum berjaya dimuatkan. Semak senarai di bawah sebelum melakukan tindakan berhenti mengikuti atau menyekat secara pukal.",
   completedNote:"Hasil menunjukkan hubungan mengikuti ketika imbasan dibuat. Ia tidak menunjukkan siapa yang baru berhenti mengikuti anda.",
@@ -228,6 +276,12 @@ const copy = {
   fail:"Tidak dapat membuka semula tetingkap. Kemajuan imbasan terdahulu masih disimpan."
  },
  vi: {
+  skipRestrictedTitle:"X đang tạm thời hạn chế tài khoản này",
+  skipSubscriptionTitle:"Màn hình đăng ký trả phí vẫn che hồ sơ",
+  skipFollowsYou:"Tài khoản này đã theo dõi lại bạn. Đã bỏ qua, không bỏ theo dõi hay chặn.",
+  skipRestricted:"X đang tạm hạn chế tài khoản này. Không thể xác minh hồ sơ hoặc trạng thái theo dõi nên đã bỏ qua để đảm bảo an toàn. Hãy kiểm tra thủ công sau.",
+  skipSubscription:"Màn hình đăng ký trả phí của X khiến thao tác không thể hoàn tất an toàn. Đã bỏ qua, không đăng ký hay thanh toán.",
+
   emptyWhitelistConfirm:"Lưu ý: bản cài đặt tiện ích này hiện không có tài khoản nào trong danh sách bảo vệ. Nếu trước đây bạn đã bảo vệ tài khoản, hãy kiểm tra xem có đang dùng một bản cài đặt khác không trước khi thao tác hàng loạt. Tiếp tục nghĩa là bạn xác nhận lần này không có danh sách bảo vệ.",
   whitelistNotLoaded:"Danh sách bảo vệ chưa tải thành công. Hãy kiểm tra danh sách bên dưới trước khi bỏ theo dõi hoặc chặn hàng loạt.",
   completedNote:"Kết quả chỉ phản ánh quan hệ theo dõi tại thời điểm quét, không cho biết ai vừa bỏ theo dõi bạn.",
@@ -256,6 +310,12 @@ const copy = {
   fail:"Không thể mở lại cửa sổ. Tiến độ quét trước đó vẫn được lưu."
  },
  id: {
+  skipRestrictedTitle:"X membatasi akun ini untuk sementara",
+  skipSubscriptionTitle:"Layar langganan berbayar masih menutupi profil",
+  skipFollowsYou:"Akun ini sudah mengikuti Anda kembali. Dilewati tanpa berhenti mengikuti atau memblokir.",
+  skipRestricted:"X membatasi akun ini untuk sementara. Profil atau status mengikuti tidak dapat dipastikan, jadi akun dilewati demi keamanan. Periksa secara manual nanti.",
+  skipSubscription:"Layar langganan berbayar X menghalangi tindakan yang aman. Akun dilewati tanpa berlangganan atau membayar.",
+
   emptyWhitelistConfirm:"Perhatian: instalasi ekstensi ini tidak memiliki akun yang tersimpan di daftar perlindungan. Jika sebelumnya Anda melindungi akun, pastikan Anda tidak sedang memakai salinan ekstensi yang berbeda sebelum melakukan tindakan massal. Melanjutkan berarti Anda memahami bahwa tidak ada perlindungan daftar tersebut kali ini.",
   whitelistNotLoaded:"Daftar perlindungan belum berhasil dimuat. Periksa daftar di bawah sebelum berhenti mengikuti atau memblokir akun secara massal.",
   completedNote:"Hasil ini mencerminkan hubungan mengikuti saat pemindaian, bukan riwayat siapa yang baru saja berhenti mengikuti Anda.",

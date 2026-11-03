@@ -441,7 +441,7 @@ function renderPersonalScan(scan = currentPersonalScan) {
   const showRecovery = paused || rateLimitCooling || (running && scan?.recoveryPending && Number(scan?.consecutiveRecoveryCount || 0)>0);
   $("#personalRecoveryHint").classList.toggle("hidden", !showRecovery);
   $("#personalRecoveryHint").textContent = rateLimitCooling
-    ? "X 返回 HTTP 429，當前正處於請求限流冷卻。已儲存的追蹤、粉絲和斷點不會丟失。最早恢復時間：" + retryTime
+    ? "X 返回 HTTP 429，目前正處於請求限流冷卻。已儲存的追蹤、粉絲和斷點不會丟失。最早恢復時間：" + retryTime
       + (paused ? "。自動重試已暫停；點擊繼續檢查也會等冷卻結束再請求。" : "。冷卻結束前不會重複請求 X，之後才會限次自動續掃。")
     : paused
       ? "X 列表持續報錯，自動恢復已暫停。原有資料和斷點已儲存；請等 X 列表恢復正常後再手動繼續。"
@@ -507,20 +507,20 @@ function renderPersonalScan(scan = currentPersonalScan) {
     const cursorCheckpointReady = Boolean(scan?.progress?.[activeRelation + "Cursor"]);
 
     $("#personalScanSummary").textContent = rateLimitCooling
-      ? "@" + (scan.username || "當前帳號") + " · HTTP 429 冷卻中，最早恢復：" + retryTime
+      ? "@" + (scan.username || "目前帳號") + " · HTTP 429 冷卻中，最早恢復：" + retryTime
       : (stallKind === "missing" || stallKind === "stalled")
-      ? "@" + (scan.username || "當前帳號") + " · 讀取暫時沒有進展"
+      ? "@" + (scan.username || "目前帳號") + " · 讀取暫時沒有進展"
       : cursorResumeActive
-      ? "@" + (scan.username || "當前帳號") + (cursorFromCheckpoint ? " · 正在從上次位置繼續" : " · 正在繼續讀取")
+      ? "@" + (scan.username || "目前帳號") + (cursorFromCheckpoint ? " · 正在從上次位置繼續" : " · 正在繼續讀取")
       : resumeActive
-        ? "@" + (scan.username || "當前帳號") + " · 正在定位舊版斷點"
+        ? "@" + (scan.username || "目前帳號") + " · 正在定位舊版斷點"
         : recovering
-        ? "@" + (scan.username || "當前帳號") + " · 自動恢復中" + (Number(scan.consecutiveRecoveryCount || 0) > 1 ? "（第 " + Number(scan.consecutiveRecoveryCount || 0) + " 次）" : "")
+        ? "@" + (scan.username || "目前帳號") + " · 自動恢復中" + (Number(scan.consecutiveRecoveryCount || 0) > 1 ? "（第 " + Number(scan.consecutiveRecoveryCount || 0) + " 次）" : "")
       : resting
-        ? "@" + (scan.username || "當前帳號") + " · 停留中"
+        ? "@" + (scan.username || "目前帳號") + " · 停留中"
         : scan.username
           ? "@" + scan.username + (phase === "followers" ? " · 第二階段檢查中" : " · 第一階段檢查中")
-          : "正在識別當前登入帳號…";
+          : "正在識別目前登入帳號…";
 
     if (cursorResumeActive) {
       const cursorPrefix = cursorFromCheckpoint ? "正在從上次位置繼續…" : "正在繼續讀取…";
@@ -528,7 +528,7 @@ function renderPersonalScan(scan = currentPersonalScan) {
         ? stagePrefix + "：" + cursorPrefix + " 已讀取 " + cursorResumePages + " 頁 · 已儲存 " + activeCount + " / " + (activeExact ? "" : "約 ") + activeTotal + " 個" + activeLabel
         : stagePrefix + "：" + cursorPrefix + " 已儲存 " + activeCount + " 個" + activeLabel + " · 總數暫未讀取，不影響檢查";
     } else if (resumeActive) {
-      $("#personalProgressText").textContent = stagePrefix + " · 正在從上次位置繼續，當前已儲存 " + resumeTarget + " 個帳號";
+      $("#personalProgressText").textContent = stagePrefix + " · 正在從上次位置繼續，目前已儲存 " + resumeTarget + " 個帳號";
     } else if (recovering) {
       $("#personalProgressText").textContent = activeTotal
         ? stagePrefix + "：已儲存 " + activeCount + " / " + (activeExact ? "" : "約 ") + activeTotal + " 個" + activeLabel + " · 等待自動續掃"
@@ -543,31 +543,31 @@ function renderPersonalScan(scan = currentPersonalScan) {
         : stagePrefix + " · 正在掃描" + activeLabel + "，總數暫未讀取")
         + (cursorCheckpointReady ? " · 續掃進度已儲存" : "");
     } else {
-      $("#personalProgressText").textContent = "正在識別當前登入帳號…";
+      $("#personalProgressText").textContent = "正在識別目前登入帳號…";
     }
 
     $("#personalScanNote").textContent = cursorResumeActive
       ? (cursorFromCheckpoint
           ? "這次不會從第一頁重新開始。取關狗會從上次儲存的位置繼續讀取，少量重疊帳號會自動去重。"
-          : "當前位置已經儲存。為避免 X 頁面重新載入或發生異常，掃描期間不建議切換到其他頁面，請耐心等待當前階段完成。")
+          : "目前位置已經儲存。為避免 X 頁面重新載入或發生異常，掃描期間不建議切換到其他頁面，請耐心等待目前階段完成。")
       : resumeActive
         ? "正在回到上次儲存的位置，之前已讀取的資料不會丟失。"
         : recovering
-        ? (scan.recoveryMessage ? humanizeScanMessage(scan.recoveryMessage) : ("中斷原因：" + humanizeScanMessage(scan.lastRecoverableError || "X 頁面暫時沒有返回可讀取的資料") + " 已儲存當前進度，正在自動繼續，不需要重新檢查。"))
+        ? (scan.recoveryMessage ? humanizeScanMessage(scan.recoveryMessage) : ("中斷原因：" + humanizeScanMessage(scan.lastRecoverableError || "X 頁面暫時沒有返回可讀取的資料") + " 已儲存目前進度，正在自動繼續，不需要重新檢查。"))
         : resting
-        ? "當前為第 " + (scan?.progress?.humanPauseCount || 1) + " 次短暫停留，結束後會自動繼續。"
+        ? "目前為第 " + (scan?.progress?.humanPauseCount || 1) + " 次短暫停留，結束後會自動繼續。"
         : cursorCheckpointReady
           ? (phase === "followers"
-              ? "第一階段已經完成並儲存。現在是第二階段：讀取追蹤你的人，用來和第一階段進行比對；第二階段完成後才會生成未回追名單。"
-              : "第一階段正在讀取你追蹤的人。第一階段完成後，還會進入第二階段讀取追蹤你的人；兩邊都完成後才會生成未回追名單。")
+              ? "第一階段已經完成並儲存。現在是第二階段：讀取追蹤你的人，用來和第一階段進行比對；第二階段完成後才會產生未回追名單。"
+              : "第一階段正在讀取你追蹤的人。第一階段完成後，還會進入第二階段讀取追蹤你的人；兩邊都完成後才會產生未回追名單。")
           : phase === "followers"
-            ? "第一階段已經完成並儲存。現在是第二階段：讀取追蹤你的人，用來和第一階段進行比對；第二階段完成後才會生成未回追名單。"
-            : "第一階段正在讀取你追蹤的人。第一階段完成後，還會進入第二階段讀取追蹤你的人；兩邊都完成後才會生成未回追名單。";
+            ? "第一階段已經完成並儲存。現在是第二階段：讀取追蹤你的人，用來和第一階段進行比對；第二階段完成後才會產生未回追名單。"
+            : "第一階段正在讀取你追蹤的人。第一階段完成後，還會進入第二階段讀取追蹤你的人；兩邊都完成後才會產生未回追名單。";
   } else if (paused) {
-    $("#personalScanSummary").textContent = "@" + (scan.username || "當前帳號") + " · 已暫停（等待手動繼續）";
+    $("#personalScanSummary").textContent = "@" + (scan.username || "目前帳號") + " · 已暫停（等待手動繼續）";
     $("#personalProgressText").textContent = "第一階段已儲存 " + followingCount
       + " 個我追蹤的人 · 第二階段已儲存 " + followersCount + " 個追蹤我的人";
-    $("#personalScanNote").textContent = "自動恢復已停止。當前資料和斷點已儲存；請先確認 X 的追蹤/粉絲列表可以正常載入，再點擊“繼續檢查（從斷點恢復）”。";
+    $("#personalScanNote").textContent = "自動恢復已停止。目前資料和斷點已儲存；請先確認 X 的追蹤/粉絲列表可以正常載入，再點擊“繼續檢查（從斷點恢復）”。";
   } else if (completed) {
     if (completionNeedsFullRescan) {
       $("#personalScanSummary").textContent = "本次檢查結果不完整";
@@ -582,7 +582,7 @@ function renderPersonalScan(scan = currentPersonalScan) {
       $("#personalScanSummary").textContent = "上次結果需要繼續校驗";
       $("#personalScanNote").textContent = getScanRestartText(document.documentElement.lang).needsValidationNote;
     } else {
-      $("#personalScanSummary").textContent = "@" + (scan.username || "當前帳號") + " · 檢查完成";
+      $("#personalScanSummary").textContent = "@" + (scan.username || "目前帳號") + " · 檢查完成";
       $("#personalScanNote").textContent = getScanRestartText(document.documentElement.lang).completedNote;
       if (completedFollowerGap) $("#personalScanNote").textContent += " " + getScanRestartText(document.documentElement.lang).completedGapWarning.replace("{count}", String(completedFollowerGap.missing));
     }
@@ -591,14 +591,14 @@ function renderPersonalScan(scan = currentPersonalScan) {
     $("#personalScanNote").textContent = humanizeScanMessage(scan.error || "檢查過程中發生錯誤。") + " 已儲存的資料仍然保留；點擊“繼續檢查”會從已儲存進度繼續。";
   } else if (cancelled) {
     $("#personalScanSummary").textContent = "檢查已停止";
-    $("#personalScanNote").textContent = "沒有生成完整名單。重新檢查後會從頭掃描。";
+    $("#personalScanNote").textContent = "沒有產生完整名單。重新檢查後會從頭掃描。";
   } else if (stale) {
     $("#personalScanSummary").textContent = "上次檢查結果需要更新";
     $("#personalScanNote").textContent = scan.staleReason || "追蹤關係可能已經變化，請重新檢查後再處理。";
   } else {
     $("#personalScanSummary").textContent = "尚未檢查";
     $("#personalProgressText").textContent = "";
-    $("#personalScanNote").textContent = "檢查只讀取當前追蹤關係，不會自動取消追蹤或封鎖任何帳號。";
+    $("#personalScanNote").textContent = "檢查只讀取目前追蹤關係，不會自動取消追蹤或封鎖任何帳號。";
   }
 
 
@@ -630,9 +630,9 @@ async function openPersonalView() {
 }
 
 function renderBlocklist() {
-  $("#blocklistDescription").textContent = "這是取關狗持續整理和維護的 X 社群共享名單，線索來自公開資訊和使用者提交。名單會持續更新。點擊下方按鈕，將在當前登入的 X 帳號中分批封鎖名單中的帳號。";
+  $("#blocklistDescription").textContent = "這是取關狗持續整理和維護的 X 社群共享名單，線索來自公開資訊和使用者提交。名單會持續更新。點擊下方按鈕，將在目前登入的 X 帳號中分批封鎖名單中的帳號。";
   $("#blocklistSummary").textContent =
-    "當前名單共 " + blocklist.targets.length + " 個帳號 · 持續更新";
+    "目前名單共 " + blocklist.targets.length + " 個帳號 · 持續更新";
   const targetList = $("#targetList");
   clear(targetList);
   blocklist.targets.forEach((target, index) => {
@@ -648,7 +648,7 @@ function renderBlocklist() {
   });
 
   const issues = [];
-  if (blocklist.remoteWarning) issues.push("線上稽核名單暫時無法讀取，本次先使用內建名單。");
+  if (blocklist.remoteWarning) issues.push("線上審核名單暫時無法讀取，本次先使用內建名單。");
   if (blocklist.duplicates.length) issues.push(`名單中已自動移除 ${blocklist.duplicates.length} 個重複項`);
   for (const item of blocklist.invalid) issues.push(`${item.raw || "空白項"}：${item.error}`);
   const issueList = $("#issueList");
@@ -660,10 +660,10 @@ function renderBlocklist() {
   });
   const batchCount = Math.ceil(blocklist.targets.length / BATCH_SIZE);
   $("#batchGuide").textContent = blocklist.targets.length
-    ? `為了避免操作過快，每批最多處理 ${BATCH_SIZE} 個帳號。每批結束後休息 30 分鐘，再由你手動繼續。當前名單預計需要 ${batchCount} 批。`
-    : "當前沒有需要處理的帳號。";
+    ? `為了避免操作過快，每批最多處理 ${BATCH_SIZE} 個帳號。每批結束後休息 30 分鐘，再由你手動繼續。目前名單預計需要 ${batchCount} 批。`
+    : "目前沒有需要處理的帳號。";
   $("#startButton").disabled = blocklist.targets.length === 0;
-  $("#startButton").textContent = blocklist.targets.length ? `開始處理第 1 批（最多 ${BATCH_SIZE} 個）` : "當前無帳號可處理";
+  $("#startButton").textContent = blocklist.targets.length ? `開始處理第 1 批（最多 ${BATCH_SIZE} 個）` : "目前無帳號可處理";
   $("#stickyValuePromo").classList.add("hidden");
   showOnly(blocklistView);
 }
@@ -672,8 +672,8 @@ function renderBlocklist() {
 function humanizeScanMessage(message) {
   const text = String(message || "").replace(/^SCAN_RECOVERABLE:/, "").trim();
   if (!text) return "X 頁面暫時沒有返回完整資料";
-  if (/HTTP[_ ]?\d+|GRAPHQL|HOOK_|NO_RESULT|CURSOR_/i.test(text)) return "X 暫時沒有繼續返回名單資料，已儲存當前進度，可以繼續檢查。";
-  if (/No tab with id|tab.*not found|The tab was closed|Invalid tab ID/i.test(text)) return "檢查頁面意外關閉，已儲存當前進度，可以繼續檢查。";
+  if (/HTTP[_ ]?\d+|GRAPHQL|HOOK_|NO_RESULT|CURSOR_/i.test(text)) return "X 暫時沒有繼續返回名單資料，已儲存目前進度，可以繼續檢查。";
+  if (/No tab with id|tab.*not found|The tab was closed|Invalid tab ID/i.test(text)) return "檢查頁面意外關閉，已儲存目前進度，可以繼續檢查。";
   return text;
 }
 
@@ -784,13 +784,19 @@ function renderJob(job) {
       if (["skipped_restricted", "skipped_subscription"].includes(result.status) && result.title) {
         const noticeTitle = document.createElement("small");
         noticeTitle.className = "result-notice-title";
-        noticeTitle.textContent = result.title;
+        noticeTitle.textContent = result.status === "skipped_restricted"
+          ? getScanRestartText(document.documentElement.lang).skipRestrictedTitle
+          : getScanRestartText(document.documentElement.lang).skipSubscriptionTitle;
         detail.append(noticeTitle);
       }
       const reason = document.createElement("small");
+      const nativeReasons = getScanRestartText(document.documentElement.lang);
       reason.textContent = result.status === "failed"
         ? humanizeActionFailureReason(result.reason)
-        : (result.reason || "已自動跳過");
+        : result.status === "skipped_following_back" ? nativeReasons.skipFollowsYou
+        : result.status === "skipped_restricted" ? nativeReasons.skipRestricted
+        : result.status === "skipped_subscription" ? nativeReasons.skipSubscription
+        : "已自動跳過";
       detail.append(reason);
     }
     const status = document.createElement("span");
@@ -824,7 +830,7 @@ function renderJob(job) {
   if (contributionVisible) {
     $("#communityContributionTitle").textContent = "要把這次任務的帳號加入社群名單嗎？";
     $("#communityContributionCopy").textContent = batchPaused
-      ? "如果選擇加入，這次任務裡所有成功封鎖或取消追蹤的帳號都會加入社群名單，不只是當前這一批。後面批次成功處理的帳號也會一起加入。"
+      ? "如果選擇加入，這次任務裡所有成功封鎖或取消追蹤的帳號都會加入社群名單，不只是目前這一批。後面批次成功處理的帳號也會一起加入。"
       : "如果選擇加入，這次任務裡所有成功封鎖或取消追蹤的帳號都會一起加入社群名單。";
     contributionButton.disabled = false;
     contributionButton.textContent = "全部加入社群名單";
@@ -859,7 +865,7 @@ $("#communityModeButton").addEventListener("click", () => void runUiAction("comm
     return;
   }
   if (currentJob?.mode === "personal") {
-    toast("當前有個人帳號任務，請先處理該任務");
+    toast("目前有個人帳號任務，請先處理該任務");
     renderJob(currentJob);
     return;
   }
@@ -878,7 +884,7 @@ $("#personalModeButton").addEventListener("click", () => {
   if (currentJob?.mode === "community"
       && ["running", "paused", "cancelled"].includes(currentJob.status)
       && currentJob.currentIndex < currentJob.targets.length) {
-    toast("當前有未完成的社群名單任務，請先繼續或結束該任務");
+    toast("目前有未完成的社群名單任務，請先繼續或結束該任務");
     renderJob(currentJob);
     return;
   }
@@ -1105,7 +1111,7 @@ $("#personalBlockConfirmButton").addEventListener("click", () => void runUiActio
   }
   if (!usernames.length || !currentPersonalScan?.id) {
     setPersonalBlockConfirmOpen(false);
-    return toast("當前沒有可處理的未回追帳號");
+    return toast("目前沒有可處理的未回追帳號");
   }
 
   const button = $("#personalBlockConfirmButton");
@@ -1154,11 +1160,11 @@ function setCommunitySubmitOpen(open) {
 }
 
 $("#openCommunitySubmitButton").addEventListener("click", () => {
-  if (!currentJob?.id || currentJob.mode !== "personal") return toast("當前沒有可加入社群名單的個人帳號任務");
+  if (!currentJob?.id || currentJob.mode !== "personal") return toast("目前沒有可加入社群名單的個人帳號任務");
   $("#communitySubmitTitle").textContent = "確認全部加入社群名單？";
   $("#communitySubmitCopy").textContent = currentJob.status === "completed"
     ? "確認後，這次任務裡所有成功封鎖或取消追蹤的帳號都會一起加入社群名單。"
-    : "確認後，這次任務裡所有成功封鎖或取消追蹤的帳號都會加入社群名單。後面批次成功處理的帳號也會一起加入，不只是當前這一批。";
+    : "確認後，這次任務裡所有成功封鎖或取消追蹤的帳號都會加入社群名單。後面批次成功處理的帳號也會一起加入，不只是目前這一批。";
   setCommunitySubmitOpen(true);
 });
 
@@ -1169,7 +1175,7 @@ communitySubmitConfirmPanel.querySelector("[data-community-submit-close]").addEv
 $("#communitySubmitConfirm").addEventListener("click", () => void runUiAction("community-submit", $("#communitySubmitConfirm"), async () => {
   if (!currentJob?.id) {
     setCommunitySubmitOpen(false);
-    return toast("當前任務已經結束");
+    return toast("目前任務已經結束");
   }
 
   const button = $("#communitySubmitConfirm");
