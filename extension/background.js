@@ -2680,6 +2680,9 @@ async function performProfileActionInPage(target, mode = "community", sourceUser
     // restricted gate or an actual profile control before deciding what to do.
     await waitFor(() => {
       if (restrictedGateVisible()) return true;
+      // A target /creator-subscriptions/subscribe route is a complete UI
+      // already: let the worker close it without waiting for Following.
+      if (/\/creator-subscriptions\/subscribe(?:\/|$)/i.test(location.pathname)) return true;
       if (document.querySelector('[data-testid$="-unfollow"], [data-testid$="-follow"]')) return true;
       return [...document.querySelectorAll('button, [role="button"]')]
         .some((node) => visible(node) && /^(Following|正在关注|正在關注|フォロー中|팔로잉)$/i.test((node.innerText || "").trim()));
@@ -2753,6 +2756,17 @@ async function performProfileActionInPage(target, mode = "community", sourceUser
       || subscriptionScreenPattern.test(pageText());
 
     if (subscriptionShown) {
+      if (isSubscriptionRoute()) {
+        // Do not click here: an SPA route change can invalidate this injected
+        // script before it returns. The dedicated worker will close the
+        // subscription dialog on the verified target route, then reopen the
+        // profile, recheck account/whitelist and perform the action once.
+        return {
+          status: "retry_profile_after_subscription",
+          failureKind: "subscription_overlay",
+          reason: "识别到目标账号订阅页面，正在关闭弹窗并返回主页核对关注状态"
+        };
+      }
       const closeSelector = '[data-testid="app-bar-close"], button[aria-label="Close"], [role="button"][aria-label="Close"], button[aria-label="Dismiss"], [role="button"][aria-label="Dismiss"], button[aria-label="关闭"], [role="button"][aria-label="关闭"], button[aria-label="關閉"]';
       const closeSubscription = await waitFor(() => {
         // Prefer the close control inside the visible subscription dialog, not
@@ -2817,6 +2831,13 @@ async function performProfileActionInPage(target, mode = "community", sourceUser
     await humanPauseInPage(500, 1200);
     unfollowControl.click();
     await humanPauseInPage(800, 1500);
+    if (/\/creator-subscriptions\/subscribe(?:\/|$)/i.test(location.pathname)
+      || /Subscription Perks|Subscribe\s*[·•—-]?\s*[¥￥$€£]?\s*\d+(?:[.,]\d{1,2})?\s*\/\s*(?:month|mo\b)|付费订阅/i.test(pageText())) {
+      return {
+        status: "retry_profile_after_subscription", failureKind: "subscription_overlay",
+        reason: "X 打开了付费订阅页面，正在关闭并返回目标主页核对取关状态"
+      };
+    }
 
     const confirmUnfollow = [...document.querySelectorAll('[data-testid="confirmationSheetConfirm"], [role="dialog"] button, [role="dialog"] [role="button"]')]
       .filter(visible)
@@ -2828,12 +2849,17 @@ async function performProfileActionInPage(target, mode = "community", sourceUser
     }
 
     const applied = await waitFor(() => {
+      if (/\/creator-subscriptions\/subscribe(?:\/|$)/i.test(location.pathname)
+        || /Subscribe\s*[·•—-]?\s*[¥￥$€£]?\s*\d+(?:[.,]\d{1,2})?\s*\/\s*(?:month|mo\b)/i.test(pageText())) return "subscription";
       const followControl = [...document.querySelectorAll('[data-testid$="-follow"]')].find(visible);
-      if (followControl) return true;
-      const stillFollowing = [...document.querySelectorAll('[data-testid$="-unfollow"]')].some(visible);
-      return stillFollowing ? null : true;
+      if (followControl) return "unfollowed";
+      return null;
     }, 6000);
-    if (!applied) return { status: "failed", reason: "点击取关后仍显示正在关注，操作可能未成功" };
+    if (applied === "subscription") return {
+      status: "retry_profile_after_subscription", failureKind: "subscription_overlay",
+      reason: "X 打开了付费订阅页面，正在返回目标主页核对取关状态"
+    };
+    if (applied !== "unfollowed") return { status: "failed", reason: "未能确认取关后显示 Follow 按钮，操作可能未成功" };
     return { status: "unfollowed", reason: "已取关" };
   }
 
@@ -2908,6 +2934,68 @@ async function performProfileActionInPage(target, mode = "community", sourceUser
   const dialogStillOpen = [...document.querySelectorAll('[role="dialog"]')].some(visible);
   if (dialogStillOpen) return { status: "failed", reason: "确认后窗口未关闭，操作可能未成功" };
   return { status: "blocked", reason: "已拉黑" };
+}
+
+// Only a matching target profile's subscription route can be dismissed.
+// This is never a purchase/terms consent; only an X close control is eligible.
+function isTargetSubscriptionRoute(urlValue, username) {
+  try {
+    const u = new URL(String(urlValue || ""));
+    const name = String(username || "").toLowerCase();
+    return u.protocol === "https:" && u.hostname === "x.com"
+      && /^[A-Za-z0-9_]{1,15}$/.test(name)
+      && u.pathname.replace(/\/$/, "").toLowerCase() === `/${name}/creator-subscriptions/subscribe`;
+  } catch {
+    return false;
+  }
+}
+
+async function closeTargetSubscriptionPageInPage(expectedUsername) {
+  const visible = (el) => Boolean(el && el.getClientRects().length);
+  const name = String(expectedUsername || "").toLowerCase();
+  if (!/^[a-z0-9_]{1,15}$/.test(name)
+    || location.pathname.replace(/\/$/, "").toLowerCase() !== `/${name}/creator-subscriptions/subscribe`) {
+    return { status: "not_target_subscription" };
+  }
+  // The screenshot shows the creator subscription screen with a Close (X)
+  // in its upper-left corner and a separate paid Subscribe button below.
+  const selectors = [
+    '[data-testid="app-bar-close"]',
+    '[data-testid="sheetDialog"] [aria-label="Close"]',
+    '[role="dialog"] [aria-label="Close"]',
+    '[aria-modal="true"] [aria-label="Close"]',
+    'button[aria-label="Close"]',
+    '[role="button"][aria-label="Close"]',
+    'button[title="Close"]',
+    '[role="button"][title="Close"]',
+    '[data-testid="close"]',
+    'button[aria-label="关闭"]',
+    '[role="button"][aria-label="关闭"]',
+    'button[aria-label="關閉"]',
+    '[role="button"][aria-label="關閉"]'
+  ];
+  let close = null;
+  for (const selector of selectors) {
+    const candidates = [...document.querySelectorAll(selector)].filter(visible);
+    // Ambiguous controls are not safe to click, even on a subscription page.
+    if (candidates.length === 1) { close = candidates[0]; break; }
+  }
+  if (!close) {
+    // X sometimes renders the close X as an icon-only role=button. Accept
+    // only an unambiguous close glyph, never a Subscribe/payment control.
+    const matches = [...document.querySelectorAll('button, [role="button"]')]
+      .filter(visible)
+      .filter((node) => /^(?:×|✕|✖|Close|Dismiss|关闭|關閉)$/.test(
+        ((node.innerText || "").trim() || (node.getAttribute("aria-label") || "").trim())));
+    if (matches.length === 1) close = matches[0];
+  }
+  if (!close) return { status: "close_not_found" };
+  const text = ((close.innerText || "") + " " + (close.getAttribute("aria-label") || "")).trim();
+  if (/Subscribe\s*[·•—-]?\s*[¥￥$€£]?\s*\d|Pay|Purchase|Buy|购买|付款/i.test(text)) {
+    return { status: "unsafe_button_rejected" };
+  }
+  close.click();
+  return { status: "close_clicked" };
 }
 
 const ACTION_JOB_WORKER_NAME_PREFIX = "__QG_ACTION_JOB_WORKER__:";
@@ -3050,14 +3138,29 @@ async function runJob() {
         // Recheck immediately before the irreversible action: whitelist can change mid-batch.
         const protectedNow = job.mode === "personal"
           && await isPersonalTargetProtected(job.sourceUsername, target);
-        const injection = protectedNow
-          ? [{ result: { status: "skipped_whitelist", reason: "白名单保护，已跳过" } }]
-          : await chrome.scripting.executeScript({
-              target: { tabId: job.workerTabId },
-              func: performProfileActionInPage,
-              args: [target, job.mode, job.sourceUsername || null, job.mode === "personal" ? (job.action || "block") : "block"]
-            });
-        outcome = injection[0]?.result ?? { status: "failed", reason: "页面脚本没有返回结果" };
+        let injection;
+        try {
+          injection = protectedNow
+            ? [{ result: { status: "skipped_whitelist", reason: "白名单保护，已跳过" } }]
+            : await chrome.scripting.executeScript({
+                target: { tabId: job.workerTabId },
+                func: performProfileActionInPage,
+                args: [target, job.mode, job.sourceUsername || null, job.mode === "personal" ? (job.action || "block") : "block"]
+              });
+          outcome = injection?.[0]?.result ?? { status: "failed", reason: "页面脚本没有返回结果" };
+        } catch (injectionError) {
+          const latestTab = await chrome.tabs.get(job.workerTabId).catch(() => null);
+          if (!protectedNow && job.mode === "personal" && job.action === "unfollow"
+              && isTargetSubscriptionRoute(latestTab?.url, target.username)) {
+            // A route transition can cancel a content script mid-action.
+            // Only a verified target subscription route is recoverable.
+            outcome = { status: "retry_profile_after_subscription",
+              failureKind: "subscription_overlay",
+              reason: "X 自动跳转到目标账号的订阅页面，正在返回主页重新核对" };
+          } else {
+            throw injectionError;
+          }
+        }
         if (job.mode === "personal" && job.action === "unfollow"
             && outcome?.status === "retry_profile_after_restricted_consent") {
           await humanSleep(1000, 1600);
@@ -3097,6 +3200,21 @@ async function runJob() {
         }
         if (job.mode === "personal" && job.action === "unfollow"
             && outcome?.status === "retry_profile_after_subscription") {
+          // The X subscription flow may live on a separate /subscribe route.
+          // Close that route's dialog first, *never* its paid Subscribe button.
+          // Even if the close control is missing, navigating to the verified
+          // target profile is safe and avoids silently marking this as success.
+          const sheetTab = await chrome.tabs.get(job.workerTabId).catch(() => null);
+          if (isTargetSubscriptionRoute(sheetTab?.url, target.username)) {
+            try {
+              await chrome.scripting.executeScript({
+                target: { tabId: job.workerTabId },
+                func: closeTargetSubscriptionPageInPage,
+                args: [target.username]
+              });
+              await humanSleep(350, 750);
+            } catch { /* X may navigate while the close button is clicked. */ }
+          }
           // Dismissal is not proof that the target's Following button is visible.
           // Re-enter the original target URL once. Never reuse a different
           // profile or bypass owner, target, and whitelist verification.
