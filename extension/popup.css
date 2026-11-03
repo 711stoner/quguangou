@@ -29,7 +29,9 @@ button, textarea { font: inherit; }
 }
 
 .brand img { width: 48px; height: 48px; }
-.brand h1 { margin: 0; font-size: 23px; letter-spacing: .04em; }
+.brand > div { min-width: 0; }
+.brand h1 { margin: 0; font-size: 23px; letter-spacing: .04em; line-height: 1.25; overflow-wrap: break-word; }
+.brand p { overflow-wrap: break-word; line-height: 1.45; }
 .brand p { margin: 3px 0 0; color: #76665c; font-size: 13px; }
 
 label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 700; }

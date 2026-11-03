@@ -63,7 +63,7 @@
           </div>
           <p id="personalStallHelp" class="personal-note personal-stall-help hidden" role="status" aria-live="polite"></p>
           <button id="personalScanButton" class="primary" type="button">スキャン開始</button>
-          <button id="personalForceRestartButton" class="secondary personal-force-restart hidden" type="button">スキャン画面を強制的に開き直す（進捗を保持）</button>
+          <button id="personalForceRestartButton" class="secondary personal-force-restart hidden" type="button">スキャン画面を開き直す（進捗を保持）</button>
           <button id="personalCancelScanButton" class="secondary hidden" type="button">スキャンを一時停止（進捗を保存）</button>
           <p id="personalRecoveryHint" class="personal-note hidden" role="status"></p>
           <p class="personal-note">Xでエラーが発生すると、拡張機能は数回だけ再試行します。読み込みが回復しない場合は進捗を保存して停止します。Xのリストが正常に表示されるようになったら「スキャン再開」を選んでください。</p>
@@ -71,7 +71,7 @@
         </div>
 
         <details id="personalWhitelistPanel" class="personal-whitelist" open>
-          <summary>保護リスト（<span id="personalWhitelistCount">0</span>)</summary>
+          <summary>保護リスト（<span id="personalWhitelistCount">0</span>）</summary>
           <p class="personal-note">データはこのブラウザー内だけに保存されます。通常の再起動や拡張機能の更新では残りますが、アンインストールやデータ消去では失われることがあります。保護したアカウントは一括ブロックとフォロー解除の対象から除外されます。</p>
           <div id="personalWhitelistList" class="personal-whitelist-list">保護中のアカウントはありません。スキャン結果から追加できます。</div>
         </details>
@@ -186,7 +186,6 @@
 
       <footer>
         <span>Xとは提携していない独立したツールです</span>
-        <a href="https://711stoner.github.io/quguangou/en/" target="_blank" rel="noopener noreferrer">公式サイト（英語）</a>
         <a href="privacy.html" target="_blank" rel="noopener noreferrer">プライバシーについて</a>
       </footer>
 

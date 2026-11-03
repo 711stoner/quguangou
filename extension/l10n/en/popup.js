@@ -277,8 +277,8 @@ function updatePersonalSelectionButton() {
   const unfollowButton = $("#personalUnfollowSelectedButton");
   blockButton.disabled = !enabled;
   unfollowButton.disabled = !enabled;
-  blockButton.textContent = count ? `Block selected (${count}）` : "Block selected";
-  unfollowButton.textContent = count ? `Unfollow selected (${count}）` : "Unfollow selected";
+  blockButton.textContent = count ? `Block selected (${count})` : "Block selected";
+  unfollowButton.textContent = count ? `Unfollow selected (${count})` : "Unfollow selected";
 }
 
 function renderPersonalResultList(users = []) {
