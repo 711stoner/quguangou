@@ -70,3 +70,21 @@ test('upload guide distinguishes eleven project configs from supported Chrome lo
  assert.ok(guide.includes('重新上传版本号'), 'Store version increment reminder');
  assert.ok(guide.includes('ZIP 始终只保留固定文件名'), 'Keep stable artifact names');
 });
+
+test('live store mismatch is documented and existing package is newer than public 0.2.63',()=>{
+ const manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.json'),'utf8'));
+ const report=fs.readFileSync(path.join(root,'商店线上语言核验.md'),'utf8');
+ const pub=[0,2,63],cur=manifest.version.split('.').map(Number);
+ assert.ok(cur.some((v,i)=>v!==pub[i]) && (cur[0]*1e6+cur[1]*1e3+cur[2])>(pub[0]*1e6+pub[1]*1e3+pub[2]));
+ assert.match(report,/0\.2\.63/);
+ assert.match(report,new RegExp(manifest.version.replaceAll('.','\\.')));
+ assert.match(report,/搜索关键词不控制/);
+ assert.match(report,/尚未完成实际线上上传\/发布/);
+});
+test('store listing release guide includes exact localized official Chrome Web Store entry points',()=>{
+ const doc=fs.readFileSync(path.join(root,'商店SEO上架文案.md'),'utf8');
+ for(const loc of ['zh-CN','zh-TW','en','ja','ko','fr','es','ms','vi','id']){
+  assert.ok(doc.includes(`https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=${loc}`),loc);
+ }
+ assert.ok(doc.includes('搜索词不决定展示语言')||doc.includes('搜索词不决定展示语言。'));
+});

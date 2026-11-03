@@ -1,12 +1,14 @@
 # 取关狗｜全语言商店 SEO 上架文案（当前唯一版本）
 
-> 当前源码版本：v0.2.74。11 份项目地区配置（Chrome 官方实际支持的 locale 为其中 10 种，另有一份 zh_HK 兼容资源），10 种可选界面语言。zh_TW / zh_HK 使用同一套繁体内容。
+> 当前源码版本：v0.2.75。11 份项目地区配置（Chrome 官方实际支持的 locale 为其中 10 种，另有一份 zh_HK 兼容资源），10 种可选界面语言。zh_TW / zh_HK 使用同一套繁体内容。
 > **只使用本文件上架，不要复制历史 v0.2.25、v0.2.63、v0.2.67 等旧文案。**
 
 ## 发布与 SEO 规则
 
 - 一个插件 ID，每个浏览器按官方支持的语言完善同一个 listing，不创建独立语言商品。
+- **线上发布差异（2026-11-04 核查）**：当前 Chrome 商店插件 `ahpjikfghfgekmjcomhcmknlkicloblf` 仍为 **v0.2.63**，而本地当前唯一安装包是 **v0.2.75**。修改本地 ZIP 或 GitHub 不会直接更新线上商店；必须在已有商品中提交新版本，审核发布后重新做线上逐语言验证，不能提前声称线上修复。
 - **香港繁体兼容说明：** Chrome 官方扩展 locale 列表有 `zh_CN`、`zh_TW`，没有独立的 `zh_HK`。当前项目仍保留 `zh_HK` 地区文案与资源供兼容及核对，但香港用户的界面使用 `zh-TW` 繁体；Chrome 商店上传请使用 `zh_TW` 的繁体 Listing，不要将 `zh_HK` 作为第 11 个可独立选择的 Chrome 商店语言。Edge 和 Firefox 以各自开发者后台实际可选语言为准。
+- **Chrome 商店搜索词不决定展示语言。** 2026-11-04 线上实测：使用 `?hl=zh-CN` 打开同一商店页时显示简体中文，`?hl=en` 则显示英文；已发布 v0.2.63 的繁体中文、日语等其他语言均回退到简体中文。输入「取关狗」搜索不能强制将英文版搜索结果切为中文。要给不同语言用户提供可靠入口，使用下方各语言官方商店链接的 `?hl=` 参数，并在平台商店后台完成各自语言的 Listing（非浏览器设置）。
 - **商店标题不是界面语言开关：** 浏览器中切换插件界面不会自动更新扩展管理页或商店的 Listing 标题。中文／英文地区的商店标题、摘要、完整介绍和图片必须在浏览器商店后台分别核对；仅打包 ZIP 或切换界面并不能保证搜索结果同步更新。
 - **重新上传版本号：** 三个浏览器的发布 ZIP 始终只保留固定文件名，但代码／manifest 更新后，若商店已发布版本号 ≥ 当前包的 `manifest.version`，下次上架必须先提高包内版本号，再覆盖这三个固定文件并提交审核；否则 Chrome 商店会拒绝上传。不要为了修复文案创建新的商店商品或新的 ZIP 名称。
 - 本文件的标题和简短介绍已写入 `_locales/<locale>/messages.json`，构建 ZIP 时包含；详细介绍和 Edge 搜索词仍需到开发者后台逐语言填写，**不会因为上传 ZIP 自动填好**。
@@ -21,6 +23,23 @@
 - Chrome：https://developer.chrome.com/docs/webstore/program-policies/listing-requirements
 - Edge：https://learn.microsoft.com/en-us/microsoft-edge/extensions/publish/publish-extension
 - Firefox：https://extensionworkshop.com/documentation/develop/create-an-appealing-listing/
+
+## Chrome 商店多语言直达链接（无须修改浏览器设置）
+
+以下链接都指向同一个插件 ID；不会新增商品。可用于官网/SEO 落地页。**仅确保商店界面选择对应语言，不代表该语言的 Listing 已经发布，未发布会回退。**
+
+- 简体中文：https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=zh-CN
+- 繁體中文：https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=zh-TW
+- English：https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=en
+- 日本語：https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=ja
+- 한국어：https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=ko
+- Français：https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=fr
+- Español：https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=es
+- Bahasa Melayu：https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=ms
+- Tiếng Việt：https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=vi
+- Bahasa Indonesia：https://chromewebstore.google.com/detail/ahpjikfghfgekmjcomhcmknlkicloblf?hl=id
+
+---
 
 ## 简体中文 — zh_CN
 
