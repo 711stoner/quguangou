@@ -1,4 +1,5 @@
 import { getScanRestartText } from "../../lib/scan-restart-text.js";
+import { scanStallKind } from "../../lib/scan-stall-help.js";
 import { getCompletedScanCountMismatch } from "../../lib/relations.js";
 import { getValuePromoProbability } from "../../lib/value-promo.js";
 import { planCommunityPromptSchedule } from "../../lib/community-share.js";
@@ -12,6 +13,7 @@ let blocklist = null;
 let blocklistPromise = null;
 let currentJob = null;
 let currentPersonalScan = null;
+let scanWindowHealth = null;
 let selectedPersonalScanId = null;
 const selectedPersonalHandles = new Set();
 let pendingPersonalAction = "block";
@@ -417,6 +419,15 @@ function renderPersonalScan(scan = currentPersonalScan) {
         : "";
 
   const restartCopy = getScanRestartText(document.documentElement.lang);
+  const stallKind = scanStallKind(scan, scanWindowHealth);
+  const recoveryHelp = $("#personalStallHelp");
+  recoveryHelp.classList.toggle("hidden", !running && !paused);
+  recoveryHelp.classList.toggle("personal-help-attention", stallKind === "missing" || stallKind === "stalled");
+  recoveryHelp.textContent = rateLimitCooling ? restartCopy.helpCooling
+    : paused ? restartCopy.helpPaused
+    : stallKind === "missing" ? restartCopy.helpMissing
+    : stallKind === "stalled" ? restartCopy.helpStalled
+    : restartCopy.helpNormal;
   const forceButton = $("#personalForceRestartButton");
   forceButton.classList.toggle("hidden", !running && !paused);
   forceButton.textContent = rateLimitCooling ? restartCopy.schedule : restartCopy.restart;
@@ -461,10 +472,11 @@ function renderPersonalScan(scan = currentPersonalScan) {
     const cursorFromCheckpoint = Boolean(scan?.progress?.[activeRelation + "CursorResumeFromCheckpoint"]);
     const cursorResumePages = Number(scan?.progress?.[activeRelation + "CursorResumePages"] || 0);
     const cursorCheckpointReady = Boolean(scan?.progress?.[activeRelation + "Cursor"]);
-    const scanPatienceNote = "Large follow lists take time to scan. Keep the X scan window open and avoid switching tabs until the current stage finishes.";
 
     $("#personalScanSummary").textContent = rateLimitCooling
       ? "@" + (scan.username || "Signed-in account") + " · HTTP 429 cooldown until " + retryTime
+      : (stallKind === "missing" || stallKind === "stalled")
+      ? "@" + (scan.username || "Signed-in account") + " · scan progress has stopped"
       : cursorResumeActive
       ? "@" + (scan.username || "Signed-in account") + (cursorFromCheckpoint ? " · resuming from last position" : " · catching up")
       : resumeActive
@@ -478,7 +490,7 @@ function renderPersonalScan(scan = currentPersonalScan) {
           : "Identifying the signed-in account…";
 
     if (cursorResumeActive) {
-      const cursorPrefix = cursorFromCheckpoint ? "Resuming from last position…" : "Reading quickly to previous position…";
+      const cursorPrefix = cursorFromCheckpoint ? "Resuming from last position…" : "Reading saved pages…";
       $("#personalProgressText").textContent = activeTotal
         ? stagePrefix + ": " + cursorPrefix + " · read " + cursorResumePages + " pages · saved " + activeCount + " / " + (activeExact ? "" : " approx. ") + activeTotal + " accounts (" + activeLabel + ")"
         : stagePrefix + ": " + cursorPrefix + " · saved " + activeCount + " accounts (" + activeLabel + ")" + " · total not yet available; the scan can continue";
@@ -518,7 +530,6 @@ function renderPersonalScan(scan = currentPersonalScan) {
           : phase === "followers"
             ? "Stage 1 is complete and saved. Stage 2 is now reading your followers for comparison. The non-follower list will be generated once stage 2 finishes."
             : "Stage 1 is reading the accounts you follow. Stage 2 will then read your followers. The non-follower list is available only after both stages finish.";
-    $("#personalScanNote").textContent += " " + scanPatienceNote;
   } else if (paused) {
     $("#personalScanSummary").textContent = "@" + (scan.username || "Signed-in account") + " · paused (manual resume required)";
     $("#personalProgressText").textContent = "Stage 1 saved " + followingCount
@@ -555,11 +566,6 @@ function renderPersonalScan(scan = currentPersonalScan) {
     $("#personalScanNote").textContent = "Scanning only checks current follow relationships. It will not unfollow or block anyone automatically.";
   }
 
-  if (running || paused) {
-    $("#personalScanNote").textContent = rateLimitCooling
-      ? restartCopy.cooling
-      : paused ? restartCopy.paused : restartCopy.running;
-  }
 
   $("#personalResultView").classList.toggle("hidden", !completed || completionNeedsValidation || completionNeedsFullRescan);
   if (completed) {
@@ -1029,6 +1035,11 @@ setInterval(async () => {
     const snapshot = await chrome.storage.local.get(PERSONAL_SCAN_STORAGE_KEY);
     const savedScan = snapshot[PERSONAL_SCAN_STORAGE_KEY] || null;
     if (savedScan) acceptPersonalScanUpdate(savedScan);
+    if (currentPersonalScan?.status === "running") {
+      const health = await chrome.runtime.sendMessage({ type: "GET_PERSONAL_SCAN_HEALTH" });
+      if (health?.ok) scanWindowHealth = health;
+      renderPersonalScan(currentPersonalScan);
+    }
   } catch (error) {
     console.warn("[Followback Watchdog] Scan progress could not be synchronized", error);
   } finally {

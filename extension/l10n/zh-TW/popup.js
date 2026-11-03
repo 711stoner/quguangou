@@ -1,4 +1,5 @@
 import { getScanRestartText } from "../../lib/scan-restart-text.js";
+import { scanStallKind } from "../../lib/scan-stall-help.js";
 import { getCompletedScanCountMismatch } from "../../lib/relations.js";
 import { getValuePromoProbability } from "../../lib/value-promo.js";
 import { planCommunityPromptSchedule } from "../../lib/community-share.js";
@@ -12,6 +13,7 @@ let blocklist = null;
 let blocklistPromise = null;
 let currentJob = null;
 let currentPersonalScan = null;
+let scanWindowHealth = null;
 let selectedPersonalScanId = null;
 const selectedPersonalHandles = new Set();
 let pendingPersonalAction = "block";
@@ -416,6 +418,15 @@ function renderPersonalScan(scan = currentPersonalScan) {
         : "";
 
   const restartCopy = getScanRestartText(document.documentElement.lang);
+  const stallKind = scanStallKind(scan, scanWindowHealth);
+  const recoveryHelp = $("#personalStallHelp");
+  recoveryHelp.classList.toggle("hidden", !running && !paused);
+  recoveryHelp.classList.toggle("personal-help-attention", stallKind === "missing" || stallKind === "stalled");
+  recoveryHelp.textContent = rateLimitCooling ? restartCopy.helpCooling
+    : paused ? restartCopy.helpPaused
+    : stallKind === "missing" ? restartCopy.helpMissing
+    : stallKind === "stalled" ? restartCopy.helpStalled
+    : restartCopy.helpNormal;
   const forceButton = $("#personalForceRestartButton");
   forceButton.classList.toggle("hidden", !running && !paused);
   forceButton.textContent = rateLimitCooling ? restartCopy.schedule : restartCopy.restart;
@@ -460,12 +471,13 @@ function renderPersonalScan(scan = currentPersonalScan) {
     const cursorFromCheckpoint = Boolean(scan?.progress?.[activeRelation + "CursorResumeFromCheckpoint"]);
     const cursorResumePages = Number(scan?.progress?.[activeRelation + "CursorResumePages"] || 0);
     const cursorCheckpointReady = Boolean(scan?.progress?.[activeRelation + "Cursor"]);
-    const scanPatienceNote = "如果追蹤數量較多，不建議切換其他頁面，請耐心在此等待完成；因為採用擬人化讀取方式，讀取速度不會特別快。";
 
     $("#personalScanSummary").textContent = rateLimitCooling
       ? "@" + (scan.username || "當前帳號") + " · HTTP 429 冷卻中，最早恢復：" + retryTime
+      : (stallKind === "missing" || stallKind === "stalled")
+      ? "@" + (scan.username || "當前帳號") + " · 讀取暫時沒有進展"
       : cursorResumeActive
-      ? "@" + (scan.username || "當前帳號") + (cursorFromCheckpoint ? " · 正在從上次位置繼續" : " · 正在快速讀取")
+      ? "@" + (scan.username || "當前帳號") + (cursorFromCheckpoint ? " · 正在從上次位置繼續" : " · 正在繼續讀取")
       : resumeActive
         ? "@" + (scan.username || "當前帳號") + " · 正在定位舊版斷點"
         : recovering
@@ -477,7 +489,7 @@ function renderPersonalScan(scan = currentPersonalScan) {
           : "正在識別當前登入帳號…";
 
     if (cursorResumeActive) {
-      const cursorPrefix = cursorFromCheckpoint ? "正在從上次位置繼續…" : "正在快速讀取…";
+      const cursorPrefix = cursorFromCheckpoint ? "正在從上次位置繼續…" : "正在繼續讀取…";
       $("#personalProgressText").textContent = activeTotal
         ? stagePrefix + "：" + cursorPrefix + " 已讀取 " + cursorResumePages + " 頁 · 已儲存 " + activeCount + " / " + (activeExact ? "" : "約 ") + activeTotal + " 個" + activeLabel
         : stagePrefix + "：" + cursorPrefix + " 已儲存 " + activeCount + " 個" + activeLabel + " · 總數暫未讀取，不影響檢查";
@@ -503,7 +515,7 @@ function renderPersonalScan(scan = currentPersonalScan) {
     $("#personalScanNote").textContent = cursorResumeActive
       ? (cursorFromCheckpoint
           ? "這次不會從第一頁重新開始。取關狗會從上次儲存的位置繼續讀取，少量重疊帳號會自動去重。"
-          : "當前位置已經儲存。為避免 X 頁面過載或觸發異常，掃描期間不建議切換到其他頁面，請耐心等待當前階段完成。")
+          : "當前位置已經儲存。為避免 X 頁面重新載入或發生異常，掃描期間不建議切換到其他頁面，請耐心等待當前階段完成。")
       : resumeActive
         ? "正在回到上次儲存的位置，之前已讀取的資料不會丟失。"
         : recovering
@@ -512,12 +524,11 @@ function renderPersonalScan(scan = currentPersonalScan) {
         ? "當前為第 " + (scan?.progress?.humanPauseCount || 1) + " 次短暫停留，結束後會自動繼續。"
         : cursorCheckpointReady
           ? (phase === "followers"
-              ? "第一階段已經完成並儲存。現在是第二階段：讀取消追蹤注你的人，用來和第一階段進行比對；第二階段完成後才會生成未回追名單。"
-              : "第一階段正在讀取你追蹤的人。第一階段完成後，還會進入第二階段讀取消追蹤注你的人；兩邊都完成後才會生成未回追名單。")
+              ? "第一階段已經完成並儲存。現在是第二階段：讀取追蹤你的人，用來和第一階段進行比對；第二階段完成後才會生成未回追名單。"
+              : "第一階段正在讀取你追蹤的人。第一階段完成後，還會進入第二階段讀取追蹤你的人；兩邊都完成後才會生成未回追名單。")
           : phase === "followers"
-            ? "第一階段已經完成並儲存。現在是第二階段：讀取消追蹤注你的人，用來和第一階段進行比對；第二階段完成後才會生成未回追名單。"
-            : "第一階段正在讀取你追蹤的人。第一階段完成後，還會進入第二階段讀取消追蹤注你的人；兩邊都完成後才會生成未回追名單。";
-    $("#personalScanNote").textContent += " " + scanPatienceNote;
+            ? "第一階段已經完成並儲存。現在是第二階段：讀取追蹤你的人，用來和第一階段進行比對；第二階段完成後才會生成未回追名單。"
+            : "第一階段正在讀取你追蹤的人。第一階段完成後，還會進入第二階段讀取追蹤你的人；兩邊都完成後才會生成未回追名單。";
   } else if (paused) {
     $("#personalScanSummary").textContent = "@" + (scan.username || "當前帳號") + " · 已暫停（等待手動繼續）";
     $("#personalProgressText").textContent = "第一階段已儲存 " + followingCount
@@ -551,11 +562,6 @@ function renderPersonalScan(scan = currentPersonalScan) {
     $("#personalScanNote").textContent = "檢查只讀取當前追蹤關係，不會自動取消追蹤或封鎖任何帳號。";
   }
 
-  if (running || paused) {
-    $("#personalScanNote").textContent = rateLimitCooling
-      ? restartCopy.cooling
-      : paused ? restartCopy.paused : restartCopy.running;
-  }
 
   $("#personalResultView").classList.toggle("hidden", !completed || completionNeedsValidation || completionNeedsFullRescan);
   if (completed) {
@@ -1020,6 +1026,11 @@ setInterval(async () => {
     const snapshot = await chrome.storage.local.get(PERSONAL_SCAN_STORAGE_KEY);
     const savedScan = snapshot[PERSONAL_SCAN_STORAGE_KEY] || null;
     if (savedScan) acceptPersonalScanUpdate(savedScan);
+    if (currentPersonalScan?.status === "running") {
+      const health = await chrome.runtime.sendMessage({ type: "GET_PERSONAL_SCAN_HEALTH" });
+      if (health?.ok) scanWindowHealth = health;
+      renderPersonalScan(currentPersonalScan);
+    }
   } catch (error) {
     console.warn("[取關狗] 檢查進度同步暫時失敗", error);
   } finally {

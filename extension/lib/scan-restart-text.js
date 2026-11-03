@@ -26,9 +26,9 @@ const copy = {
   helpMissing:"找不到正在掃描的 X 視窗，可能已經卡住。請點「重新開啟掃描視窗（保留進度）」繼續；不要重新偵測或移除擴充功能。",
   helpStalled:"進度超過 3 分鐘沒有增加。若 X 沒有限流，請重新開啟掃描視窗；仍無變化就先暫停，再從儲存的位置繼續。",
   helpCooling:"X 暫時限制請求。請等顯示的冷卻時間結束，不要反覆點擊；已讀取的資料會保留。",
-  helpPaused:"已暫停，資料沒有清除。確認 X 頁面可開啟後，點「繼續偵測」；若視窗沒有出現，再重新開啟掃描視窗。",
+  helpPaused:"已暫停，資料沒有清除。確認 X 頁面可開啟後，點「繼續檢查（從斷點恢復）」；若視窗沒有出現，再重新開啟掃描視窗。",
 
-  restart:"強制重開掃描視窗（保留進度）",
+  restart:"重新開啟掃描視窗（保留進度）",
   schedule:"冷卻結束後重開視窗（保留進度）",
   running:"已掃過的帳號會自動儲存。如果視窗消失或長時間沒有進度，可以點「強制重開掃描視窗」，從斷點繼續。",
   cooling:"X 暫時限制了請求。已儲存的資料不會消失；冷卻結束後，外掛會重新開啟視窗繼續。",
@@ -46,7 +46,7 @@ const copy = {
   helpCooling:"X has limited requests. Wait until the cooldown time shown; repeated clicks will not help. Saved accounts remain intact.",
   helpPaused:"The scan is paused, but your data is saved. Once X works again, choose Resume. If no scan window appears, reopen it.",
 
-  restart:"Force restart scan window (keep progress)",
+  restart:"Reopen scan window (keep progress)",
   schedule:"Reopen after cooldown (keep progress)",
   running:"Your scanned accounts are saved. If the window disappears or stops progressing, restart the scan window to continue from your checkpoint.",
   cooling:"X is rate-limiting requests. Your progress is safe. A new scan window will open when the cooldown ends.",
@@ -82,7 +82,7 @@ const copy = {
   helpCooling:"X에서 요청을 제한하고 있습니다. 표시된 대기 시간이 끝날 때까지 기다리세요. 반복 클릭해도 빨라지지 않으며 저장 데이터는 유지됩니다.",
   helpPaused:"검사가 일시 중지되었지만 데이터는 저장됐습니다. X가 정상 작동하면 계속하기를 누르고, 창이 없으면 다시 여세요.",
 
-  restart:"스캔 창 강제로 다시 열기(진행 상황 유지)",
+  restart:"스캔 창 다시 열기(진행 상황 유지)",
   schedule:"제한 해제 후 다시 열기(진행 상황 유지)",
   running:"이미 읽은 계정은 저장됩니다. 창이 사라지거나 진행이 오래 멈추면 스캔 창을 다시 열어 저장된 지점부터 이어갈 수 있습니다.",
   cooling:"X가 요청을 일시적으로 제한하고 있습니다. 진행 상황은 안전하게 저장됐으며 제한이 풀리면 새 창에서 이어집니다.",
@@ -118,7 +118,7 @@ const copy = {
   helpCooling:"X limita temporalmente las solicitudes. Espera hasta la hora indicada sin hacer clic repetidas veces. Los datos guardados permanecen.",
   helpPaused:"El análisis está pausado y los datos siguen guardados. Cuando X funcione, pulsa Continuar; si falta la ventana, vuelve a abrirla.",
 
-  restart:"Forzar reapertura del análisis (conservar progreso)",
+  restart:"Volver a abrir la ventana de análisis (conservar progreso)",
   schedule:"Reabrir tras la espera (conservar progreso)",
   running:"Las cuentas ya revisadas se guardan. Si desaparece la ventana o se queda bloqueada, puedes reabrirla y continuar desde el último punto guardado.",
   cooling:"X está limitando las solicitudes. El progreso está guardado y se abrirá una ventana nueva cuando termine la espera.",
