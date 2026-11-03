@@ -2,6 +2,28 @@
   if (Number(window.__QG_RELATION_NETWORK_V2__?.version || 0) >= 4) return;
 
   const originalFetch = window.fetch.bind(window);
+  // Respect server-provided Retry-After / reset headers when available.
+  // Keep only a bounded duration; never expose request auth headers.
+  const getRetryAfterMs = (response) => {
+    if (Number(response?.status) !== 429) return 0;
+    const headers = response.headers;
+    let wait = 0;
+    try {
+      const retryAfter = String(headers?.get('retry-after') || '').trim();
+      if (/^\d+(?:\.\d+)?$/.test(retryAfter))
+        wait = Math.ceil(Number(retryAfter) * 1000);
+      else if (retryAfter) {
+        const at = Date.parse(retryAfter);
+        if (Number.isFinite(at)) wait = Math.max(0, at - Date.now());
+      }
+      const reset = Number(headers?.get('x-rate-limit-reset') || 0);
+      if (reset > 0) {
+        const at = reset > 1e12 ? reset : reset * 1000;
+        wait = Math.max(wait, Math.max(0, at - Date.now()));
+      }
+    } catch {}
+    return Math.min(24 * 60 * 60 * 1000, Math.max(0, wait));
+  };
   const templates = new Map();
   // Diagnostics contain only request status/error codes, never URLs, cookies or usernames.
   const lastFailures = new Map();
@@ -10,6 +32,7 @@
     lastFailures.set(relation, {
       status: Number(status) || 0,
       error: String(error || "").slice(0, 50),
+      retryAfterMs: Number(arguments[3] || 0) || 0,
       observedAt: Date.now()
     });
   }
@@ -249,7 +272,7 @@
       throw error;
     }
     if (relation && !response?.ok) {
-      recordFailure(relation, response?.status, "HTTP_" + response?.status);
+      recordFailure(relation, response?.status, "HTTP_" + response?.status, getRetryAfterMs(response));
     } else if (relation && response?.ok) {
       void enqueueResponse(response, relation, template, "page");
     }
@@ -294,7 +317,7 @@
         this.addEventListener("load", () => {
           try {
             if (this.status < 200 || this.status >= 300) {
-              recordFailure(relation, this.status, "HTTP_" + this.status);
+              recordFailure(relation, this.status, "HTTP_" + this.status, this.status === 429 ? (() => { const seconds = Number(this.getResponseHeader("retry-after") || 0); return Number.isFinite(seconds) && seconds > 0 ? Math.min(86400000, Math.ceil(seconds * 1000)) : 0; })() : 0);
               return;
             }
             let payload = null;
@@ -366,7 +389,8 @@
         });
         if (!response.ok) {
           recordFailure(relation, response.status, "HTTP_" + response.status);
-          return { ok: false, status: response.status, error: "HTTP_" + response.status };
+          return { ok: false, status: response.status, error: "HTTP_" + response.status,
+            retryAfterMs: getRetryAfterMs(response) };
         }
         const payload = await response.json();
         const graphQLError = getGraphQLError(payload);

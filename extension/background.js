@@ -1,3 +1,4 @@
+import { recentlyRateLimited, cursorPacingWindow, domPacingWindow, shouldClearRecoveryCount, advertisedRetryAfterMs } from "./lib/scan-pacing.js";
 import { parseAccountList, parseAccountReference } from "./lib/accounts.js";
 import { reserveAttempt } from "./lib/pacing.js";
 import { dedupeUsers, mergeRunningPersonalScan, mergeUsersPreferLatest, shouldFallbackCursorToDom, evaluateUnknownDomEndCheckpoint, requiredRelationCount, shouldFallbackCursorAfterNoNewPages, getCompletedScanCountMismatch } from "./lib/relations.js";
@@ -120,7 +121,8 @@ function getPersonalScanRecoveryDelayMs(recoveryText, recoveryCount = 0) {
     // A rate limit needs a genuine cooldown, not a 3-5 minute retry loop.
     // 1st: 15-20 minutes; 2nd: 30-35 minutes; later: 60-65 minutes.
     const attempt = Math.max(1, Number(recoveryCount) || 1);
-    return Math.min(3600000, 900000 * (2 ** Math.min(2, attempt - 1))) + randomInt(0, 300000);
+    const serverWaitMs = advertisedRetryAfterMs(text);
+    return Math.max(serverWaitMs, Math.min(3600000, 900000 * (2 ** Math.min(2, attempt - 1))) + randomInt(0, 300000));
   }
   if (Number(recoveryCount || 0) >= 2 || /HTTP_5\d\d|GRAPHQL_ERROR|X 页面|分页暂时|持续显示临时错误/i.test(text))
     return randomInt(60000, 120000);
@@ -1144,9 +1146,11 @@ async function scanRelationPage(tabId, username, scanId, relation, profileRelati
   let cursorReachedEnd = false;
   let cursorHadSuccessfulPage = false;
   let cursorDisabledForRelation = Boolean(scanAtStart.progress?.[relation + "CursorDisabled"]);
-  let nextCursorRestAt = randomInt(4, 7);
-  let nextCursorLongRestAt = randomInt(18, 28);
-  if (latestCursor && !cursorDisabledForRelation) {
+  // Do not replay GraphQL cursor requests: let X load its own pages while
+  // the extension only reads visible DOM and observed responses. This avoids
+  // sending an extra request stream on top of X's own lazy loading.
+  const allowSyntheticCursorRequests = false;
+  if (allowSyntheticCursorRequests && latestCursor && !cursorDisabledForRelation) {
     let templateReady = networkTemplateReady;
 
     if (!templateReady && (resumeFromCheckpoint || hadSavedRelationProgress)) {
@@ -1196,7 +1200,8 @@ async function scanRelationPage(tabId, username, scanId, relation, profileRelati
 
         const page = await fetchXRelationCursorPage(tabId, relation, cursor);
         if (!page?.ok) {
-          cursorError = page?.error || ("HTTP_" + (page?.status || "unknown"));
+          cursorError = (page?.error || ("HTTP_" + (page?.status || "unknown")))
+            + (page?.retryAfterMs > 0 ? " RETRY_AFTER_MS=" + Math.floor(page.retryAfterMs) : "");
           break;
         }
         cursorHadSuccessfulPage = true;
@@ -1237,16 +1242,11 @@ async function scanRelationPage(tabId, username, scanId, relation, profileRelati
         }
 
         cursor = nextCursor;
-        if (cursorPage + 1 >= nextCursorLongRestAt) {
-          await sleep(randomInt(12000, 22000));
-          nextCursorLongRestAt += randomInt(16, 24);
-          nextCursorRestAt = Math.max(nextCursorRestAt, cursorPage + 1 + randomInt(4, 6));
-        } else if (cursorPage + 1 >= nextCursorRestAt) {
-          await sleep(randomInt(5000, 9000));
-          nextCursorRestAt += randomInt(4, 6);
-        } else {
-          await sleep(randomInt(2500, 4500));
-        }
+        // Previous versions could send 15-24 pagination requests per minute.
+        // Even with occasional short rests, that was unsustainable for large lists.
+        const recent429 = recentlyRateLimited(current.lastRateLimitAt);
+        const [minWait, maxWait] = cursorPacingWindow(cursorPage + 1, recent429);
+        await sleep(randomInt(minWait, maxWait));
       }
 
       const latest = await getPersonalScan();
@@ -1427,7 +1427,7 @@ async function scanRelationPage(tabId, username, scanId, relation, profileRelati
   let domConfirmedEnd = false;
   let lastHeight = 0;
   let sameHeightRounds = 0;
-  let nextHumanPauseAt = found.size + randomInt(160, 280);
+  let nextHumanPauseAt = found.size + randomInt(85, 130);
   let humanPauseCount = Number(scanAtStart.progress?.humanPauseCount || 0);
   let lastPersistedSize = found.size;
   let lastPersistAt = Date.now();
@@ -1443,7 +1443,9 @@ async function scanRelationPage(tabId, username, scanId, relation, profileRelati
     if (madeRealProgress) {
       latest.recoveryPending = false;
       latest.recoveryMessage = null;
-      latest.consecutiveRecoveryCount = 0;
+      // Do not reset the 429 circuit breaker after a single successful page.
+      // Account-level limits span multiple scan windows and resumed sessions.
+      if (shouldClearRecoveryCount(latest.lastRateLimitAt)) latest.consecutiveRecoveryCount = 0;
       latest.nextRecoveryAt = null;
       latest.rateLimitUntil = null;
     }
@@ -1480,6 +1482,19 @@ async function scanRelationPage(tabId, username, scanId, relation, profileRelati
   for (let round = 0; round < maxRounds; round += 1) {
     const current = await getPersonalScan();
     if (!current || current.id !== scanId || current.status !== "running") throw new Error("SCAN_CANCELLED");
+
+    // Respect a 429 from X's own lazy-load requests immediately. Previously
+    // the network error was only examined after the page displayed an error,
+    // which allowed additional scrolling while X was already rejecting calls.
+    const relationNetwork = await getXRelationNetworkStatus(tabId, relation);
+    const recentNetworkFailure = safeRelationFailure(relationNetwork?.lastFailure);
+    if (recentNetworkFailure?.startsWith("HTTP_429")) {
+      const failure = relationNetwork.lastFailure;
+      const retryAfter = Math.max(0, Number(failure?.retryAfterMs || 0));
+      throw new Error("SCAN_RECOVERABLE:HTTP_429" +
+        (retryAfter ? " RETRY_AFTER_MS=" + retryAfter : "") +
+        "：X 已限制请求，已保存进度并停止继续加载");
+    }
 
     let injection;
     try {
@@ -1803,7 +1818,7 @@ async function scanRelationPage(tabId, username, scanId, relation, profileRelati
 
     if (found.size >= nextHumanPauseAt) {
       humanPauseCount += 1;
-      const pauseMs = randomInt(3500, 7500);
+      const pauseMs = randomInt(10000, 18000);
       const resting = await getPersonalScan();
       if (resting?.id === scanId && resting.status === "running") {
         resting.partial = { ...(resting.partial || {}), [relation]: dedupeUsers([...found.values()]) };
@@ -1825,7 +1840,7 @@ async function scanRelationPage(tabId, username, scanId, relation, profileRelati
         lastPersistAt = Date.now();
       }
       await sleep(pauseMs);
-      nextHumanPauseAt = found.size + randomInt(180, 340);
+      nextHumanPauseAt = found.size + randomInt(100, 150);
       const resumed = await getPersonalScan();
       if (resumed?.id === scanId && resumed.status === "running") {
         resumed.progress = { ...(resumed.progress || {}), [relation]: found.size, humanPauseCount, resting: false, restingRelation: null };
@@ -1833,7 +1848,9 @@ async function scanRelationPage(tabId, username, scanId, relation, profileRelati
       }
     }
 
-    await humanSleep(page.atBottom ? 1300 : 760, page.atBottom ? 2200 : 1480);
+    const recentlyLimited = recentlyRateLimited(current.lastRateLimitAt);
+    const [minScrollWait, maxScrollWait] = domPacingWindow(page.atBottom, recentlyLimited);
+    await humanSleep(minScrollWait, maxScrollWait);
   }
 
   const finalUsers = dedupeUsers([...found.values()]);
@@ -2448,6 +2465,7 @@ async function runPersonalScan(scanId) {
         }
         const recoveryText = String(scan.lastRecoverableError || "");
         if (isPersonalScanRateLimited(recoveryText)) {
+          scan.lastRateLimitAt = Date.now();
           const delayMs = getPersonalScanRecoveryDelayMs(recoveryText, recoveryCount);
           scan.rateLimitUntil = Date.now() + delayMs;
           scan.nextRecoveryAt = scan.rateLimitUntil;
