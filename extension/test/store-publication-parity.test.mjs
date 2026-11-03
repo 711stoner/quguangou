@@ -43,3 +43,11 @@ test('live-store metadata classifier separates a Japanese storefront suffix from
  assert.equal(result.status,0,result.stderr);
  assert.match(result.stdout,/OFFLINE_TESTS_PASS/);
 });
+
+test('Chromium release uses only supported i18n locale folders; Hong Kong retains the Traditional compatibility source',()=>{
+ const build=fs.readFileSync(path.join(root,'scripts/build.py'),'utf8');
+ assert.match(build,/chromium_locales=tuple\(lang for lang in languages if lang!='zh_HK'\)/);
+ assert.match(build,/if browser in \('chrome','edge'\) and rel\.parts\[:2\]==\('_locales','zh_HK'\)/);
+ assert.match(build,/assert '_locales\/zh_TW\/messages\.json' in names/);
+ assert.ok(fs.existsSync(path.join(root,'_locales/zh_HK/messages.json')),'Keep HK region source without shipping unsupported Chromium locale');
+});

@@ -5,7 +5,11 @@ src=Path(__file__).resolve().parent.parent
 # Keep store metadata synchronized with the canonical, reviewed SEO copy.
 subprocess.run([sys.executable,str(src/"scripts/sync-store-seo.py")],check=True)
 destinations=[src/'dist']
+# Keep all 11 project region configurations in source. Chromium only lists
+# zh_CN and zh_TW as Chinese extension locales: zh_HK is not recognized.
+# Hong Kong's UI uses the already supported zh_TW Traditional resources.
 languages=('zh_CN','zh_TW','zh_HK','en','ja','ko','fr','es','ms','vi','id')
+chromium_locales=tuple(lang for lang in languages if lang!='zh_HK')
 m=json.loads((src/'manifest.json').read_text())
 assert re.fullmatch(r'\d+\.\d+\.\d+', m['version']), 'Invalid manifest version'
 assert m['default_locale']=='zh_CN'
@@ -59,6 +63,10 @@ for target in destinations:
    }
   with ZipFile(out,'w',ZIP_DEFLATED,compresslevel=9) as archive:
    for rel in assets:
+    # The unsupported zh_HK Chrome locale is kept as source/SEO data, but
+    # must not be shipped in Chromium release ZIPs. zh_TW is the fallback.
+    if browser in ('chrome','edge') and rel.parts[:2]==('_locales','zh_HK'):
+     continue
     if str(rel)=='manifest.json':
      archive.writestr('manifest.json',json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
     elif browser=='firefox' and rel.name=='privacy.html':
@@ -88,9 +96,13 @@ for target in destinations:
    else:
     assert 'sidePanel' in archived_manifest['permissions']
     assert archived_manifest['background']['service_worker']=='background.js'
-   for lang in languages:
+   packaged_locales=languages if browser=='firefox' else chromium_locales
+   for lang in packaged_locales:
     assert f'_locales/{lang}/messages.json' in names
-  print('PACKAGE',out,'files',len(assets),'size',out.stat().st_size,'sha256',hashlib.sha256(out.read_bytes()).hexdigest()[:24])
+   if browser in ('chrome','edge'):
+    assert all(not name.startswith('_locales/zh_HK/') for name in names)
+    assert '_locales/zh_TW/messages.json' in names
+  print('PACKAGE',out,'files',len(names),'size',out.stat().st_size,'sha256',hashlib.sha256(out.read_bytes()).hexdigest()[:24])
 
 # The three fixed filenames are updated in place. No versioned ZIPs are created.
 release_parent=Path('/Volumes/15055751248/vibe的脚本/04-发布包')
