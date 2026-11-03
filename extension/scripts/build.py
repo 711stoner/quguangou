@@ -35,6 +35,11 @@ for loc in languages:
  msgs=json.loads(path.read_text())
  for key in ['extensionName','extensionDescription','extensionShortName']:
   assert key in msgs and len(msgs[key]['message'])>0,(loc,key)
+ # A single metadata source feeds Chrome, Microsoft Edge, and Mozilla AMO.
+ # Keep localized names compatible with the stricter Edge/AMO 45-char cap;
+ # Chrome Web Store itself supports up to 75. Descriptions cap at 132.
+ assert len(msgs['extensionName']['message'])<=45, (loc,'extensionName over Edge/AMO 45-character limit')
+ assert len(msgs['extensionDescription']['message'])<=132, (loc,'extensionDescription over 132-character limit')
 for locale in ['ja','ko','fr','es','ms','vi','id']:
  for name in ['popup.html','ui-runtime.js','ui-error-hook.js','privacy.html']:
   assert (src/'l10n'/locale/name).exists(),(locale,name)

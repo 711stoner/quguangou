@@ -149,7 +149,7 @@ not following back；X non followers；Twitter followback；following checker；
 
 **Chrome / Edge / Firefox 标题**
 
-フォローバック確認｜X・Twitterの片思いフォロー管理 | Followback Watchdog
+Xの片思いフォロー確認 | Followback Watchdog
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -175,7 +175,7 @@ X（旧Twitter）で、フォローバックされていない「片思いフォ
 
 **Chrome / Edge / Firefox 标题**
 
-맞팔 확인 | X(트위터) 맞팔 아닌 계정 찾기 | Followback Watchdog
+X 맞팔 아닌 계정 찾기 | Followback Watchdog
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -201,7 +201,7 @@ X(옛 트위터)에서 내가 팔로우하지만 나를 팔로우하지 않는 �
 
 **Chrome / Edge / Firefox 标题**
 
-Qui ne me suit pas sur X ? | Followback Watchdog
+Qui ne me suit pas ? | Followback Watchdog
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -227,7 +227,7 @@ qui ne me suit pas；abonnements non réciproques；abonnés X；se désabonner 
 
 **Chrome / Edge / Firefox 标题**
 
-Quién no me sigue en X (Twitter) | Followback Watchdog
+No me siguen en X | Followback Watchdog
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -253,7 +253,7 @@ quién no me sigue；no me siguen en X；seguidores Twitter；dejar de seguir；
 
 **Chrome / Edge / Firefox 标题**
 
-Siapa Tak Follow Balik di X | Followback Watchdog
+Tak Follow Balik di X | Followback Watchdog
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -279,7 +279,7 @@ tak follow balik；semak pengikut X；unfollow Twitter；senarai sekatan；akaun
 
 **Chrome / Edge / Firefox 标题**
 
-Ai không theo dõi lại trên X | Followback Watchdog
+Ai chưa theo dõi lại | Followback Watchdog
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -305,7 +305,7 @@ không follow lại；không theo dõi lại；người theo dõi；bỏ theo d�
 
 **Chrome / Edge / Firefox 标题**
 
-Cek yang Tidak Follow Back di X | Followback Watchdog
+Tidak Follow Back di X | Followback Watchdog
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
