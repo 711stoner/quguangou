@@ -16,11 +16,11 @@
     "description": "Short extension name"
   },
   "extensionDescription": {
-    "message": "See who doesn't follow you back on X (Twitter). Compare followers and following, protect accounts, and review community blocklists.",
+    "message": "Check who doesn't follow you back on X (Twitter). Compare followers and following, protect accounts, and review blocklists.",
     "description": "Localized summary for installed extension and store listing"
   },
   "extensionDescriptionChrome": {
-    "message": "See who doesn't follow you back on X (Twitter). Compare followers and following, protect accounts, and review community blocklists.",
+    "message": "Check who doesn't follow you back on X (Twitter). Compare followers and following, protect accounts, and review blocklists.",
     "description": "Localized summary for installed extension and store listing"
   }
 }

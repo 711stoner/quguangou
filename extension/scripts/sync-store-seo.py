@@ -39,12 +39,15 @@ print('SEO: manifest metadata synced for',len(locales),'store/region locales')
 notes=[
  '# 取关狗｜全语言商店 SEO 上架文案（当前唯一版本）',
  '',
- '> 当前源码版本：v0.2.74。11 个商店语言／地区配置、10 种可选界面语言。zh_TW / zh_HK 使用同一套繁体内容。',
+ '> 当前源码版本：v0.2.74。11 份项目地区配置（Chrome 官方实际支持的 locale 为其中 10 种，另有一份 zh_HK 兼容资源），10 种可选界面语言。zh_TW / zh_HK 使用同一套繁体内容。',
  '> **只使用本文件上架，不要复制历史 v0.2.25、v0.2.63、v0.2.67 等旧文案。**',
  '',
  '## 发布与 SEO 规则',
  '',
- '- 一个插件 ID，每个浏览器按相应语言完善同一个 listing，不创建独立语言商品。',
+ '- 一个插件 ID，每个浏览器按官方支持的语言完善同一个 listing，不创建独立语言商品。',
+ '- **香港繁体兼容说明：** Chrome 官方扩展 locale 列表有 `zh_CN`、`zh_TW`，没有独立的 `zh_HK`。当前项目仍保留 `zh_HK` 地区文案与资源供兼容及核对，但香港用户的界面使用 `zh-TW` 繁体；Chrome 商店上传请使用 `zh_TW` 的繁体 Listing，不要将 `zh_HK` 作为第 11 个可独立选择的 Chrome 商店语言。Edge 和 Firefox 以各自开发者后台实际可选语言为准。',
+ '- **商店标题不是界面语言开关：** 浏览器中切换插件界面不会自动更新扩展管理页或商店的 Listing 标题。中文／英文地区的商店标题、摘要、完整介绍和图片必须在浏览器商店后台分别核对；仅打包 ZIP 或切换界面并不能保证搜索结果同步更新。',
+ '- **重新上传版本号：** 三个浏览器的发布 ZIP 始终只保留固定文件名，但代码／manifest 更新后，若商店已发布版本号 ≥ 当前包的 `manifest.version`，下次上架必须先提高包内版本号，再覆盖这三个固定文件并提交审核；否则 Chrome 商店会拒绝上传。不要为了修复文案创建新的商店商品或新的 ZIP 名称。',
  '- 本文件的标题和简短介绍已写入 `_locales/<locale>/messages.json`，构建 ZIP 时包含；详细介绍和 Edge 搜索词仍需到开发者后台逐语言填写，**不会因为上传 ZIP 自动填好**。',
  '- SEO 重点是「X / Twitter + 谁没有回关 / follow back / non-followers + 真实功能」。自然表述而非重复关键词；不要宣称可查谁刚刚取关、过去退关历史、100% 成功或 X 官方授权。',
  '- Edge 每个语言最多 7 条搜索词，每条不超过 30 字符，合计不超过 21 个词；以下均经过校验。Edge 的完整介绍 250–10000 字符。',
@@ -52,12 +55,14 @@ notes=[
  '- Chrome Web Store 禁止关键词堆砌。已有图片若不是当前界面，必须在上传前核对截图与实际功能是否一致。',
  '',
  '参考：',
+ '- Chrome 官方扩展 locale：https://developer.chrome.com/docs/extensions/reference/api/i18n',
+ '- Chrome 版本更新：https://developer.chrome.com/docs/webstore/update',
  '- Chrome：https://developer.chrome.com/docs/webstore/program-policies/listing-requirements',
  '- Edge：https://learn.microsoft.com/en-us/microsoft-edge/extensions/publish/publish-extension',
  '- Firefox：https://extensionworkshop.com/documentation/develop/create-an-appealing-listing/',
  '',
 ]
-locale_names={'zh_CN':'简体中文','zh_TW':'繁體中文（台灣）','zh_HK':'繁體中文（香港）','en':'English','ja':'日本語','ko':'한국어','fr':'Français','es':'Español','ms':'Bahasa Melayu','vi':'Tiếng Việt','id':'Bahasa Indonesia'}
+locale_names={'zh_CN':'简体中文','zh_TW':'繁體中文（台灣）','zh_HK':'繁體中文（香港兼容資料／非獨立 Chrome 商店語言）','en':'English','ja':'日本語','ko':'한국어','fr':'Français','es':'Español','ms':'Bahasa Melayu','vi':'Tiếng Việt','id':'Bahasa Indonesia'}
 for locale in locales:
  e=entries[locale]
  notes.extend([

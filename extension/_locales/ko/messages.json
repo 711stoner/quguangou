@@ -1,12 +1,12 @@
 {
   "extensionName": {
-    "message": "맞팔 확인 | X(트위터) 맞팔 아닌 계정 찾기"
+    "message": "맞팔 확인 | X(트위터) 맞팔 아닌 계정 찾기 | Followback Watchdog"
   },
   "extensionNameChrome": {
-    "message": "맞팔 확인 | X(트위터) 맞팔 아닌 계정 찾기"
+    "message": "맞팔 확인 | X(트위터) 맞팔 아닌 계정 찾기 | Followback Watchdog"
   },
   "extensionNameEdge": {
-    "message": "맞팔 확인 | X(트위터) 맞팔 아닌 계정 찾기"
+    "message": "맞팔 확인 | X(트위터) 맞팔 아닌 계정 찾기 | Followback Watchdog"
   },
   "extensionShortName": {
     "message": "맞팔 확인"

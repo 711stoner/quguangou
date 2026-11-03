@@ -1,20 +1,20 @@
 {
   "extensionName": {
-    "message": "Cek Tidak Follow Back di X (Twitter)"
+    "message": "Cek yang Tidak Follow Back di X | Followback Watchdog"
   },
   "extensionNameChrome": {
-    "message": "Cek Tidak Follow Back di X (Twitter)"
+    "message": "Cek yang Tidak Follow Back di X | Followback Watchdog"
   },
   "extensionNameEdge": {
-    "message": "Cek Tidak Follow Back di X (Twitter)"
+    "message": "Cek yang Tidak Follow Back di X | Followback Watchdog"
   },
   "extensionShortName": {
     "message": "Cek Ikuti Balik"
   },
   "extensionDescription": {
-    "message": "Cek siapa yang tidak mengikuti balik di X (Twitter). Bandingkan pengikut, lindungi akun penting, dan lihat daftar blokir komunitas."
+    "message": "Cek siapa yang tidak follow back di X (Twitter). Bandingkan daftar mengikuti dan pengikut, lalu lindungi akun penting."
   },
   "extensionDescriptionChrome": {
-    "message": "Cek siapa yang tidak mengikuti balik di X (Twitter). Bandingkan pengikut, lindungi akun penting, dan lihat daftar blokir komunitas."
+    "message": "Cek siapa yang tidak follow back di X (Twitter). Bandingkan daftar mengikuti dan pengikut, lalu lindungi akun penting."
   }
 }

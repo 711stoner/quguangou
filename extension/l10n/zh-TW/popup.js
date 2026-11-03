@@ -702,7 +702,10 @@ function renderJob(job) {
   const uiLocale = document.documentElement.lang;
   const currentPartition = uiLocale === "zh-CN" || uiLocale === "zh-TW" ? "zh" : uiLocale;
   const taskPartition = job.communityLocale || "zh"; // Pre-0.2.71 saved jobs are Chinese.
-  if (taskPartition !== currentPartition) {
+  // A personal action job is bound to the scanned X account, not to a
+  // community-list language. Allow changing the UI language mid-task while
+  // retaining its original communityLocale for any optional submission.
+  if (job.mode === "community" && taskPartition !== currentPartition) {
     renderModeSelector();
     toast("目前任務屬於其他語言分區。請切換回開始此任務時的語言，才能繼續管理。");
     return;

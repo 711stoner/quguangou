@@ -1,11 +1,14 @@
 # 取关狗｜全语言商店 SEO 上架文案（当前唯一版本）
 
-> 当前源码版本：v0.2.74。11 个商店语言／地区配置、10 种可选界面语言。zh_TW / zh_HK 使用同一套繁体内容。
+> 当前源码版本：v0.2.74。11 份项目地区配置（Chrome 官方实际支持的 locale 为其中 10 种，另有一份 zh_HK 兼容资源），10 种可选界面语言。zh_TW / zh_HK 使用同一套繁体内容。
 > **只使用本文件上架，不要复制历史 v0.2.25、v0.2.63、v0.2.67 等旧文案。**
 
 ## 发布与 SEO 规则
 
-- 一个插件 ID，每个浏览器按相应语言完善同一个 listing，不创建独立语言商品。
+- 一个插件 ID，每个浏览器按官方支持的语言完善同一个 listing，不创建独立语言商品。
+- **香港繁体兼容说明：** Chrome 官方扩展 locale 列表有 `zh_CN`、`zh_TW`，没有独立的 `zh_HK`。当前项目仍保留 `zh_HK` 地区文案与资源供兼容及核对，但香港用户的界面使用 `zh-TW` 繁体；Chrome 商店上传请使用 `zh_TW` 的繁体 Listing，不要将 `zh_HK` 作为第 11 个可独立选择的 Chrome 商店语言。Edge 和 Firefox 以各自开发者后台实际可选语言为准。
+- **商店标题不是界面语言开关：** 浏览器中切换插件界面不会自动更新扩展管理页或商店的 Listing 标题。中文／英文地区的商店标题、摘要、完整介绍和图片必须在浏览器商店后台分别核对；仅打包 ZIP 或切换界面并不能保证搜索结果同步更新。
+- **重新上传版本号：** 三个浏览器的发布 ZIP 始终只保留固定文件名，但代码／manifest 更新后，若商店已发布版本号 ≥ 当前包的 `manifest.version`，下次上架必须先提高包内版本号，再覆盖这三个固定文件并提交审核；否则 Chrome 商店会拒绝上传。不要为了修复文案创建新的商店商品或新的 ZIP 名称。
 - 本文件的标题和简短介绍已写入 `_locales/<locale>/messages.json`，构建 ZIP 时包含；详细介绍和 Edge 搜索词仍需到开发者后台逐语言填写，**不会因为上传 ZIP 自动填好**。
 - SEO 重点是「X / Twitter + 谁没有回关 / follow back / non-followers + 真实功能」。自然表述而非重复关键词；不要宣称可查谁刚刚取关、过去退关历史、100% 成功或 X 官方授权。
 - Edge 每个语言最多 7 条搜索词，每条不超过 30 字符，合计不超过 21 个词；以下均经过校验。Edge 的完整介绍 250–10000 字符。
@@ -13,6 +16,8 @@
 - Chrome Web Store 禁止关键词堆砌。已有图片若不是当前界面，必须在上传前核对截图与实际功能是否一致。
 
 参考：
+- Chrome 官方扩展 locale：https://developer.chrome.com/docs/extensions/reference/api/i18n
+- Chrome 版本更新：https://developer.chrome.com/docs/webstore/update
 - Chrome：https://developer.chrome.com/docs/webstore/program-policies/listing-requirements
 - Edge：https://learn.microsoft.com/en-us/microsoft-edge/extensions/publish/publish-extension
 - Firefox：https://extensionworkshop.com/documentation/develop/create-an-appealing-listing/
@@ -69,7 +74,7 @@
 
 ---
 
-## 繁體中文（香港） — zh_HK
+## 繁體中文（香港兼容資料／非獨立 Chrome 商店語言） — zh_HK
 
 **Chrome / Edge / Firefox 标题**
 
@@ -103,7 +108,7 @@ Followback Watchdog | X Non-Follower Checker
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
-See who doesn't follow you back on X (Twitter). Compare followers and following, protect accounts, and review community blocklists.
+Check who doesn't follow you back on X (Twitter). Compare followers and following, protect accounts, and review blocklists.
 
 **Chrome、Edge、Firefox 完整介绍（手动填入商店后台）**
 
@@ -117,7 +122,7 @@ Important: Results show the follow relationships at the time of scanning. This i
 
 **Edge 搜索词（逐条填写）**
 
-not following back；X non followers；Twitter followback；unfollow checker；unfollow X；community blocklist；protect accounts
+not following back；X non followers；Twitter followback；following checker；unfollow X；community blocklist；whitelist X
 
 ---
 
@@ -125,7 +130,7 @@ not following back；X non followers；Twitter followback；unfollow checker；u
 
 **Chrome / Edge / Firefox 标题**
 
-フォローバック確認｜X・Twitterの片思いフォロー管理
+フォローバック確認｜X・Twitterの片思いフォロー管理 | Followback Watchdog
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -151,7 +156,7 @@ X（旧Twitter）で、フォローバックされていない「片思いフォ
 
 **Chrome / Edge / Firefox 标题**
 
-맞팔 확인 | X(트위터) 맞팔 아닌 계정 찾기
+맞팔 확인 | X(트위터) 맞팔 아닌 계정 찾기 | Followback Watchdog
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -177,11 +182,11 @@ X(옛 트위터)에서 내가 팔로우하지만 나를 팔로우하지 않는 �
 
 **Chrome / Edge / Firefox 标题**
 
-Qui ne me suit pas sur X ? | Followback
+Qui ne me suit pas sur X ? | Followback Watchdog
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
-Repérez qui ne vous suit pas sur X (Twitter). Comparez vos abonnements, protégez des comptes et consultez les listes de blocage.
+Qui ne vous suit pas sur X (Twitter) ? Comparez abonnements et abonnés, protégez des comptes et consultez des listes de blocage.
 
 **Chrome、Edge、Firefox 完整介绍（手动填入商店后台）**
 
@@ -195,7 +200,7 @@ Les résultats décrivent uniquement les abonnements au moment de l’analyse. L
 
 **Edge 搜索词（逐条填写）**
 
-qui ne me suit pas；abonnements non réciproques；abonnés X；se désabonner X；liste de blocage；abonnés Twitter；suivi mutuel
+qui ne me suit pas；abonnements non réciproques；abonnés X；se désabonner sur X；liste de blocage；abonnés Twitter；suivi mutuel
 
 ---
 
@@ -203,11 +208,11 @@ qui ne me suit pas；abonnements non réciproques；abonnés X；se désabonner 
 
 **Chrome / Edge / Firefox 标题**
 
-Quién no me sigue en X (Twitter) | Followback
+Quién no me sigue en X (Twitter) | Followback Watchdog
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
-Mira quién no te sigue en X (Twitter). Compara seguidores y seguidos, protege cuentas y revisa las listas de bloqueos.
+¿Quién no te sigue en X (Twitter)? Compara tus seguidores y seguidos, protege cuentas y consulta listas de bloqueo.
 
 **Chrome、Edge、Firefox 完整介绍（手动填入商店后台）**
 
@@ -221,7 +226,7 @@ El resultado refleja únicamente la relación de seguimiento en el momento del a
 
 **Edge 搜索词（逐条填写）**
 
-quién no me sigue；no me siguen en X；seguidores Twitter；dejar de seguir；bloquear cuentas；lista de bloqueados；seguimiento mutuo
+quién no me sigue；no me siguen en X；seguidores Twitter；dejar de seguir；bloquear cuentas；lista de bloqueo；seguimiento mutuo
 
 ---
 
@@ -229,11 +234,11 @@ quién no me sigue；no me siguen en X；seguidores Twitter；dejar de seguir；
 
 **Chrome / Edge / Firefox 标题**
 
-Siapa Tak Follow Balik di X | Followback
+Siapa Tak Follow Balik di X | Followback Watchdog
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
-Semak siapa yang tidak follow balik di X (Twitter). Bandingkan pengikut, lindungi akaun penting dan lihat senarai sekatan komuniti.
+Semak siapa yang tidak follow balik di X (Twitter). Bandingkan pengikut dan akaun diikuti, serta lindungi akaun pilihan anda.
 
 **Chrome、Edge、Firefox 完整介绍（手动填入商店后台）**
 
@@ -255,11 +260,11 @@ tak follow balik；semak pengikut X；unfollow Twitter；senarai sekatan；akaun
 
 **Chrome / Edge / Firefox 标题**
 
-Ai không theo dõi lại trên X | Followback
+Ai không theo dõi lại trên X | Followback Watchdog
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
-Kiểm tra ai không theo dõi lại bạn trên X (Twitter). So sánh danh sách theo dõi, bảo vệ tài khoản và xem danh sách chặn cộng đồng.
+Kiểm tra ai không theo dõi lại trên X (Twitter). So sánh người theo dõi và đang theo dõi, bảo vệ tài khoản quan trọng.
 
 **Chrome、Edge、Firefox 完整介绍（手动填入商店后台）**
 
@@ -281,11 +286,11 @@ không follow lại；không theo dõi lại；người theo dõi；bỏ theo d�
 
 **Chrome / Edge / Firefox 标题**
 
-Cek Tidak Follow Back di X (Twitter)
+Cek yang Tidak Follow Back di X | Followback Watchdog
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
-Cek siapa yang tidak mengikuti balik di X (Twitter). Bandingkan pengikut, lindungi akun penting, dan lihat daftar blokir komunitas.
+Cek siapa yang tidak follow back di X (Twitter). Bandingkan daftar mengikuti dan pengikut, lalu lindungi akun penting.
 
 **Chrome、Edge、Firefox 完整介绍（手动填入商店后台）**
 

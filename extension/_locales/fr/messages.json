@@ -1,20 +1,20 @@
 {
   "extensionName": {
-    "message": "Qui ne me suit pas sur X ? | Followback"
+    "message": "Qui ne me suit pas sur X ? | Followback Watchdog"
   },
   "extensionNameChrome": {
-    "message": "Qui ne me suit pas sur X ? | Followback"
+    "message": "Qui ne me suit pas sur X ? | Followback Watchdog"
   },
   "extensionNameEdge": {
-    "message": "Qui ne me suit pas sur X ? | Followback"
+    "message": "Qui ne me suit pas sur X ? | Followback Watchdog"
   },
   "extensionShortName": {
     "message": "Abonnements X"
   },
   "extensionDescription": {
-    "message": "Repérez qui ne vous suit pas sur X (Twitter). Comparez vos abonnements, protégez des comptes et consultez les listes de blocage."
+    "message": "Qui ne vous suit pas sur X (Twitter) ? Comparez abonnements et abonnés, protégez des comptes et consultez des listes de blocage."
   },
   "extensionDescriptionChrome": {
-    "message": "Repérez qui ne vous suit pas sur X (Twitter). Comparez vos abonnements, protégez des comptes et consultez les listes de blocage."
+    "message": "Qui ne vous suit pas sur X (Twitter) ? Comparez abonnements et abonnés, protégez des comptes et consultez des listes de blocage."
   }
 }

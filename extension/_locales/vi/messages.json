@@ -1,20 +1,20 @@
 {
   "extensionName": {
-    "message": "Ai không theo dõi lại trên X | Followback"
+    "message": "Ai không theo dõi lại trên X | Followback Watchdog"
   },
   "extensionNameChrome": {
-    "message": "Ai không theo dõi lại trên X | Followback"
+    "message": "Ai không theo dõi lại trên X | Followback Watchdog"
   },
   "extensionNameEdge": {
-    "message": "Ai không theo dõi lại trên X | Followback"
+    "message": "Ai không theo dõi lại trên X | Followback Watchdog"
   },
   "extensionShortName": {
     "message": "Kiểm tra theo dõi"
   },
   "extensionDescription": {
-    "message": "Kiểm tra ai không theo dõi lại bạn trên X (Twitter). So sánh danh sách theo dõi, bảo vệ tài khoản và xem danh sách chặn cộng đồng."
+    "message": "Kiểm tra ai không theo dõi lại trên X (Twitter). So sánh người theo dõi và đang theo dõi, bảo vệ tài khoản quan trọng."
   },
   "extensionDescriptionChrome": {
-    "message": "Kiểm tra ai không theo dõi lại bạn trên X (Twitter). So sánh danh sách theo dõi, bảo vệ tài khoản và xem danh sách chặn cộng đồng."
+    "message": "Kiểm tra ai không theo dõi lại trên X (Twitter). So sánh người theo dõi và đang theo dõi, bảo vệ tài khoản quan trọng."
   }
 }

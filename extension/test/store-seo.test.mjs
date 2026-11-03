@@ -55,3 +55,18 @@ test('current listing guide has all languages and explicitly describes history a
   assert.ok(doc.includes('不会因为上传 ZIP 自动填好'));
   assert.ok(doc.includes('历史'));
 });
+
+test('eight international storefront titles use the identifiable Followback Watchdog brand, not just Followback',()=>{
+ for(const lang of ['en','ja','ko','fr','es','ms','vi','id']){
+  assert.ok(canonical[lang].title.includes('Followback Watchdog'),lang);
+  assert.ok(!canonical[lang].title.endsWith('| Followback'),lang);
+ }
+ for(const lang of ['zh_CN','zh_TW','zh_HK'])assert.match(canonical[lang].title,/取[关關]狗/,lang);
+});
+test('upload guide distinguishes eleven project configs from supported Chrome locales and requires release version increment',()=>{
+ const guide=fs.readFileSync(path.join(root,'商店SEO上架文案.md'),'utf8');
+ assert.ok(guide.includes('Chrome 官方扩展 locale 列表'), 'Chrome locale compatibility note');
+ assert.ok(guide.includes('没有独立的 `zh_HK`'), 'No unsupported HK store listing claims');
+ assert.ok(guide.includes('重新上传版本号'), 'Store version increment reminder');
+ assert.ok(guide.includes('ZIP 始终只保留固定文件名'), 'Keep stable artifact names');
+});
