@@ -2588,7 +2588,7 @@ async function waitForTabComplete(tabId, timeoutMs = 35_000) {
   });
 }
 
-async function performProfileActionInPage(target, mode = "community", sourceUsername = null, action = "block") {
+async function performProfileActionInPage(target, mode = "community", sourceUsername = null, action = "block", consentPreviouslyClicked = false) {
   const sleepInPage = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const humanPauseInPage = (min, max) => sleepInPage(Math.floor(min + Math.random() * (max - min + 1)));
   const visible = (element) => Boolean(element && element.getClientRects().length);
@@ -2613,15 +2613,6 @@ async function performProfileActionInPage(target, mode = "community", sourceUser
   await waitFor(() => document.body, 10000);
   if (/\/i\/flow\/login/.test(location.pathname) || loginPattern.test(pageText())) {
     return { status: "failed", reason: "当前浏览器中尚未登录 X" };
-  }
-
-  if (mode === "personal" && action === "unfollow" && restrictedPattern.test(pageText())) {
-    return {
-      status: "skipped_restricted",
-      failureKind: "restricted",
-      title: "这个账号目前被 X 限制",
-      reason: "账号被 X 限制，暂时无法取关。我先帮你跳过，不会影响后续任务；建议稍后手动处理。"
-    };
   }
 
   if (mode === "personal" && sourceUsername) {
@@ -2680,6 +2671,43 @@ async function performProfileActionInPage(target, mode = "community", sourceUser
         reason: "目标主页发生跳转，预期 @" + target.username + "，实际 @" + (currentUsername || "未知") + "；为避免误操作已停止"
       };
     }
+  }
+
+  if (mode === "personal" && action === "unfollow" && restrictedPattern.test(pageText())) {
+    // X may put a restricted-profile notice in front of the target account.
+    // Do not accept generic cookie, legal, payment or subscription agreements.
+    // Only the actual X restricted-profile gate, on the verified target URL,
+    // is eligible for one automatic acknowledgement.
+    const skipRestricted = (reason) => ({
+      status: "skipped_restricted",
+      failureKind: "restricted",
+      title: "这个账号目前被 X 限制",
+      reason: reason || "X 限制了该账号的资料页，暂时无法安全取关。已跳过，请稍后手动处理。"
+    });
+    if (consentPreviouslyClicked) {
+      return skipRestricted("点击同意后仍未进入目标主页，无法确认关注状态。为避免误操作，已跳过。");
+    }
+    const agreeLabel = /^(?:Agree|I agree|Yes, view profile|Yes, view this profile|Yes, show profile|View profile|Yes, continue|同意|我同意|是的，查看个人资料|仍要查看|继续查看|查看个人资料|查看个人主页|檢視個人資料|同意並繼續|同意并继续|表示する|プロフィールを表示|동의|프로필 보기|Acepto|Ver perfil|J’accepte|Voir le profil|Setuju|Lihat profil|Đồng ý|Xem hồ sơ)$/i;
+    const scopes = [...document.querySelectorAll('[role="dialog"], [data-testid="primaryColumn"], main')]
+      .filter(visible)
+      .filter((node) => restrictedPattern.test(node.innerText || ""));
+    const agreeButton = scopes.flatMap((node) => [...node.querySelectorAll('button, [role="button"]')])
+      .filter(visible)
+      .find((node) => {
+        const label = ((node.innerText || "").trim() || (node.getAttribute("aria-label") || "").trim()).replace(/\s+/g, " ");
+        return agreeLabel.test(label);
+      });
+    if (!agreeButton) return skipRestricted("X 显示账号限制提示，但未找到明确的「同意／查看个人主页」按钮。已跳过，不会点击其他授权或订阅按钮。");
+    await humanPauseInPage(400, 750);
+    agreeButton.click();
+    // The app may navigate the same tab. A one-time reinjection from the
+    // background verifies the account, target, whitelist, and Following state.
+    // Clicking Agree is never reported as an unfollow success.
+    return {
+      status: "retry_profile_after_restricted_consent",
+      failureKind: "restricted_consent",
+      reason: "已点击 X 账号限制提示中的同意，正在重新确认目标主页和关注状态"
+    };
   }
 
   if (mode === "personal" && action === "unfollow") {
@@ -3000,6 +3028,43 @@ async function runJob() {
               args: [target, job.mode, job.sourceUsername || null, job.mode === "personal" ? (job.action || "block") : "block"]
             });
         outcome = injection[0]?.result ?? { status: "failed", reason: "页面脚本没有返回结果" };
+        if (job.mode === "personal" && job.action === "unfollow"
+            && outcome?.status === "retry_profile_after_restricted_consent") {
+          await humanSleep(1000, 1600);
+          const currentTab = await chrome.tabs.get(job.workerTabId).catch(() => null);
+          if (!currentTab || !isSafePersonalScanWorkerUrl(currentTab.url)) {
+            throw new Error("X 账号限制提示关闭后页面已离开 X，为避免误操作已暂停");
+          }
+          const expectedPath = "/" + String(target.username || "").toLowerCase();
+          let actualPath = "";
+          try { actualPath = new URL(currentTab.url).pathname.replace(/\/$/, "").toLowerCase(); } catch {}
+          if (actualPath !== expectedPath) {
+            await chrome.tabs.update(job.workerTabId, { url: target.url, active: false });
+            await waitForTabComplete(job.workerTabId);
+          }
+          const verifiedConsentWorker = await markActionJobWorker(job.workerTabId, job.id);
+          if (!verifiedConsentWorker) throw new Error("同意 X 限制提示后无法验证目标主页，已暂停以避免误操作");
+          await humanSleep(700, 1200);
+          if (await isPersonalTargetProtected(job.sourceUsername, target)) {
+            outcome = { status: "skipped_whitelist", reason: "白名单保护，已跳过" };
+          } else {
+            const secondInjection = await chrome.scripting.executeScript({
+              target: { tabId: job.workerTabId },
+              func: performProfileActionInPage,
+              args: [target, job.mode, job.sourceUsername || null, "unfollow", true]
+            });
+            outcome = secondInjection[0]?.result ?? {
+              status: "failed", failureKind: "system", reason: "点击同意后没有收到目标主页的检查结果"
+            };
+            if (outcome?.status === "retry_profile_after_restricted_consent") {
+              outcome = {
+                status: "skipped_restricted",
+                failureKind: "restricted",
+                reason: "X 账号限制提示重复出现，已停止自动尝试，请手动查看。"
+              };
+            }
+          }
+        }
         if (job.mode === "personal" && job.action === "unfollow"
             && outcome?.status === "retry_profile_after_subscription") {
           // Dismissal is not proof that the target's Following button is visible.

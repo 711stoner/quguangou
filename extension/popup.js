@@ -1,5 +1,6 @@
 import { getScanRestartText } from "./lib/scan-restart-text.js";
 import { scanStallKind } from "./lib/scan-stall-help.js";
+import { remainingProfileCountGap, completedFollowerCountGap } from "./lib/scan-last-mile.js";
 import { getCompletedScanCountMismatch } from "./lib/relations.js";
 import { getValuePromoProbability } from "./lib/value-promo.js";
 import { planCommunityPromptSchedule } from "./lib/community-share.js";
@@ -369,6 +370,7 @@ function renderPersonalScan(scan = currentPersonalScan) {
   const profileFollowersCount = Number.isFinite(scan?.profileFollowersCount) ? scan.profileFollowersCount : null;
   const profileFollowersExact = Boolean(scan?.profileFollowersExact);
   const completedCountMismatch = getCompletedScanCountMismatch(scan);
+  const completedFollowerGap = completedFollowerCountGap(scan);
   const completionNeedsValidation = completed
     && profileFollowersCount === null
     && !scan?.progress?.followersUnknownEndValidated;
@@ -419,6 +421,7 @@ function renderPersonalScan(scan = currentPersonalScan) {
 
   const restartCopy = getScanRestartText(document.documentElement.lang);
   const stallKind = scanStallKind(scan, scanWindowHealth);
+  const nearEndGap = remainingProfileCountGap(scan);
   const recoveryHelp = $("#personalStallHelp");
   recoveryHelp.classList.toggle("hidden", !running && !paused);
   recoveryHelp.classList.toggle("personal-help-attention", stallKind === "missing" || stallKind === "stalled");
@@ -426,6 +429,7 @@ function renderPersonalScan(scan = currentPersonalScan) {
     : paused ? restartCopy.helpPaused
     : stallKind === "missing" ? restartCopy.helpMissing
     : stallKind === "stalled" ? restartCopy.helpStalled
+    : nearEndGap ? restartCopy.helpTail.replace('{count}', String(nearEndGap.missing))
     : restartCopy.helpNormal;
   const forceButton = $("#personalForceRestartButton");
   forceButton.classList.toggle("hidden", !running && !paused);
@@ -539,15 +543,20 @@ function renderPersonalScan(scan = currentPersonalScan) {
   } else if (completed) {
     if (completionNeedsFullRescan) {
       $("#personalScanSummary").textContent = "本次检测结果不完整";
-      $("#personalScanNote").textContent = completedCountMismatch.label + "只读取到 "
-        + completedCountMismatch.actual + " 个，主页显示至少应读取 " + completedCountMismatch.required
-        + " 个，少了 " + completedCountMismatch.missing + " 个。为避免误判，当前名单已停用，请重新检测。";
+      const localized = getScanRestartText(document.documentElement.lang);
+      const relation = completedCountMismatch.relation === "followers" ? localized.relationFollowers : localized.relationFollowing;
+      $("#personalScanNote").textContent = localized.incompleteCountWarning
+        .replace("{relation}", relation)
+        .replace("{actual}", String(completedCountMismatch.actual))
+        .replace("{required}", String(completedCountMismatch.required))
+        .replace("{missing}", String(completedCountMismatch.missing));
     } else if (completionNeedsValidation) {
       $("#personalScanSummary").textContent = "上次结果需要继续校验";
-      $("#personalScanNote").textContent = "上次检测没有确认完整的粉丝总数，不能作为最终名单。点击“继续检测”会沿用已保存进度，不会重扫第一阶段。";
+      $("#personalScanNote").textContent = getScanRestartText(document.documentElement.lang).needsValidationNote;
     } else {
       $("#personalScanSummary").textContent = "@" + (scan.username || "当前账号") + " · 检测完成";
-      $("#personalScanNote").textContent = "结果只反映本次扫描时的当前关注关系，不代表历史上谁刚刚取关了你。";
+      $("#personalScanNote").textContent = getScanRestartText(document.documentElement.lang).completedNote;
+      if (completedFollowerGap) $("#personalScanNote").textContent += " " + getScanRestartText(document.documentElement.lang).completedGapWarning.replace("{count}", String(completedFollowerGap.missing));
     }
   } else if (failed) {
     $("#personalScanSummary").textContent = "检测暂时中断";

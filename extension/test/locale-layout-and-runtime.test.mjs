@@ -69,7 +69,7 @@ test('native dynamic dictionaries preserve English source token boundaries in La
 });
 test('scan-window guidance is native-language and foreground advice is present everywhere',()=>{
  const nativeTokens={
-  'zh-CN':'前台','zh-TW':'前景',en:'foreground',ja:'最前面',ko:'맨 앞에',
+  'zh-CN':'前台','zh-TW':'最前面',en:'foreground',ja:'最前面',ko:'맨 앞에',
   fr:'premier plan',es:'primer plano',ms:'di hadapan',vi:'phía trước',id:'di depan'
  };
  for(const lang of all){

@@ -4,6 +4,14 @@
  */
 const copy = {
  "zh-CN": {
+  completedNote:"结果只反映本次扫描时的当前关注关系，不代表历史上谁刚刚取关了你。",
+  needsValidationNote:"上次检测还没确认粉丝列表是否完整，不能作为最终名单。点击「继续检测」会沿用已保存的进度，不会重扫第一阶段。",
+  incompleteCountWarning:"{relation}只读取到 {actual} 个，X 主页显示至少应有 {required} 个，还差 {missing} 个。为避免误判，当前名单暂不可用。请重新检测。",
+  relationFollowing:"我关注的人",
+  relationFollowers:"关注我的人",
+
+  completedGapWarning:"注意：X 主页显示的粉丝数比本次读取结果多 {count} 个。部分账号可能未展示，因此未回关名单存在误判风险。处理前请逐个核对；插件操作时也会尝试再次检查对方是否回关，但无法保证 X 始终提供完整信息。",
+  helpTail:"已经接近列表末尾，目前读取数比 X 主页显示的数量少 {count} 个。插件正在等待最后一段加载并核对结果。请先让 X 扫描窗口保持在前台；如果连续几分钟仍没有变化，再点「重新打开扫描窗口（保留进度）」。",
   helpNormal:"如果X 扫描窗口不见了，或者 数字进度连续几分钟不变，请点下面的「重新打开扫描窗口（保留进度）」。不要点「重新检测」。 扫描时，请让 X 扫描窗口一直开着并保持在前台，不要最小化或切到其他窗口，否则浏览器可能暂停滚动，进度就不动了。",
   helpMissing:"没有找到正在扫描的 X 窗口，可能已经卡住。点下面「重新打开扫描窗口（保留进度）」，会接着已保存的位置继续；不要点「重新检测」或卸载插件。",
   helpStalled:"进度已经超过 3 分钟没有增加。若 X 没有限流，点「重新打开扫描窗口（保留进度）」；仍不动就先点「暂停检测」，再点「继续检测」。",
@@ -12,7 +20,7 @@ const copy = {
 
   restart:"重新打开扫描窗口（保留进度）",
   schedule:"冷却结束后重新打开窗口（保留进度）",
-  running:"已经扫过的账号会自动保存。如果窗口消失或长时间不动，可以点“强制重开扫描窗口”，会从断点继续。",
+  running:"已经扫过的账号会自动保存。如果窗口消失或进度长时间不动，可以点「重新打开扫描窗口（保留进度）」，会从上次保存的位置继续。",
   cooling:"X 暂时限制了请求。已保存的数据不会丢失；到冷却时间后，插件会重新打开窗口继续。",
   paused:"扫描已暂停，数据保留。可以点“继续检测”，或者重新打开扫描窗口从断点恢复。",
   limit:"X 请求太频繁，暂时不能继续。最早恢复：",
@@ -22,7 +30,15 @@ const copy = {
   fail:"窗口没有成功重开，原来的扫描数据仍保留。请重试。"
  },
  "zh-TW": {
-  helpNormal:"如果數字連續 3 分鐘不變，或 X 掃描視窗不見了，請點下方「重新開啟掃描視窗（保留進度）」。不要點「重新偵測」。 掃描時，請讓 X 掃描視窗一直開著並保持在前景，不要最小化或切換到其他視窗，否則瀏覽器可能會暫停捲動，進度就不再更新。",
+  completedNote:"結果只反映本次掃描時的追蹤關係，無法知道誰剛剛取消追蹤你。",
+  needsValidationNote:"上次檢查還沒確認粉絲名單是否完整，不能當成最終結果。點「繼續檢查」會保留目前進度，不必重新讀取第一階段。",
+  incompleteCountWarning:"{relation}只讀取到 {actual} 個，X 個人檔案至少顯示 {required} 個，還差 {missing} 個。為避免誤判，目前無法使用這份名單。請重新檢查。",
+  relationFollowing:"我追蹤的人",
+  relationFollowers:"追蹤我的人",
+
+  completedGapWarning:"注意：X 個人檔案顯示的粉絲數比本次讀取到的多 {count} 個。部分帳號可能沒有出現在名單中，因此未回追結果可能有誤。請先逐一確認再處理；擴充功能執行時也會再次嘗試確認對方是否回追，但無法保證 X 的資料始終完整。",
+  helpTail:"已經接近名單末尾，目前讀取的數量比 X 個人檔案顯示的少 {count} 個。擴充功能正在等待最後一段載入並核對結果。請先讓 X 掃描視窗保持在最前面；如果好幾分鐘都沒變，再點「重新開啟掃描視窗（保留進度）」。",
+  helpNormal:"如果 X 掃描視窗不見了，或是進度數字好幾分鐘都沒變，請點下方「重新開啟掃描視窗（保留進度）」。不要點「重新檢查」。掃描時，請讓 X 掃描視窗保持開啟並顯示在最前面，不要最小化或切換到其他視窗，否則瀏覽器可能暫停捲動，進度就不會繼續。",
   helpMissing:"找不到正在掃描的 X 視窗，可能已經卡住。請點「重新開啟掃描視窗（保留進度）」繼續；不要重新偵測或移除擴充功能。",
   helpStalled:"進度超過 3 分鐘沒有增加。若 X 沒有限流，請重新開啟掃描視窗；仍無變化就先暫停，再從儲存的位置繼續。",
   helpCooling:"X 暫時限制請求。請等顯示的冷卻時間結束，不要反覆點擊；已讀取的資料會保留。",
@@ -30,9 +46,9 @@ const copy = {
 
   restart:"重新開啟掃描視窗（保留進度）",
   schedule:"冷卻結束後重開視窗（保留進度）",
-  running:"已掃過的帳號會自動儲存。如果視窗消失或長時間沒有進度，可以點「強制重開掃描視窗」，從斷點繼續。",
+  running:"已讀取的帳號會自動儲存。如果視窗消失或進度長時間沒有變化，請點「重新開啟掃描視窗（保留進度）」，就能從儲存的位置繼續。",
   cooling:"X 暫時限制了請求。已儲存的資料不會消失；冷卻結束後，外掛會重新開啟視窗繼續。",
-  paused:"掃描已暫停，資料仍保留。可點「繼續偵測」，或重新開啟掃描視窗從斷點恢復。",
+  paused:"掃描已暫停，資料仍保留。你可以點「繼續檢查」，或重新開啟掃描視窗，從儲存的位置繼續。",
   limit:"X 請求過於頻繁，暫時無法繼續。最早恢復時間：",
   recovering:"正在恢復掃描視窗，先前掃過的帳號不會清零。",
   scheduled:"已安排重新開啟。等 X 冷卻結束，便會自動開啟掃描視窗；進度不會消失。",
@@ -40,7 +56,15 @@ const copy = {
   fail:"視窗未能重新開啟，原有掃描資料仍保留。請再試一次。"
  },
  en: {
-  helpNormal:"If the number does not change for 3 minutes or the X scan window vanishes, use “Reopen scan window (keep progress)” below. Do not start a new scan. While scanning, keep the X scan window open and in the foreground. Do not minimize it or switch to another window, or the browser may pause scrolling and progress may stop.",
+  completedNote:"Results show follow relationships at the time of scanning. They cannot tell you who recently unfollowed you.",
+  needsValidationNote:"The previous scan could not confirm that the follower list was complete. This is not a final result. Select Resume scan to continue from saved progress without restarting stage 1.",
+  incompleteCountWarning:"Only {actual} accounts were read for {relation}, but the X profile shows at least {required}. That is {missing} fewer. To avoid false positives, the list is unavailable. Please run a new scan.",
+  relationFollowing:"Following",
+  relationFollowers:"Followers",
+
+  completedGapWarning:"Note: X shows {count} more followers on your profile than this scan could read. Some accounts may not be visible, so the non-followback list could include false positives. Review accounts before taking action. The extension also tries to recheck followback status before each action, but X may still provide incomplete data.",
+  helpTail:"Almost at the end. So far, X’s profile shows {count} more accounts than the list has loaded. The scan is checking the final section. Keep the X window open in front; if the count stays the same for several minutes, choose “Reopen scan window (keep progress)”.",
+  helpNormal:"If the X scan window disappears or the progress count has not changed for a few minutes, select “Reopen scan window (keep progress)” below. Do not select “Scan again.” Keep the X scan window open and in the foreground while scanning. Minimizing it or switching to another window may stop the list from scrolling and stall the scan.",
   helpMissing:"The X scan window is missing. Choose “Reopen scan window (keep progress)” to continue from saved accounts. Do not reset the scan or uninstall.",
   helpStalled:"No new accounts for over 3 minutes. If X is not rate-limiting you, reopen the scan window. If it still stalls, pause, then resume.",
   helpCooling:"X has limited requests. Wait until the cooldown time shown; repeated clicks will not help. Saved accounts remain intact.",
@@ -58,13 +82,21 @@ const copy = {
   fail:"Could not reopen the window. Your previous scan progress is still saved."
  },
  ja: {
-  helpNormal:"3分以上数字が変わらない、またはXのスキャン画面が消えた場合は、下の「スキャン画面を開き直す（進捗を保持）」を押してください。最初からやり直さないでください。 スキャン中はXのスキャン画面を開いたまま、最前面に表示してください。最小化したり別のウィンドウに切り替えたりすると、ブラウザーがスクロールを停止し、進捗が止まることがあります。",
+  completedNote:"結果はスキャン時点のフォロー関係を示すもので、最近誰がフォローを外したかは分かりません。",
+  needsValidationNote:"前回のスキャンではフォロワー一覧を最後まで確認できませんでした。確定結果としては使えません。「スキャンを再開」を押すと、第1段階をやり直さず保存位置から続行します。",
+  incompleteCountWarning:"{relation}は{actual}件しか読み取れませんでした。Xのプロフィールには少なくとも{required}件と表示されており、{missing}件不足しています。誤判定を避けるため、現在のリストは使用できません。再スキャンしてください。",
+  relationFollowing:"フォロー中",
+  relationFollowers:"フォロワー",
+
+  completedGapWarning:"注意：Xのプロフィールに表示されるフォロワー数は、今回読み取れた件数より{count}件多くなっています。一部のアカウントが一覧に表示されず、フォローバックされていないと誤判定される可能性があります。処理前に対象を確認してください。拡張機能も実行直前にフォローバックを再確認しますが、Xのデータが常に完全とは限りません。",
+  helpTail:"リストの終わりに近づいています。読み込んだ件数は、Xのプロフィールに表示される数より{count}件少ない状態です。最後の部分を読み込み、結果を確認しています。Xの画面を最前面に表示したままお待ちください。数分間数字が変わらなければ「スキャン画面を開き直す（進捗を保持）」を押してください。",
+  helpNormal:"Xのスキャン画面が消えた場合や、進捗の数字が数分間変わらない場合は、下の「スキャン画面を開き直す（進捗を保持）」を押してください。「再スキャン」は押さないでください。スキャン中はXの画面を開いたまま最前面に表示し、最小化や別のウィンドウへの切り替えを避けてください。ブラウザーがスクロールを止め、処理が進まなくなることがあります。",
   helpMissing:"Xのスキャン画面が見つかりません。保存済みの続きから再開するには画面を開き直してください。再スキャンや拡張機能の削除は避けてください。",
   helpStalled:"3分以上進捗がありません。Xの制限中でなければスキャン画面を開き直し、それでも動かなければ一時停止してから再開してください。",
   helpCooling:"Xがリクエストを制限中です。表示された解除時刻まで待ち、何度も押さないでください。保存したデータは残ります。",
   helpPaused:"スキャンは一時停止中で、データは保存されています。Xが正常に開けたら「再開」を押し、画面が現れなければ開き直してください。",
 
-  restart:"スキャン画面を強制的に開き直す（進捗を保持）",
+  restart:"スキャン画面を開き直す（進捗を保持）",
   schedule:"制限解除後に開き直す（進捗を保持）",
   running:"取得済みのアカウントは保存されています。画面が消えたり処理が長時間止まったりしたら、スキャン画面を開き直して続きから再開できます。",
   cooling:"X がリクエストを制限しています。進捗は保存済みです。制限解除後に新しいスキャン画面を開いて再開します。",
@@ -76,7 +108,15 @@ const copy = {
   fail:"スキャン画面を開き直せませんでした。これまでの進捗は保存されています。"
  },
  ko: {
-  helpNormal:"3분 동안 숫자가 바뀌지 않거나 X 스캔 창이 사라지면 아래의 “스캔 창 다시 열기(진행 상황 유지)”를 누르세요. 새 검사를 시작하지 마세요. 검사하는 동안 X 스캔 창을 닫지 말고 맨 앞에 띄워 두세요. 최소화하거나 다른 창으로 전환하면 브라우저가 스크롤을 멈춰 진행이 중단될 수 있습니다.",
+  completedNote:"이 결과는 검사 당시의 팔로우 관계를 보여 줍니다. 최근 누가 언팔로우했는지는 알 수 없습니다.",
+  needsValidationNote:"이전 검사에서 팔로워 목록이 모두 읽혔는지 확인하지 못했습니다. 최종 결과로 사용할 수 없습니다. ‘검사 계속하기’를 누르면 1단계부터 다시 시작하지 않고 저장된 지점부터 이어집니다.",
+  incompleteCountWarning:"{relation} 목록에서 {actual}개만 읽혔지만 X 프로필에는 최소 {required}개가 표시됩니다. {missing}개가 부족해 잘못 판단할 수 있으므로 지금은 이 목록을 사용할 수 없습니다. 다시 검사해 주세요.",
+  relationFollowing:"팔로잉",
+  relationFollowers:"팔로워",
+
+  completedGapWarning:"주의: X 프로필의 팔로워 수가 이번 검사에서 읽은 수보다 {count}개 많습니다. 일부 계정이 표시되지 않아 맞팔이 아닌 것으로 잘못 판단될 수 있습니다. 작업 전 대상을 확인하세요. 확장 프로그램도 실행 직전에 맞팔 여부를 다시 확인하지만, X 데이터가 항상 완전한 것은 아닙니다.",
+  helpTail:"목록 끝에 거의 도착했습니다. 현재 읽은 계정이 X 프로필에 표시된 수보다 {count}개 적습니다. 마지막 구간을 불러와 결과를 확인하는 중입니다. X 창을 맨 앞에 열어 두세요. 몇 분 동안 숫자가 바뀌지 않으면 ‘스캔 창 다시 열기(진행 상황 유지)’를 누르세요.",
+  helpNormal:"X 스캔 창이 사라졌거나 진행 숫자가 몇 분 동안 바뀌지 않으면 아래의 ‘스캔 창 다시 열기(진행 상황 유지)’를 누르세요. ‘다시 검사’는 누르지 마세요. 검사 중에는 X 스캔 창을 계속 열어 두고 맨 앞에 띄워 두세요. 창을 최소화하거나 다른 창으로 전환하면 목록 스크롤이 멈춰 검사가 진행되지 않을 수 있습니다.",
   helpMissing:"X 스캔 창을 찾을 수 없습니다. 저장된 위치부터 이어가려면 스캔 창을 다시 여세요. 처음부터 재검사하거나 확장 프로그램을 삭제하지 마세요.",
   helpStalled:"3분 넘게 새 계정이 없습니다. X 요청 제한이 아니라면 창을 다시 열고, 계속 멈추면 일시 중지한 뒤 재개하세요.",
   helpCooling:"X에서 요청을 제한하고 있습니다. 표시된 대기 시간이 끝날 때까지 기다리세요. 반복 클릭해도 빨라지지 않으며 저장 데이터는 유지됩니다.",
@@ -94,9 +134,17 @@ const copy = {
   fail:"스캔 창을 다시 열지 못했습니다. 이전 진행 상황은 그대로 저장되어 있습니다."
  },
  fr: {
-  helpNormal:"Si le nombre ne change plus pendant 3 minutes ou si la fenêtre X disparaît, cliquez sur « Rouvrir la fenêtre » ci-dessous. Ne recommencez pas à zéro. Pendant l’analyse, gardez la fenêtre X ouverte et au premier plan. Ne la réduisez pas et ne passez pas à une autre fenêtre : le navigateur pourrait suspendre le défilement et bloquer la progression.",
+  completedNote:"Les résultats reflètent les abonnements au moment de l’analyse. Ils ne permettent pas de savoir qui s’est désabonné récemment.",
+  needsValidationNote:"La dernière analyse n’a pas pu vérifier que la liste des abonnés était complète. Ce résultat n’est pas définitif. Reprenez l’analyse depuis les données enregistrées sans recommencer la première étape.",
+  incompleteCountWarning:"Seulement {actual} comptes ont été lus dans {relation}, alors que le profil X en affiche au moins {required}, soit {missing} de moins. Pour éviter les erreurs, cette liste est indisponible. Relancez une analyse.",
+  relationFollowing:"les abonnements",
+  relationFollowers:"les abonnés",
+
+  completedGapWarning:"Attention : le profil X affiche {count} abonnés de plus que ceux lus pendant cette analyse. Certains comptes peuvent être masqués, ce qui risque de faire apparaître à tort des abonnements comme non réciproques. Vérifiez les comptes avant d’agir. L’extension tente aussi de revérifier chaque abonnement, mais les données de X peuvent être incomplètes.",
+  helpTail:"L’analyse approche de la fin. Pour le moment, la liste contient {count} comptes de moins que le total affiché sur le profil X. L’extension attend le chargement des dernières entrées et vérifie le résultat. Gardez la fenêtre X au premier plan. Si le compteur reste inchangé pendant plusieurs minutes, rouvrez la fenêtre en conservant la progression.",
+  helpNormal:"Si la fenêtre d’analyse X disparaît ou si le compteur n’avance plus depuis quelques minutes, cliquez sur « Rouvrir la fenêtre d’analyse (garder la progression) » ci-dessous. Ne cliquez pas sur « Relancer l’analyse ». Pendant l’analyse, laissez cette fenêtre ouverte au premier plan. Si vous la réduisez ou passez à une autre fenêtre, le navigateur risque d’arrêter le défilement et de bloquer l’analyse.",
   helpMissing:"La fenêtre d’analyse X est introuvable. Rouvrez-la pour reprendre les comptes enregistrés ; ne réinitialisez pas l’analyse et ne désinstallez pas l’extension.",
-  helpStalled:"Aucun nouveau compte depuis plus de 3 minutes. Si X ne limite pas les requêtes, rouvrez la fenêtre. Sinon, mettez en pause puis reprenez.",
+  helpStalled:"Le compteur n’a pas progressé depuis plus de 3 minutes. Si X ne limite pas les requêtes, rouvrez la fenêtre d’analyse. Si le problème persiste, mettez l’analyse en pause, puis reprenez-la.",
   helpCooling:"X limite les requêtes. Attendez l’heure indiquée sans cliquer plusieurs fois. Les comptes déjà enregistrés sont conservés.",
   helpPaused:"L’analyse est en pause, mais les données sont sauvegardées. Quand X fonctionne de nouveau, reprenez ; si la fenêtre manque, rouvrez-la.",
 
@@ -112,7 +160,15 @@ const copy = {
   fail:"Impossible de rouvrir la fenêtre. Les données déjà analysées sont conservées."
  },
  es: {
-  helpNormal:"Si el número no cambia durante 3 minutos o desaparece la ventana de X, pulsa « Volver a abrir la ventana » abajo. No reinicies el análisis. Durante el análisis, mantén abierta la ventana de X y déjala en primer plano. No la minimices ni cambies a otra ventana: el navegador podría detener el desplazamiento y el progreso dejaría de avanzar.",
+  completedNote:"Los resultados reflejan las relaciones de seguimiento al analizar la cuenta. No permiten saber quién dejó de seguirte recientemente.",
+  needsValidationNote:"El análisis anterior no pudo confirmar que la lista de seguidores estuviera completa. No es un resultado definitivo. Pulsa « Continuar » para retomar desde los datos guardados sin repetir la primera fase.",
+  incompleteCountWarning:"Solo se pudieron leer {actual} cuentas de {relation}, pero el perfil de X indica al menos {required}. Faltan {missing}, por lo que la lista no está disponible para evitar errores. Vuelve a analizar la cuenta.",
+  relationFollowing:"seguidos",
+  relationFollowers:"seguidores",
+
+  completedGapWarning:"Atención: el perfil de X muestra {count} seguidores más de los que pudo leer este análisis. Algunas cuentas podrían no aparecer y la lista podría incluir falsos positivos. Comprueba los perfiles antes de actuar. La extensión también intenta verificar si te siguen de vuelta antes de cada acción, pero los datos de X pueden estar incompletos.",
+  helpTail:"El análisis está a punto de terminar. Por ahora se han leído {count} cuentas menos de las que indica el perfil de X. La extensión está esperando a que cargue la última parte de la lista y comprobando el resultado. Mantén la ventana de X en primer plano; si el número no cambia durante varios minutos, vuelve a abrir la ventana sin perder el progreso.",
+  helpNormal:"Si desaparece la ventana de análisis de X o el contador lleva varios minutos sin avanzar, pulsa « Volver a abrir la ventana de análisis (conservar progreso) ». No pulses « Volver a analizar ». Durante el análisis, mantén la ventana de X abierta y en primer plano. Si la minimizas o cambias a otra ventana, el navegador podría dejar de desplazarse por la lista y detener el avance.",
   helpMissing:"No aparece la ventana de análisis de X. Vuelve a abrirla para seguir desde lo guardado. No reinicies ni desinstales la extensión.",
   helpStalled:"No hay nuevas cuentas desde hace más de 3 minutos. Si X no está limitando las solicitudes, vuelve a abrir la ventana. Si persiste, pausa y continúa.",
   helpCooling:"X limita temporalmente las solicitudes. Espera hasta la hora indicada sin hacer clic repetidas veces. Los datos guardados permanecen.",
@@ -130,7 +186,15 @@ const copy = {
   fail:"No se pudo reabrir la ventana. Los datos del análisis siguen guardados."
  },
  ms: {
-  helpNormal:"Jika angka tidak berubah selama 3 minit atau tetingkap imbasan X hilang, pilih “Buka semula tetingkap” di bawah. Jangan mulakan imbasan baharu. Semasa imbasan, biarkan tetingkap imbasan X terbuka dan berada di hadapan. Jangan minimumkan atau beralih ke tetingkap lain kerana penyemak imbas mungkin menghentikan tatalan dan kemajuan akan terhenti.",
+  completedNote:"Hasil menunjukkan hubungan mengikuti ketika imbasan dibuat. Ia tidak menunjukkan siapa yang baru berhenti mengikuti anda.",
+  needsValidationNote:"Imbasan terdahulu belum dapat mengesahkan senarai pengikut yang lengkap. Ini bukan hasil akhir. Pilih Sambung untuk meneruskan dari data tersimpan tanpa mengulang peringkat pertama.",
+  incompleteCountWarning:"Hanya {actual} akaun dapat dibaca bagi {relation}, tetapi profil X memaparkan sekurang-kurangnya {required} akaun. Masih kurang {missing}, jadi senarai ini belum boleh digunakan untuk mengelakkan kesilapan. Sila imbas semula.",
+  relationFollowing:"akaun yang anda ikuti",
+  relationFollowers:"pengikut",
+
+  completedGapWarning:"Perhatian: profil X memaparkan {count} pengikut lebih banyak daripada yang berjaya dibaca. Sesetengah akaun mungkin tidak dipaparkan, jadi senarai akaun yang tidak follow balik mungkin mengandungi kesilapan. Semak akaun sebelum bertindak. Sambungan juga cuba menyemak semula hubungan mengikuti sebelum tindakan, tetapi data X mungkin tidak lengkap.",
+  helpTail:"Imbasan hampir selesai. Buat masa ini, jumlah akaun yang dibaca kurang {count} berbanding angka pada profil X. Sambungan sedang menunggu bahagian terakhir senarai dimuatkan dan menyemak hasilnya. Biarkan tetingkap X di hadapan. Jika angka masih tidak berubah selepas beberapa minit, buka semula tetingkap imbasan tanpa kehilangan kemajuan.",
+  helpNormal:"Jika tetingkap imbasan X hilang atau angka kemajuan tidak berubah selama beberapa minit, klik “Buka semula tetingkap imbasan (kekalkan kemajuan)” di bawah. Jangan klik “Imbas semula”. Semasa imbasan, biarkan tetingkap X terbuka dan berada di hadapan. Jika anda minimumkan atau beralih ke tetingkap lain, penyemak imbas mungkin berhenti menatal senarai dan imbasan tidak akan bergerak.",
   helpMissing:"Tetingkap imbasan X tidak ditemui. Buka semula untuk menyambung dari data tersimpan. Jangan tetapkan semula atau nyahpasang sambungan.",
   helpStalled:"Tiada akaun baharu lebih 3 minit. Jika X tidak mengehadkan permintaan, buka semula tetingkap; jika masih tersekat, jeda dan sambung.",
   helpCooling:"X mengehadkan permintaan. Tunggu sehingga masa yang dipaparkan; jangan klik berulang kali. Data tersimpan kekal.",
@@ -148,7 +212,15 @@ const copy = {
   fail:"Tidak dapat membuka semula tetingkap. Kemajuan imbasan terdahulu masih disimpan."
  },
  vi: {
-  helpNormal:"Nếu số liệu không đổi trong 3 phút hoặc cửa sổ quét X biến mất, nhấn “Mở lại cửa sổ” bên dưới. Đừng bắt đầu quét lại từ đầu. Trong khi quét, hãy giữ cửa sổ quét X luôn mở và ở phía trước. Đừng thu nhỏ hoặc chuyển sang cửa sổ khác vì trình duyệt có thể ngừng cuộn danh sách, khiến tiến độ đứng yên.",
+  completedNote:"Kết quả chỉ phản ánh quan hệ theo dõi tại thời điểm quét, không cho biết ai vừa bỏ theo dõi bạn.",
+  needsValidationNote:"Lần quét trước chưa xác nhận được danh sách người theo dõi đã đầy đủ. Đây chưa phải kết quả cuối cùng. Nhấn Tiếp tục để quét từ tiến độ đã lưu mà không phải làm lại bước đầu.",
+  incompleteCountWarning:"Chỉ đọc được {actual} tài khoản trong mục {relation}, trong khi hồ sơ X hiển thị ít nhất {required}. Còn thiếu {missing} tài khoản nên danh sách này chưa thể sử dụng để tránh nhầm lẫn. Vui lòng quét lại.",
+  relationFollowing:"đang theo dõi",
+  relationFollowers:"người theo dõi",
+
+  completedGapWarning:"Lưu ý: hồ sơ X hiển thị nhiều hơn kết quả đã đọc {count} người theo dõi. Một số tài khoản có thể không xuất hiện, nên danh sách không theo dõi lại có thể có kết quả sai. Hãy kiểm tra từng tài khoản trước khi thao tác. Tiện ích cũng cố gắng xác minh lại trạng thái theo dõi, nhưng dữ liệu từ X có thể chưa đầy đủ.",
+  helpTail:"Quá trình quét sắp kết thúc. Hiện số tài khoản đã đọc ít hơn con số hiển thị trên hồ sơ X là {count}. Tiện ích đang chờ phần cuối danh sách tải xong và kiểm tra kết quả. Hãy giữ cửa sổ X ở phía trước; nếu số liệu không đổi trong vài phút, hãy mở lại cửa sổ quét để tiếp tục từ tiến độ đã lưu.",
+  helpNormal:"Nếu cửa sổ quét X biến mất hoặc số tiến độ không thay đổi suốt vài phút, hãy nhấn “Mở lại cửa sổ quét (giữ tiến độ)” bên dưới. Đừng nhấn “Quét lại”. Khi quét, hãy luôn mở cửa sổ X và giữ cửa sổ ở phía trước. Nếu thu nhỏ hoặc chuyển sang cửa sổ khác, trình duyệt có thể ngừng cuộn danh sách và tiến độ sẽ đứng yên.",
   helpMissing:"Không tìm thấy cửa sổ quét X. Hãy mở lại để tiếp tục từ dữ liệu đã lưu; đừng đặt lại hoặc gỡ tiện ích.",
   helpStalled:"Hơn 3 phút không có tài khoản mới. Nếu X không giới hạn yêu cầu, hãy mở lại cửa sổ; nếu vẫn đứng, tạm dừng rồi tiếp tục.",
   helpCooling:"X đang giới hạn yêu cầu. Chờ đến thời gian được hiển thị, đừng nhấn liên tục. Dữ liệu đã lưu vẫn còn.",
@@ -166,7 +238,15 @@ const copy = {
   fail:"Không thể mở lại cửa sổ. Tiến độ quét trước đó vẫn được lưu."
  },
  id: {
-  helpNormal:"Jika angka tidak berubah selama 3 menit atau jendela pemindaian X hilang, pilih “Buka ulang jendela” di bawah. Jangan mulai dari awal. Saat memindai, biarkan jendela pemindaian X tetap terbuka dan berada di depan. Jangan minimalkan atau beralih ke jendela lain karena browser dapat menghentikan pengguliran sehingga proses tidak bergerak.",
+  completedNote:"Hasil ini mencerminkan hubungan mengikuti saat pemindaian, bukan riwayat siapa yang baru saja berhenti mengikuti Anda.",
+  needsValidationNote:"Pemindaian sebelumnya belum dapat memastikan daftar pengikut sudah lengkap. Hasil ini belum final. Pilih Lanjutkan untuk meneruskan dari progres tersimpan tanpa mengulang tahap pertama.",
+  incompleteCountWarning:"Hanya {actual} akun yang terbaca untuk {relation}, sedangkan profil X menampilkan setidaknya {required}. Masih kurang {missing} akun, jadi daftar ini belum dapat digunakan agar tidak salah menilai. Silakan pindai ulang.",
+  relationFollowing:"akun yang Anda ikuti",
+  relationFollowers:"pengikut",
+
+  completedGapWarning:"Perhatian: profil X menampilkan {count} pengikut lebih banyak daripada yang berhasil dibaca. Sebagian akun mungkin tidak muncul, sehingga daftar yang tidak follow back bisa mengandung kesalahan. Periksa akun sebelum bertindak. Ekstensi juga mencoba mengecek ulang status follow back sebelum setiap tindakan, tetapi data dari X mungkin tidak lengkap.",
+  helpTail:"Pemindaian hampir selesai. Saat ini jumlah akun yang terbaca masih kurang {count} dibanding angka di profil X. Ekstensi sedang menunggu bagian akhir daftar dimuat dan memeriksa hasilnya. Biarkan jendela X tetap di depan. Jika angkanya tidak berubah selama beberapa menit, buka ulang jendela pemindaian tanpa menghapus progres.",
+  helpNormal:"Jika jendela pemindaian X hilang atau angka progres tidak berubah selama beberapa menit, pilih “Buka ulang jendela pemindaian (progres tersimpan)” di bawah. Jangan pilih “Pindai ulang”. Saat memindai, biarkan jendela X tetap terbuka dan berada di depan. Jika diminimalkan atau Anda beralih ke jendela lain, browser mungkin berhenti menggulir daftar dan pemindaian tidak akan berlanjut.",
   helpMissing:"Jendela pemindaian X tidak ditemukan. Buka ulang untuk melanjutkan dari data tersimpan. Jangan reset atau hapus ekstensi.",
   helpStalled:"Tidak ada akun baru lebih dari 3 menit. Jika X tidak membatasi permintaan, buka ulang jendela; jika tetap macet, jeda lalu lanjutkan.",
   helpCooling:"X sedang membatasi permintaan. Tunggu hingga waktu yang ditampilkan dan jangan klik berulang kali. Data tersimpan tetap ada.",
