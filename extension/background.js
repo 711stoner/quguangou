@@ -2057,7 +2057,10 @@ async function forceRestartPersonalScanWindow(automatic = false) {
     recoveryPending: true,
     // The user explicitly restarted the session. It may retry only after any
     // remaining cooldown, with a fresh finite retry budget.
-    consecutiveRecoveryCount: 0,
+    // Restarting a window must not reset the 429 circuit-breaker. A new
+    // window does not mean the account has received a fresh request quota.
+    consecutiveRecoveryCount: recentlyRateLimited(old.lastRateLimitAt)
+      ? Number(old.consecutiveRecoveryCount || 0) : 0,
     recoveryMessage: cooling
       ? "已保留扫描进度。X 仍在限流，冷却结束后会自动打开新窗口继续。"
       : "已保留扫描进度，正在重新打开 X 扫描窗口。",
@@ -3210,6 +3213,20 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         return;
       }
       const existing = await getPersonalScan();
+      const currentRateLimitUntil = getExistingRateLimitUntil(existing);
+      if (currentRateLimitUntil > Date.now()) {
+        sendResponse({ ok: false, error: "X 的请求冷却尚未结束，请使用保留断点的继续/重开入口，不要新建检测。" });
+        return;
+      }
+      if (existing?.status === "paused" && existing?.id && (
+        Number(existing.progress?.following || 0) > 0
+        || Number(existing.progress?.followers || 0) > 0
+        || (existing.partial?.following?.length || 0) > 0
+        || (existing.partial?.followers?.length || 0) > 0
+      )) {
+        sendResponse({ ok: false, error: "已有暂停的检测及保存的账号。请先继续原检测，不要新建任务覆盖断点。" });
+        return;
+      }
       if (activePersonalScan || existing?.status === "running") {
         sendResponse({ ok: false, error: "私人账号检测正在进行中" });
         return;

@@ -1,13 +1,14 @@
 {
   "name": "quguangou-chrome",
-  "version": "0.2.25",
+  "version": "0.2.73",
   "private": true,
   "type": "module",
   "scripts": {
     "test": "node --test",
-    "build": "node scripts/build-browser-packages.mjs",
-    "build:chrome": "node scripts/build-browser-packages.mjs chrome",
-    "build:edge": "node scripts/build-browser-packages.mjs edge",
-    "build:firefox": "node scripts/build-browser-packages.mjs firefox"
+    "build": "python3 scripts/build-v0.2.73.py",
+    "build:chrome": "python3 scripts/build-v0.2.73.py",
+    "build:edge": "python3 scripts/build-v0.2.73.py",
+    "build:firefox": "python3 scripts/build-v0.2.73.py",
+    "test:scan": "node --test test/scan-pacing.test.mjs test/network-rate-limit.test.mjs"
   }
 }
