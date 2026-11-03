@@ -4,7 +4,7 @@
  */
 const copy = {
  "zh-CN": {
-  helpNormal:"如果X 扫描窗口不见了，或者 数字进度连续几分钟不变，请点下面的「重新打开扫描窗口（保留进度）」。不要点「重新检测」。",
+  helpNormal:"如果X 扫描窗口不见了，或者 数字进度连续几分钟不变，请点下面的「重新打开扫描窗口（保留进度）」。不要点「重新检测」。 扫描时，请让 X 扫描窗口一直开着并保持在前台，不要最小化或切到其他窗口，否则浏览器可能暂停滚动，进度就不动了。",
   helpMissing:"没有找到正在扫描的 X 窗口，可能已经卡住。点下面「重新打开扫描窗口（保留进度）」，会接着已保存的位置继续；不要点「重新检测」或卸载插件。",
   helpStalled:"进度已经超过 3 分钟没有增加。若 X 没有限流，点「重新打开扫描窗口（保留进度）」；仍不动就先点「暂停检测」，再点「继续检测」。",
   helpCooling:"X 提示请求太频繁，现在不能继续。请等界面显示的冷却时间结束，不要反复点击。之前读取的数据已经保存。",
@@ -22,7 +22,7 @@ const copy = {
   fail:"窗口没有成功重开，原来的扫描数据仍保留。请重试。"
  },
  "zh-TW": {
-  helpNormal:"如果數字連續 3 分鐘不變，或 X 掃描視窗不見了，請點下方「重新開啟掃描視窗（保留進度）」。不要點「重新偵測」。",
+  helpNormal:"如果數字連續 3 分鐘不變，或 X 掃描視窗不見了，請點下方「重新開啟掃描視窗（保留進度）」。不要點「重新偵測」。 掃描時，請讓 X 掃描視窗一直開著並保持在前景，不要最小化或切換到其他視窗，否則瀏覽器可能會暫停捲動，進度就不再更新。",
   helpMissing:"找不到正在掃描的 X 視窗，可能已經卡住。請點「重新開啟掃描視窗（保留進度）」繼續；不要重新偵測或移除擴充功能。",
   helpStalled:"進度超過 3 分鐘沒有增加。若 X 沒有限流，請重新開啟掃描視窗；仍無變化就先暫停，再從儲存的位置繼續。",
   helpCooling:"X 暫時限制請求。請等顯示的冷卻時間結束，不要反覆點擊；已讀取的資料會保留。",
@@ -40,7 +40,7 @@ const copy = {
   fail:"視窗未能重新開啟，原有掃描資料仍保留。請再試一次。"
  },
  en: {
-  helpNormal:"If the number does not change for 3 minutes or the X scan window vanishes, use “Reopen scan window (keep progress)” below. Do not start a new scan.",
+  helpNormal:"If the number does not change for 3 minutes or the X scan window vanishes, use “Reopen scan window (keep progress)” below. Do not start a new scan. While scanning, keep the X scan window open and in the foreground. Do not minimize it or switch to another window, or the browser may pause scrolling and progress may stop.",
   helpMissing:"The X scan window is missing. Choose “Reopen scan window (keep progress)” to continue from saved accounts. Do not reset the scan or uninstall.",
   helpStalled:"No new accounts for over 3 minutes. If X is not rate-limiting you, reopen the scan window. If it still stalls, pause, then resume.",
   helpCooling:"X has limited requests. Wait until the cooldown time shown; repeated clicks will not help. Saved accounts remain intact.",
@@ -58,7 +58,7 @@ const copy = {
   fail:"Could not reopen the window. Your previous scan progress is still saved."
  },
  ja: {
-  helpNormal:"3分以上数字が変わらない、またはXのスキャン画面が消えた場合は、下の「スキャン画面を開き直す（進捗を保持）」を押してください。最初からやり直さないでください。",
+  helpNormal:"3分以上数字が変わらない、またはXのスキャン画面が消えた場合は、下の「スキャン画面を開き直す（進捗を保持）」を押してください。最初からやり直さないでください。 スキャン中はXのスキャン画面を開いたまま、最前面に表示してください。最小化したり別のウィンドウに切り替えたりすると、ブラウザーがスクロールを停止し、進捗が止まることがあります。",
   helpMissing:"Xのスキャン画面が見つかりません。保存済みの続きから再開するには画面を開き直してください。再スキャンや拡張機能の削除は避けてください。",
   helpStalled:"3分以上進捗がありません。Xの制限中でなければスキャン画面を開き直し、それでも動かなければ一時停止してから再開してください。",
   helpCooling:"Xがリクエストを制限中です。表示された解除時刻まで待ち、何度も押さないでください。保存したデータは残ります。",
@@ -76,7 +76,7 @@ const copy = {
   fail:"スキャン画面を開き直せませんでした。これまでの進捗は保存されています。"
  },
  ko: {
-  helpNormal:"3분 동안 숫자가 바뀌지 않거나 X 스캔 창이 사라지면 아래의 “스캔 창 다시 열기(진행 상황 유지)”를 누르세요. 새 검사를 시작하지 마세요.",
+  helpNormal:"3분 동안 숫자가 바뀌지 않거나 X 스캔 창이 사라지면 아래의 “스캔 창 다시 열기(진행 상황 유지)”를 누르세요. 새 검사를 시작하지 마세요. 검사하는 동안 X 스캔 창을 닫지 말고 맨 앞에 띄워 두세요. 최소화하거나 다른 창으로 전환하면 브라우저가 스크롤을 멈춰 진행이 중단될 수 있습니다.",
   helpMissing:"X 스캔 창을 찾을 수 없습니다. 저장된 위치부터 이어가려면 스캔 창을 다시 여세요. 처음부터 재검사하거나 확장 프로그램을 삭제하지 마세요.",
   helpStalled:"3분 넘게 새 계정이 없습니다. X 요청 제한이 아니라면 창을 다시 열고, 계속 멈추면 일시 중지한 뒤 재개하세요.",
   helpCooling:"X에서 요청을 제한하고 있습니다. 표시된 대기 시간이 끝날 때까지 기다리세요. 반복 클릭해도 빨라지지 않으며 저장 데이터는 유지됩니다.",
@@ -94,7 +94,7 @@ const copy = {
   fail:"스캔 창을 다시 열지 못했습니다. 이전 진행 상황은 그대로 저장되어 있습니다."
  },
  fr: {
-  helpNormal:"Si le nombre ne change plus pendant 3 minutes ou si la fenêtre X disparaît, cliquez sur « Rouvrir la fenêtre » ci-dessous. Ne recommencez pas à zéro.",
+  helpNormal:"Si le nombre ne change plus pendant 3 minutes ou si la fenêtre X disparaît, cliquez sur « Rouvrir la fenêtre » ci-dessous. Ne recommencez pas à zéro. Pendant l’analyse, gardez la fenêtre X ouverte et au premier plan. Ne la réduisez pas et ne passez pas à une autre fenêtre : le navigateur pourrait suspendre le défilement et bloquer la progression.",
   helpMissing:"La fenêtre d’analyse X est introuvable. Rouvrez-la pour reprendre les comptes enregistrés ; ne réinitialisez pas l’analyse et ne désinstallez pas l’extension.",
   helpStalled:"Aucun nouveau compte depuis plus de 3 minutes. Si X ne limite pas les requêtes, rouvrez la fenêtre. Sinon, mettez en pause puis reprenez.",
   helpCooling:"X limite les requêtes. Attendez l’heure indiquée sans cliquer plusieurs fois. Les comptes déjà enregistrés sont conservés.",
@@ -112,7 +112,7 @@ const copy = {
   fail:"Impossible de rouvrir la fenêtre. Les données déjà analysées sont conservées."
  },
  es: {
-  helpNormal:"Si el número no cambia durante 3 minutos o desaparece la ventana de X, pulsa « Volver a abrir la ventana » abajo. No reinicies el análisis.",
+  helpNormal:"Si el número no cambia durante 3 minutos o desaparece la ventana de X, pulsa « Volver a abrir la ventana » abajo. No reinicies el análisis. Durante el análisis, mantén abierta la ventana de X y déjala en primer plano. No la minimices ni cambies a otra ventana: el navegador podría detener el desplazamiento y el progreso dejaría de avanzar.",
   helpMissing:"No aparece la ventana de análisis de X. Vuelve a abrirla para seguir desde lo guardado. No reinicies ni desinstales la extensión.",
   helpStalled:"No hay nuevas cuentas desde hace más de 3 minutos. Si X no está limitando las solicitudes, vuelve a abrir la ventana. Si persiste, pausa y continúa.",
   helpCooling:"X limita temporalmente las solicitudes. Espera hasta la hora indicada sin hacer clic repetidas veces. Los datos guardados permanecen.",
@@ -130,7 +130,7 @@ const copy = {
   fail:"No se pudo reabrir la ventana. Los datos del análisis siguen guardados."
  },
  ms: {
-  helpNormal:"Jika angka tidak berubah selama 3 minit atau tetingkap imbasan X hilang, pilih “Buka semula tetingkap” di bawah. Jangan mulakan imbasan baharu.",
+  helpNormal:"Jika angka tidak berubah selama 3 minit atau tetingkap imbasan X hilang, pilih “Buka semula tetingkap” di bawah. Jangan mulakan imbasan baharu. Semasa imbasan, biarkan tetingkap imbasan X terbuka dan berada di hadapan. Jangan minimumkan atau beralih ke tetingkap lain kerana penyemak imbas mungkin menghentikan tatalan dan kemajuan akan terhenti.",
   helpMissing:"Tetingkap imbasan X tidak ditemui. Buka semula untuk menyambung dari data tersimpan. Jangan tetapkan semula atau nyahpasang sambungan.",
   helpStalled:"Tiada akaun baharu lebih 3 minit. Jika X tidak mengehadkan permintaan, buka semula tetingkap; jika masih tersekat, jeda dan sambung.",
   helpCooling:"X mengehadkan permintaan. Tunggu sehingga masa yang dipaparkan; jangan klik berulang kali. Data tersimpan kekal.",
@@ -148,7 +148,7 @@ const copy = {
   fail:"Tidak dapat membuka semula tetingkap. Kemajuan imbasan terdahulu masih disimpan."
  },
  vi: {
-  helpNormal:"Nếu số liệu không đổi trong 3 phút hoặc cửa sổ quét X biến mất, nhấn “Mở lại cửa sổ” bên dưới. Đừng bắt đầu quét lại từ đầu.",
+  helpNormal:"Nếu số liệu không đổi trong 3 phút hoặc cửa sổ quét X biến mất, nhấn “Mở lại cửa sổ” bên dưới. Đừng bắt đầu quét lại từ đầu. Trong khi quét, hãy giữ cửa sổ quét X luôn mở và ở phía trước. Đừng thu nhỏ hoặc chuyển sang cửa sổ khác vì trình duyệt có thể ngừng cuộn danh sách, khiến tiến độ đứng yên.",
   helpMissing:"Không tìm thấy cửa sổ quét X. Hãy mở lại để tiếp tục từ dữ liệu đã lưu; đừng đặt lại hoặc gỡ tiện ích.",
   helpStalled:"Hơn 3 phút không có tài khoản mới. Nếu X không giới hạn yêu cầu, hãy mở lại cửa sổ; nếu vẫn đứng, tạm dừng rồi tiếp tục.",
   helpCooling:"X đang giới hạn yêu cầu. Chờ đến thời gian được hiển thị, đừng nhấn liên tục. Dữ liệu đã lưu vẫn còn.",
@@ -166,7 +166,7 @@ const copy = {
   fail:"Không thể mở lại cửa sổ. Tiến độ quét trước đó vẫn được lưu."
  },
  id: {
-  helpNormal:"Jika angka tidak berubah selama 3 menit atau jendela pemindaian X hilang, pilih “Buka ulang jendela” di bawah. Jangan mulai dari awal.",
+  helpNormal:"Jika angka tidak berubah selama 3 menit atau jendela pemindaian X hilang, pilih “Buka ulang jendela” di bawah. Jangan mulai dari awal. Saat memindai, biarkan jendela pemindaian X tetap terbuka dan berada di depan. Jangan minimalkan atau beralih ke jendela lain karena browser dapat menghentikan pengguliran sehingga proses tidak bergerak.",
   helpMissing:"Jendela pemindaian X tidak ditemukan. Buka ulang untuk melanjutkan dari data tersimpan. Jangan reset atau hapus ekstensi.",
   helpStalled:"Tidak ada akun baru lebih dari 3 menit. Jika X tidak membatasi permintaan, buka ulang jendela; jika tetap macet, jeda lalu lanjutkan.",
   helpCooling:"X sedang membatasi permintaan. Tunggu hingga waktu yang ditampilkan dan jangan klik berulang kali. Data tersimpan tetap ada.",
