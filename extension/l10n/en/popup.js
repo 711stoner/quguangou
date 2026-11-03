@@ -21,6 +21,9 @@ let pendingPersonalAction = "block";
 const PERSONAL_WHITELIST_STORAGE_KEY = "quguangouPersonalWhitelistV1";
 let whitelistOwner = "";
 let personalWhitelistEntries = [];
+let whitelistLoadStatus = "idle";
+let whitelistLoadRequest = 0;
+let whitelistLoadError = "";
 
 function normalizePersonalWhitelistHandle(value) {
   return String(value || "").trim().replace(/^@/, "").toLowerCase();
@@ -51,15 +54,32 @@ function renderPersonalWhitelist() {
   const list = $("#personalWhitelistList");
   if (!list) return;
   clear(list);
-  $("#personalWhitelistCount").textContent = String(personalWhitelistEntries.length);
+  $("#personalWhitelistCount").textContent = whitelistLoadStatus === "ready"
+    ? String(personalWhitelistEntries.length)
+    : whitelistLoadStatus === "loading" ? "…" : "—";
+  if (whitelistLoadStatus === "loading" || whitelistLoadStatus === "error") {
+    list.textContent = whitelistLoadStatus === "loading" ? 'Loading the whitelist saved in this extension…' : 'Could not read the saved whitelist, so protected accounts cannot be confirmed. Retry before starting bulk actions.';
+    if (whitelistLoadStatus === "error") {
+      const retryButton = document.createElement("button");
+      retryButton.type = "button";
+      retryButton.textContent = 'Retry loading whitelist';
+      retryButton.addEventListener("click", () => void refreshPersonalWhitelist());
+      list.append(retryButton);
+    }
+    return;
+  }
   if (!whitelistOwner) {
     list.textContent = 'Run a scan to manage the whitelist for your X account.';
     return;
   }
   if (!personalWhitelistEntries.length) {
-    list.textContent = 'No protected accounts yet. Add accounts from your scan results.';
+    list.textContent = 'No saved whitelist was found for @{owner} in this extension installation. If you saved one before, check for another copy of the extension. Do not uninstall the old copy.'.replace("{owner}", whitelistOwner || "?");
     return;
   }
+  const ownerLabel = document.createElement("p");
+  ownerLabel.className = "personal-note";
+  ownerLabel.textContent = 'Whitelist for @{owner}, saved in this extension installation:'.replace("{owner}", whitelistOwner);
+  list.append(ownerLabel);
   for (const user of personalWhitelistEntries) {
     const row = document.createElement("div");
     row.className = "personal-whitelist-item";
@@ -76,17 +96,24 @@ function renderPersonalWhitelist() {
 
 async function refreshPersonalWhitelist() {
   const expectedOwner = whitelistOwner;
-  if (!expectedOwner) {
-    applyPersonalWhitelistEntries([]);
-    return;
-  }
+  const token = ++whitelistLoadRequest;
+  whitelistLoadStatus = "loading";
+  whitelistLoadError = "";
+  renderPersonalWhitelist();
   try {
     const response = await chrome.runtime.sendMessage({ type: "GET_PERSONAL_WHITELIST" });
-    if (whitelistOwner !== expectedOwner || response?.owner !== expectedOwner) return;
+    if (token !== whitelistLoadRequest || (expectedOwner && whitelistOwner !== expectedOwner)) return;
     if (!response?.ok) throw new Error(response?.error || "Whitelist unavailable");
+    if (!expectedOwner && response.owner) whitelistOwner = normalizePersonalWhitelistHandle(response.owner);
+    if (response.owner !== whitelistOwner) return;
+    whitelistLoadStatus = "ready";
     applyPersonalWhitelistEntries(response.entries);
   } catch (error) {
+    if (token !== whitelistLoadRequest || (expectedOwner && whitelistOwner !== expectedOwner)) return;
+    whitelistLoadStatus = "error";
+    whitelistLoadError = error?.message || String(error);
     console.warn("[QG] Failed to load local whitelist:", error);
+    renderPersonalWhitelist();
   }
 }
 
@@ -103,6 +130,7 @@ async function changePersonalWhitelist(username, protect, button) {
     });
     if (!response?.ok) throw new Error(response?.error || 'Could not update your whitelist');
     if (whitelistOwner === expectedOwner && response.owner === expectedOwner) {
+      whitelistLoadStatus = "ready";
       applyPersonalWhitelistEntries(response.entries);
       toast(protect ? 'Added to the whitelist' : 'Removed from the whitelist');
     }
@@ -382,9 +410,10 @@ function renderPersonalScan(scan = currentPersonalScan) {
     selectedPersonalHandles.clear();
   }
   const detectedOwner = normalizePersonalWhitelistHandle(scan?.username);
-  if (detectedOwner !== whitelistOwner) {
+  if (detectedOwner && detectedOwner !== whitelistOwner) {
     whitelistOwner = detectedOwner;
     personalWhitelistEntries = [];
+    whitelistLoadStatus = "loading";
     renderPersonalWhitelist();
     void refreshPersonalWhitelist();
   }
@@ -1024,9 +1053,10 @@ chrome.runtime.onMessage.addListener((message) => {
 // Storage notifications survive missed runtime broadcasts in a long-lived side panel.
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== "local") return;
-  if (changes[PERSONAL_WHITELIST_STORAGE_KEY]) {
-    const state = changes[PERSONAL_WHITELIST_STORAGE_KEY].newValue || {};
-    applyPersonalWhitelistEntries(state["x:" + whitelistOwner] || []);
+  if (changes[PERSONAL_WHITELIST_STORAGE_KEY]
+      || changes["quguangouPersonalWhitelistBackupV1"]
+      || changes["quguangouPersonalWhitelistOwnerEvidenceV1"]) {
+    void refreshPersonalWhitelist();
   }
   if (changes[PERSONAL_SCAN_STORAGE_KEY]) {
     acceptPersonalScanUpdate(changes[PERSONAL_SCAN_STORAGE_KEY].newValue || null);
@@ -1071,6 +1101,10 @@ $("#personalBlockConfirmClose").addEventListener("click", () => setPersonalBlock
 personalBlockConfirmPanel.querySelector("[data-personal-block-close]").addEventListener("click", () => setPersonalBlockConfirmOpen(false));
 $("#personalBlockConfirmButton").addEventListener("click", () => void runUiAction("personal-action", $("#personalBlockConfirmButton"), async () => {
   const usernames = getSelectedPersonalUsernames();
+  if (whitelistLoadStatus !== "ready") {
+    void refreshPersonalWhitelist();
+    return toast(getScanRestartText(document.documentElement.lang).whitelistNotLoaded);
+  }
   if (!usernames.length || !currentPersonalScan?.id) {
     setPersonalBlockConfirmOpen(false);
     return toast("There are no non-followers ready to process");
@@ -1211,6 +1245,7 @@ async function initialize() {
   ]);
   currentJob = jobResponse?.job || null;
   currentPersonalScan = scanResponse?.scan || null;
+  if (!currentPersonalScan?.username) void refreshPersonalWhitelist();
   const rememberedView = uiStateResponse?.[UI_STATE_KEY]?.view || "mode";
 
   if (currentJob?.status === "running" && ["community", "personal"].includes(currentJob.mode)) {

@@ -21,6 +21,9 @@ let pendingPersonalAction = "block";
 const PERSONAL_WHITELIST_STORAGE_KEY = "quguangouPersonalWhitelistV1";
 let whitelistOwner = "";
 let personalWhitelistEntries = [];
+let whitelistLoadStatus = "idle";
+let whitelistLoadRequest = 0;
+let whitelistLoadError = "";
 
 function normalizePersonalWhitelistHandle(value) {
   return String(value || "").trim().replace(/^@/, "").toLowerCase();
@@ -51,15 +54,32 @@ function renderPersonalWhitelist() {
   const list = $("#personalWhitelistList");
   if (!list) return;
   clear(list);
-  $("#personalWhitelistCount").textContent = String(personalWhitelistEntries.length);
+  $("#personalWhitelistCount").textContent = whitelistLoadStatus === "ready"
+    ? String(personalWhitelistEntries.length)
+    : whitelistLoadStatus === "loading" ? "…" : "—";
+  if (whitelistLoadStatus === "loading" || whitelistLoadStatus === "error") {
+    list.textContent = whitelistLoadStatus === "loading" ? '正在读取当前插件保存的白名单…' : '白名单读取失败，不能确认哪些账号受到保护。请先重试读取，再进行批量处理。';
+    if (whitelistLoadStatus === "error") {
+      const retryButton = document.createElement("button");
+      retryButton.type = "button";
+      retryButton.textContent = '重新读取白名单';
+      retryButton.addEventListener("click", () => void refreshPersonalWhitelist());
+      list.append(retryButton);
+    }
+    return;
+  }
   if (!whitelistOwner) {
     list.textContent = '完成一次账号检测后，可管理这个 X 账号的白名单。';
     return;
   }
   if (!personalWhitelistEntries.length) {
-    list.textContent = '目前没有白名单账号，可以从未回关名单中添加。';
+    list.textContent = '当前这份插件里没有找到 @{owner} 的白名单。如果你之前保存过，请检查是否加载过另一份「取关狗」；先不要卸载旧插件。'.replace("{owner}", whitelistOwner || "?");
     return;
   }
+  const ownerLabel = document.createElement("p");
+  ownerLabel.className = "personal-note";
+  ownerLabel.textContent = '当前账号 @{owner} 的白名单（保存在这份插件里）：'.replace("{owner}", whitelistOwner);
+  list.append(ownerLabel);
   for (const user of personalWhitelistEntries) {
     const row = document.createElement("div");
     row.className = "personal-whitelist-item";
@@ -76,17 +96,24 @@ function renderPersonalWhitelist() {
 
 async function refreshPersonalWhitelist() {
   const expectedOwner = whitelistOwner;
-  if (!expectedOwner) {
-    applyPersonalWhitelistEntries([]);
-    return;
-  }
+  const token = ++whitelistLoadRequest;
+  whitelistLoadStatus = "loading";
+  whitelistLoadError = "";
+  renderPersonalWhitelist();
   try {
     const response = await chrome.runtime.sendMessage({ type: "GET_PERSONAL_WHITELIST" });
-    if (whitelistOwner !== expectedOwner || response?.owner !== expectedOwner) return;
+    if (token !== whitelistLoadRequest || (expectedOwner && whitelistOwner !== expectedOwner)) return;
     if (!response?.ok) throw new Error(response?.error || "Whitelist unavailable");
+    if (!expectedOwner && response.owner) whitelistOwner = normalizePersonalWhitelistHandle(response.owner);
+    if (response.owner !== whitelistOwner) return;
+    whitelistLoadStatus = "ready";
     applyPersonalWhitelistEntries(response.entries);
   } catch (error) {
+    if (token !== whitelistLoadRequest || (expectedOwner && whitelistOwner !== expectedOwner)) return;
+    whitelistLoadStatus = "error";
+    whitelistLoadError = error?.message || String(error);
     console.warn("[QG] Failed to load local whitelist:", error);
+    renderPersonalWhitelist();
   }
 }
 
@@ -103,6 +130,7 @@ async function changePersonalWhitelist(username, protect, button) {
     });
     if (!response?.ok) throw new Error(response?.error || '无法更新白名单');
     if (whitelistOwner === expectedOwner && response.owner === expectedOwner) {
+      whitelistLoadStatus = "ready";
       applyPersonalWhitelistEntries(response.entries);
       toast(protect ? '已加入白名单' : '已移出白名单');
     }
@@ -381,9 +409,10 @@ function renderPersonalScan(scan = currentPersonalScan) {
     selectedPersonalHandles.clear();
   }
   const detectedOwner = normalizePersonalWhitelistHandle(scan?.username);
-  if (detectedOwner !== whitelistOwner) {
+  if (detectedOwner && detectedOwner !== whitelistOwner) {
     whitelistOwner = detectedOwner;
     personalWhitelistEntries = [];
+    whitelistLoadStatus = "loading";
     renderPersonalWhitelist();
     void refreshPersonalWhitelist();
   }
@@ -1020,9 +1049,10 @@ chrome.runtime.onMessage.addListener((message) => {
 // Storage notifications survive missed runtime broadcasts in a long-lived side panel.
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== "local") return;
-  if (changes[PERSONAL_WHITELIST_STORAGE_KEY]) {
-    const state = changes[PERSONAL_WHITELIST_STORAGE_KEY].newValue || {};
-    applyPersonalWhitelistEntries(state["x:" + whitelistOwner] || []);
+  if (changes[PERSONAL_WHITELIST_STORAGE_KEY]
+      || changes["quguangouPersonalWhitelistBackupV1"]
+      || changes["quguangouPersonalWhitelistOwnerEvidenceV1"]) {
+    void refreshPersonalWhitelist();
   }
   if (changes[PERSONAL_SCAN_STORAGE_KEY]) {
     acceptPersonalScanUpdate(changes[PERSONAL_SCAN_STORAGE_KEY].newValue || null);
@@ -1067,6 +1097,10 @@ $("#personalBlockConfirmClose").addEventListener("click", () => setPersonalBlock
 personalBlockConfirmPanel.querySelector("[data-personal-block-close]").addEventListener("click", () => setPersonalBlockConfirmOpen(false));
 $("#personalBlockConfirmButton").addEventListener("click", () => void runUiAction("personal-action", $("#personalBlockConfirmButton"), async () => {
   const usernames = getSelectedPersonalUsernames();
+  if (whitelistLoadStatus !== "ready") {
+    void refreshPersonalWhitelist();
+    return toast(getScanRestartText(document.documentElement.lang).whitelistNotLoaded);
+  }
   if (!usernames.length || !currentPersonalScan?.id) {
     setPersonalBlockConfirmOpen(false);
     return toast("当前没有可处理的未回关账号");
@@ -1207,6 +1241,7 @@ async function initialize() {
   ]);
   currentJob = jobResponse?.job || null;
   currentPersonalScan = scanResponse?.scan || null;
+  if (!currentPersonalScan?.username) void refreshPersonalWhitelist();
   const rememberedView = uiStateResponse?.[UI_STATE_KEY]?.view || "mode";
 
   if (currentJob?.status === "running" && ["community", "personal"].includes(currentJob.mode)) {

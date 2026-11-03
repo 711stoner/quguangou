@@ -4,6 +4,10 @@ import { reserveAttempt } from "./lib/pacing.js";
 import { dedupeUsers, mergeRunningPersonalScan, mergeUsersPreferLatest, shouldFallbackCursorToDom, evaluateUnknownDomEndCheckpoint, requiredRelationCount, shouldFallbackCursorAfterNoNewPages, getCompletedScanCountMismatch } from "./lib/relations.js";
 import { planCommunityPromptSchedule } from "./lib/community-share.js";
 import { shouldPauseForRepeatedXError, safeRelationFailure } from "./lib/scan-recovery.js";
+import {
+  WHITELIST_KEY, whitelistHandle, whitelistOwnerKey, whitelistUserId,
+  readWhitelist, updateWhitelist, resolveWhitelistOwner
+} from "./lib/whitelist-store.js";
 
 const QG_BUILD_MARKER = "terminal-gap-v2-20261005-2235";
 chrome.storage.local.set({ quguangouBuildMarker: QG_BUILD_MARKER }).catch(() => {});
@@ -11,23 +15,7 @@ chrome.storage.local.set({ quguangouBuildMarker: QG_BUILD_MARKER }).catch(() => 
 const STORAGE_KEY = "quguangouJob";
 const PERSONAL_SCAN_KEY = "quguangouPersonalScan";
 const PERSONAL_SCAN_CHECKPOINT_PREFIX = "quguangouPersonalScanCheckpoint:";
-const PERSONAL_WHITELIST_KEY = "quguangouPersonalWhitelistV1";
 let personalWhitelistWriteQueue = Promise.resolve();
-
-function whitelistHandle(value) {
-  const handle = String(value || "").trim().replace(/^@/, "").toLowerCase();
-  return /^[a-z0-9_]{1,15}$/.test(handle) ? handle : "";
-}
-
-function whitelistOwnerKey(username) {
-  const owner = whitelistHandle(username);
-  return owner ? "x:" + owner : "";
-}
-
-function whitelistUserId(user) {
-  const candidate = String(user?.userId || user?.rest_id || user?.id_str || user?.id || "");
-  return /^[0-9]+$/.test(candidate) ? candidate : "";
-}
 
 function isPersonalWhitelisted(entries, user) {
   const handle = whitelistHandle(user?.username);
@@ -38,41 +26,20 @@ function isPersonalWhitelisted(entries, user) {
 }
 
 async function readPersonalWhitelist(username) {
-  const key = whitelistOwnerKey(username);
-  if (!key) return [];
-  const stored = (await chrome.storage.local.get(PERSONAL_WHITELIST_KEY))[PERSONAL_WHITELIST_KEY];
-  const entries = stored && typeof stored === "object" ? stored[key] : null;
-  return Array.isArray(entries) ? entries.filter((entry) => whitelistHandle(entry?.username)) : [];
+  if (!whitelistOwnerKey(username)) return [];
+  // Reads must not race ahead of the queued whitelist write or its recovery.
+  await personalWhitelistWriteQueue.catch(() => {});
+  return readWhitelist(chrome.storage.local, username);
 }
 
 async function isPersonalTargetProtected(owner, target) {
   if (!whitelistOwnerKey(owner)) return true; // No verified owner: fail closed.
-  await personalWhitelistWriteQueue.catch(() => {});
   return isPersonalWhitelisted(await readPersonalWhitelist(owner), target);
 }
 
 function updatePersonalWhitelist(owner, user, protect) {
-  const task = personalWhitelistWriteQueue.catch(() => {}).then(async () => {
-    const key = whitelistOwnerKey(owner);
-    const username = whitelistHandle(user?.username);
-    if (!key || !username) throw new Error("无法确认需要保护的 X 账号");
-    const state = (await chrome.storage.local.get(PERSONAL_WHITELIST_KEY))[PERSONAL_WHITELIST_KEY];
-    const all = state && typeof state === "object" && !Array.isArray(state) ? { ...state } : {};
-    const old = Array.isArray(all[key]) ? all[key] : [];
-    const next = old.filter((entry) => whitelistHandle(entry.username) !== username
-      && !(user?.userId && String(entry.userId || "") === String(user.userId)));
-    if (protect) {
-      next.push({
-        username,
-        userId: whitelistUserId(user),
-        displayName: String(user.displayName || "").slice(0, 80),
-        addedAt: new Date().toISOString()
-      });
-    }
-    all[key] = next;
-    await chrome.storage.local.set({ [PERSONAL_WHITELIST_KEY]: all });
-    return next;
-  });
+  const task = personalWhitelistWriteQueue.catch(() => {}).then(() =>
+    updateWhitelist(chrome.storage.local, owner, user, protect));
   personalWhitelistWriteQueue = task;
   return task;
 }
@@ -3409,10 +3376,11 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     (async () => {
       const scan = await getPersonalScan();
       await personalWhitelistWriteQueue.catch(() => {});
+      const owner = await resolveWhitelistOwner(chrome.storage.local, scan?.username);
       sendResponse({
         ok: true,
-        owner: whitelistHandle(scan?.username),
-        entries: await readPersonalWhitelist(scan?.username)
+        owner,
+        entries: await readPersonalWhitelist(owner)
       });
     })().catch((error) => sendResponse({ ok: false, error: error.message || String(error) }));
     return true;

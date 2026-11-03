@@ -4,6 +4,7 @@
  */
 const copy = {
  "zh-CN": {
+  whitelistNotLoaded:"白名单还没有读取成功。请先在下方确认白名单已加载，再开始批量取关或拉黑。",
   completedNote:"结果只反映本次扫描时的当前关注关系，不代表历史上谁刚刚取关了你。",
   needsValidationNote:"上次检测还没确认粉丝列表是否完整，不能作为最终名单。点击「继续检测」会沿用已保存的进度，不会重扫第一阶段。",
   incompleteCountWarning:"{relation}只读取到 {actual} 个，X 主页显示至少应有 {required} 个，还差 {missing} 个。为避免误判，当前名单暂不可用。请重新检测。",
@@ -30,6 +31,7 @@ const copy = {
   fail:"窗口没有成功重开，原来的扫描数据仍保留。请重试。"
  },
  "zh-TW": {
+  whitelistNotLoaded:"白名單還沒讀取成功。請先確認下方的白名單已載入，再進行批次取消追蹤或封鎖。",
   completedNote:"結果只反映本次掃描時的追蹤關係，無法知道誰剛剛取消追蹤你。",
   needsValidationNote:"上次檢查還沒確認粉絲名單是否完整，不能當成最終結果。點「繼續檢查」會保留目前進度，不必重新讀取第一階段。",
   incompleteCountWarning:"{relation}只讀取到 {actual} 個，X 個人檔案至少顯示 {required} 個，還差 {missing} 個。為避免誤判，目前無法使用這份名單。請重新檢查。",
@@ -56,6 +58,7 @@ const copy = {
   fail:"視窗未能重新開啟，原有掃描資料仍保留。請再試一次。"
  },
  en: {
+  whitelistNotLoaded:"The saved whitelist has not loaded successfully. Check it below before starting bulk unfollow or block actions.",
   completedNote:"Results show follow relationships at the time of scanning. They cannot tell you who recently unfollowed you.",
   needsValidationNote:"The previous scan could not confirm that the follower list was complete. This is not a final result. Select Resume scan to continue from saved progress without restarting stage 1.",
   incompleteCountWarning:"Only {actual} accounts were read for {relation}, but the X profile shows at least {required}. That is {missing} fewer. To avoid false positives, the list is unavailable. Please run a new scan.",
@@ -82,6 +85,7 @@ const copy = {
   fail:"Could not reopen the window. Your previous scan progress is still saved."
  },
  ja: {
+  whitelistNotLoaded:"保護リストの読み込みが完了していません。下のリストを確認してから、一括フォロー解除やブロックを始めてください。",
   completedNote:"結果はスキャン時点のフォロー関係を示すもので、最近誰がフォローを外したかは分かりません。",
   needsValidationNote:"前回のスキャンではフォロワー一覧を最後まで確認できませんでした。確定結果としては使えません。「スキャンを再開」を押すと、第1段階をやり直さず保存位置から続行します。",
   incompleteCountWarning:"{relation}は{actual}件しか読み取れませんでした。Xのプロフィールには少なくとも{required}件と表示されており、{missing}件不足しています。誤判定を避けるため、現在のリストは使用できません。再スキャンしてください。",
@@ -108,6 +112,7 @@ const copy = {
   fail:"スキャン画面を開き直せませんでした。これまでの進捗は保存されています。"
  },
  ko: {
+  whitelistNotLoaded:"저장된 보호 목록을 아직 불러오지 못했습니다. 아래 목록을 확인한 뒤 일괄 언팔로우나 차단을 시작하세요.",
   completedNote:"이 결과는 검사 당시의 팔로우 관계를 보여 줍니다. 최근 누가 언팔로우했는지는 알 수 없습니다.",
   needsValidationNote:"이전 검사에서 팔로워 목록이 모두 읽혔는지 확인하지 못했습니다. 최종 결과로 사용할 수 없습니다. ‘검사 계속하기’를 누르면 1단계부터 다시 시작하지 않고 저장된 지점부터 이어집니다.",
   incompleteCountWarning:"{relation} 목록에서 {actual}개만 읽혔지만 X 프로필에는 최소 {required}개가 표시됩니다. {missing}개가 부족해 잘못 판단할 수 있으므로 지금은 이 목록을 사용할 수 없습니다. 다시 검사해 주세요.",
@@ -134,6 +139,7 @@ const copy = {
   fail:"스캔 창을 다시 열지 못했습니다. 이전 진행 상황은 그대로 저장되어 있습니다."
  },
  fr: {
+  whitelistNotLoaded:"La liste de protection n’a pas pu être chargée. Vérifiez-la ci-dessous avant de lancer des désabonnements ou des blocages groupés.",
   completedNote:"Les résultats reflètent les abonnements au moment de l’analyse. Ils ne permettent pas de savoir qui s’est désabonné récemment.",
   needsValidationNote:"La dernière analyse n’a pas pu vérifier que la liste des abonnés était complète. Ce résultat n’est pas définitif. Reprenez l’analyse depuis les données enregistrées sans recommencer la première étape.",
   incompleteCountWarning:"Seulement {actual} comptes ont été lus dans {relation}, alors que le profil X en affiche au moins {required}, soit {missing} de moins. Pour éviter les erreurs, cette liste est indisponible. Relancez une analyse.",
@@ -160,6 +166,7 @@ const copy = {
   fail:"Impossible de rouvrir la fenêtre. Les données déjà analysées sont conservées."
  },
  es: {
+  whitelistNotLoaded:"La lista de protección aún no se ha cargado correctamente. Compruébala antes de bloquear o dejar de seguir cuentas en masa.",
   completedNote:"Los resultados reflejan las relaciones de seguimiento al analizar la cuenta. No permiten saber quién dejó de seguirte recientemente.",
   needsValidationNote:"El análisis anterior no pudo confirmar que la lista de seguidores estuviera completa. No es un resultado definitivo. Pulsa « Continuar » para retomar desde los datos guardados sin repetir la primera fase.",
   incompleteCountWarning:"Solo se pudieron leer {actual} cuentas de {relation}, pero el perfil de X indica al menos {required}. Faltan {missing}, por lo que la lista no está disponible para evitar errores. Vuelve a analizar la cuenta.",
@@ -186,6 +193,7 @@ const copy = {
   fail:"No se pudo reabrir la ventana. Los datos del análisis siguen guardados."
  },
  ms: {
+  whitelistNotLoaded:"Senarai perlindungan belum berjaya dimuatkan. Semak senarai di bawah sebelum melakukan tindakan berhenti mengikuti atau menyekat secara pukal.",
   completedNote:"Hasil menunjukkan hubungan mengikuti ketika imbasan dibuat. Ia tidak menunjukkan siapa yang baru berhenti mengikuti anda.",
   needsValidationNote:"Imbasan terdahulu belum dapat mengesahkan senarai pengikut yang lengkap. Ini bukan hasil akhir. Pilih Sambung untuk meneruskan dari data tersimpan tanpa mengulang peringkat pertama.",
   incompleteCountWarning:"Hanya {actual} akaun dapat dibaca bagi {relation}, tetapi profil X memaparkan sekurang-kurangnya {required} akaun. Masih kurang {missing}, jadi senarai ini belum boleh digunakan untuk mengelakkan kesilapan. Sila imbas semula.",
@@ -212,6 +220,7 @@ const copy = {
   fail:"Tidak dapat membuka semula tetingkap. Kemajuan imbasan terdahulu masih disimpan."
  },
  vi: {
+  whitelistNotLoaded:"Danh sách bảo vệ chưa tải thành công. Hãy kiểm tra danh sách bên dưới trước khi bỏ theo dõi hoặc chặn hàng loạt.",
   completedNote:"Kết quả chỉ phản ánh quan hệ theo dõi tại thời điểm quét, không cho biết ai vừa bỏ theo dõi bạn.",
   needsValidationNote:"Lần quét trước chưa xác nhận được danh sách người theo dõi đã đầy đủ. Đây chưa phải kết quả cuối cùng. Nhấn Tiếp tục để quét từ tiến độ đã lưu mà không phải làm lại bước đầu.",
   incompleteCountWarning:"Chỉ đọc được {actual} tài khoản trong mục {relation}, trong khi hồ sơ X hiển thị ít nhất {required}. Còn thiếu {missing} tài khoản nên danh sách này chưa thể sử dụng để tránh nhầm lẫn. Vui lòng quét lại.",
@@ -238,6 +247,7 @@ const copy = {
   fail:"Không thể mở lại cửa sổ. Tiến độ quét trước đó vẫn được lưu."
  },
  id: {
+  whitelistNotLoaded:"Daftar perlindungan belum berhasil dimuat. Periksa daftar di bawah sebelum berhenti mengikuti atau memblokir akun secara massal.",
   completedNote:"Hasil ini mencerminkan hubungan mengikuti saat pemindaian, bukan riwayat siapa yang baru saja berhenti mengikuti Anda.",
   needsValidationNote:"Pemindaian sebelumnya belum dapat memastikan daftar pengikut sudah lengkap. Hasil ini belum final. Pilih Lanjutkan untuk meneruskan dari progres tersimpan tanpa mengulang tahap pertama.",
   incompleteCountWarning:"Hanya {actual} akun yang terbaca untuk {relation}, sedangkan profil X menampilkan setidaknya {required}. Masih kurang {missing} akun, jadi daftar ini belum dapat digunakan agar tidak salah menilai. Silakan pindai ulang.",
