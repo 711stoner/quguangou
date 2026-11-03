@@ -2,7 +2,6 @@ import { getScanRestartText } from "./lib/scan-restart-text.js";
 import { scanStallKind } from "./lib/scan-stall-help.js";
 import { remainingProfileCountGap, completedFollowerCountGap } from "./lib/scan-last-mile.js";
 import { getCompletedScanCountMismatch } from "./lib/relations.js";
-import { getValuePromoProbability } from "./lib/value-promo.js";
 import { planCommunityPromptSchedule } from "./lib/community-share.js";
 
 const $ = (selector) => document.querySelector(selector);
@@ -145,63 +144,15 @@ async function changePersonalWhitelist(username, protect, button) {
 const UI_STATE_KEY = "quguangouUiState";
 const BATCH_SIZE = 20;
 
-const VALUE_PROMO_STATE_KEY = "quguangouValuePromoStateV1";
-let lastValuePromoViewName = null;
-let valuePromoDecisionToken = 0;
-let valuePromoDecisionQueue = Promise.resolve();
-
-function promoRandomUnit() {
-  const value = new Uint32Array(1);
-  crypto.getRandomValues(value);
-  return value[0] / 4294967296;
-}
-
-async function decideValuePromo(viewName, token) {
-  const promo = $("#homeValuePromo");
-  if (!promo) return;
-
-  const stored = await chrome.storage.local.get(VALUE_PROMO_STATE_KEY);
-  const state = stored?.[VALUE_PROMO_STATE_KEY] && typeof stored[VALUE_PROMO_STATE_KEY] === "object"
-    ? stored[VALUE_PROMO_STATE_KEY]
-    : {};
-  const previous = state[viewName] && typeof state[viewName] === "object" ? state[viewName] : {};
-  const visitCount = Math.max(0, Number(previous.visits) || 0) + 1;
-  const previousShows = Math.max(0, Number(previous.shows) || 0);
-  const previousMissStreak = Math.max(0, Number(previous.missStreak) || 0);
-  const probability = getValuePromoProbability({ shows: previousShows, missStreak: previousMissStreak });
-  const shouldShow = promoRandomUnit() < probability;
-
-  state[viewName] = {
-    visits: visitCount,
-    shows: previousShows + (shouldShow ? 1 : 0),
-    missStreak: shouldShow ? 0 : previousMissStreak + 1,
-    probability,
-    lastDecisionAt: Date.now()
-  };
-  await chrome.storage.local.set({ [VALUE_PROMO_STATE_KEY]: state });
-
-  if (token !== valuePromoDecisionToken || lastValuePromoViewName !== viewName) return;
-  promo.classList.toggle("hidden", !shouldShow);
-  promo.dataset.view = viewName;
-  promo.dataset.visit = String(visitCount);
-  promo.dataset.probability = String(probability);
-}
-
-function scheduleValuePromo(view) {
-  const viewName = getViewName(view);
-  if (viewName === lastValuePromoViewName) return;
-
-  lastValuePromoViewName = viewName;
-  const token = ++valuePromoDecisionToken;
-  const promo = $("#homeValuePromo");
-  promo?.classList.add("hidden");
-  valuePromoDecisionQueue = valuePromoDecisionQueue
-    .then(() => decideValuePromo(viewName, token))
-    .catch(() => {
-      if (token === valuePromoDecisionToken && lastValuePromoViewName === viewName) {
-        promo?.classList.toggle("hidden", promoRandomUnit() >= 0.35);
-      }
-    });
+// Optional value-check link: show a single card consistently in all UI languages.
+// It opens only on a user click; no scan/account data is sent to the website.
+function renderValuePromos(viewName, { completed = false, cooling = false } = {}) {
+  const inProgress = viewName === "progress";
+  const showCompleted = inProgress && Boolean(completed);
+  const showCooldown = inProgress && !showCompleted && Boolean(cooling);
+  $("#homeValuePromo")?.classList.toggle("hidden", showCompleted || showCooldown);
+  $("#valuePromo")?.classList.toggle("hidden", !showCompleted);
+  $("#stickyValuePromo")?.classList.toggle("hidden", !showCooldown);
 }
 
 function getViewName(view) {
@@ -213,7 +164,7 @@ function getViewName(view) {
 
 function showOnly(view, remember = true) {
   [modeView, personalView, blocklistView, progressView].forEach((item) => item.classList.toggle("hidden", item !== view));
-  scheduleValuePromo(view);
+  renderValuePromos(getViewName(view));
   if (remember) {
     void chrome.storage.local.set({
       [UI_STATE_KEY]: {
@@ -728,6 +679,7 @@ function renderJob(job) {
     && Boolean(job.resumeAt);
   const batchPaused = job.status === "paused" && (job.pauseKind === "batch" || atBatchBoundary);
   const cooling = batchPaused && job.resumeAt && job.resumeAt > Date.now();
+  renderValuePromos("progress", { completed, cooling });
   let batchNumber = job.batchNumber || Math.min(totalBatches, Math.floor(done / batchSize) + 1);
   if (completed) batchNumber = totalBatches;
   else if (batchPaused && !job.batchNumber) batchNumber = Math.max(1, Math.ceil(done / batchSize));
@@ -842,8 +794,8 @@ function renderJob(job) {
     contributionButton.disabled = false;
     contributionButton.textContent = "全部加入社区名单";
   }
-  valuePromo.classList.add("hidden");
-  $("#stickyValuePromo").classList.add("hidden");
+  // Placement was selected above from the actual task state.
+  // Do not hide completion/cooldown promos again during the render.
   $("#progressBackButton").classList.toggle("hidden", running || completed);
   cancelButton.classList.toggle("hidden", !running);
   const canEndTask = !running && !completed && done < total;
