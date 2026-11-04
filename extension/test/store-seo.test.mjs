@@ -56,10 +56,12 @@ test('current listing guide has all languages and explicitly describes history a
   assert.ok(doc.includes('历史'));
 });
 
-test('eight international storefront titles use the identifiable Followback Watchdog brand, not just Followback',()=>{
- for(const lang of ['en','ja','ko','fr','es','ms','vi','id']){
-  assert.ok(canonical[lang].title.includes('Followback Watchdog'),lang);
-  assert.ok(!canonical[lang].title.endsWith('| Followback'),lang);
+test('English keeps English branding, while seven other international titles use entirely native brand names',()=>{
+ const brands=JSON.parse(fs.readFileSync(path.join(root,'本地化产品名称.json'),'utf8'));
+ assert.ok(canonical.en.title.includes('Followback Watchdog'));
+ for(const lang of ['ja','ko','fr','es','ms','vi','id']){
+  assert.ok(canonical[lang].title.includes(brands[lang].name),lang);
+  assert.ok(!canonical[lang].title.includes('Followback Watchdog'),lang);
  }
  for(const lang of ['zh_CN','zh_TW','zh_HK'])assert.match(canonical[lang].title,/取[关關]狗/,lang);
 });

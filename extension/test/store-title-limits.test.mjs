@@ -21,11 +21,12 @@ test('all 11 regional name/description strings fit Edge and Mozilla manifest lim
  assert.deepEqual(seo.zh_HK,seo.zh_TW,'Hong Kong and Taiwan share the Traditional Chinese store text');
 });
 
+const nativeNames=Object.fromEntries(Object.entries(JSON.parse(fs.readFileSync(path.join(root,'本地化产品名称.json'),'utf8'))).map(([lang,x])=>[lang,x.name]));
 test('new localized names keep core non-follower intent and identifiable brand without Chinese leftovers',()=>{
  for(const region of ['ja','ko','fr','es','ms','vi','id']){
   const title=seo[region].title;
-  assert.ok(title.includes('Followback Watchdog'),`${region} branded name absent`);
-  assert.doesNotMatch(title,/取关狗|未回关|黑名单|批量拉黑|商单搭档/u,`${region} contains untranslated Chinese wording`);
+  assert.ok(title.includes(nativeNames[region]),`${region} native brand name absent`);
+  assert.doesNotMatch(title,/Followback Watchdog|取关狗|取關狗|未回关|黑名单|批量拉黑|商单搭档/u,`${region} contains untranslated English or Chinese branding`);
  }
 });
 

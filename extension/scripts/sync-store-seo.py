@@ -9,6 +9,7 @@ from pathlib import Path
 root=Path(__file__).resolve().parent.parent
 source=root/'商店SEO文案.json'
 entries=json.loads(source.read_text())
+native_brands=json.loads((root/'本地化产品名称.json').read_text())
 current_version=json.loads((root/'manifest.json').read_text())['version']
 locales=('zh_CN','zh_TW','zh_HK','en','ja','ko','fr','es','ms','vi','id')
 assert set(entries)==set(locales),'Store locales mismatch'
@@ -16,6 +17,11 @@ assert entries['zh_HK']==entries['zh_TW'],'Traditional Chinese regional listing 
 for locale in locales:
  e=entries[locale]
  title=e['title'].strip();short=e['short'].strip();long=e['long'].strip()
+ if locale in native_brands:
+  assert native_brands[locale]['name'] in title,(locale,'native brand name absent')
+  assert title==native_brands[locale]['title'],(locale,'title differs from native-language source')
+  assert 'Followback Watchdog' not in title and 'Followback Watchdog' not in long,(locale,'English brand leaked')
+  assert '取关狗' not in title and '取关狗' not in long,(locale,'Chinese brand leaked')
  terms=e['edge_search_terms']
  assert 5<=len(title)<=45,(locale,'cross-store name limit (Edge/AMO ≤45)',len(title))
  assert 20<=len(short)<=132,(locale,'short description',len(short))
@@ -50,7 +56,8 @@ notes=[
  '- **Chrome 上架顺序（请勿误操作）：** 只向既有商品 `ahpjikfghfgekmjcomhcmknlkicloblf` 上传 **一次** `quguangou-chrome.zip`（v0.2.75，包含 10 个有效 Chrome locale）。不要为十种语言上传十次不同 ZIP；同一商品后续上传包会替换之前的待发布代码，也不要创建十个新商品 ID。',
  '- **十种语言逐项上传的是 Store listing 资料，不是十份安装包：** 后台选 `zh_CN`、`zh_TW`、`en`、`ja`、`ko`、`fr`、`es`、`ms`、`vi`、`id`，分别填对应的完整介绍与当地语言截图；商品标题、短摘要来自 ZIP 里的 `_locales/*/messages.json`。`zh_HK` 仅本地兼容，不是 Chrome 独立语言。',
  '- **容易遗漏的全球图片回退：** Chrome 官方显示顺序是本地化视频／本地化截图，然后是全球视频／全球截图；如“Global screenshots”残留中文截图，其他语言用户仍可能在后面看到中文图片。检查并清理非中立的全球图片；不可通过上传每种语言截图自动移除旧全局图片。Small/Marquee 宣传图不能按语言本地化，应使用无中文文字的中立素材。',
- '- **旧图片与当前界面不一致：** 已目视抽查 `v0.2.68` 日文和 `v0.2.70` 越南文首张商店截图，里面仍展示“英文网站”的旧入口；v0.2.75 的这些隐私页已改为对应当地语言官网。上架前必须重做或逐张修正旧版截图，不能将旧图通过尺寸检查视为最新版功能验收。',
+ '- **本轮全球宣传图已改成无文字：** 由于 Chrome 的 440×280 和 1400×560 宣传图不能按语言分别配置，已将七种外语原素材、简体及繁体原素材中的对应图片统一替换为同一份无文字、无语言的插件图形设计；后台仍须检查是否有之前已上传的中文／英文 Global screenshots。',
+ '- **本轮已重制七种外语商店截图：** 日语、韩语、法语、西班牙语、马来语、越南语、印尼语各 5 张图片，均已用 v0.2.75 的真实插件界面重拍并覆盖原 Chrome／Edge／Firefox 素材（共 105 份截图文件）。旧图片中的英文品牌和“英文网站”提示不再沿用；文件夹虽然保留 v0.2.68／v0.2.70 的历史目录名，里面的五张截图是新内容。经尺寸、逐语一致性及部分视觉抽样核验；简体／繁体／英文旧图尚未在本轮整体重制。',
  '- **安装后的语言例外：** 插件初次运行按浏览器 UI 语言选择界面；如果用户曾手动选语言并保存，`quguangouUILanguageV1` 优先于浏览器语言。Chrome 商店并不知道搜索框所用语言，插件也无法在安装时读取用户的商店搜索关键词，因此不能保证“在英文商店输入中文关键词后，插件自动成为中文”。',
 
  f'- **线上发布差异（2026-11-04 核查）**：当前 Chrome 商店插件 `ahpjikfghfgekmjcomhcmknlkicloblf` 仍为 **v0.2.63**，而本地当前唯一安装包是 **v{current_version}**。修改本地 ZIP 或 GitHub 不会直接更新线上商店；必须在已有商品中提交新版本，审核发布后重新做线上逐语言验证，不能提前声称线上修复。',

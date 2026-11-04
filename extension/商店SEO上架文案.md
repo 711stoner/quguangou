@@ -9,7 +9,8 @@
 - **Chrome 上架顺序（请勿误操作）：** 只向既有商品 `ahpjikfghfgekmjcomhcmknlkicloblf` 上传 **一次** `quguangou-chrome.zip`（v0.2.75，包含 10 个有效 Chrome locale）。不要为十种语言上传十次不同 ZIP；同一商品后续上传包会替换之前的待发布代码，也不要创建十个新商品 ID。
 - **十种语言逐项上传的是 Store listing 资料，不是十份安装包：** 后台选 `zh_CN`、`zh_TW`、`en`、`ja`、`ko`、`fr`、`es`、`ms`、`vi`、`id`，分别填对应的完整介绍与当地语言截图；商品标题、短摘要来自 ZIP 里的 `_locales/*/messages.json`。`zh_HK` 仅本地兼容，不是 Chrome 独立语言。
 - **容易遗漏的全球图片回退：** Chrome 官方显示顺序是本地化视频／本地化截图，然后是全球视频／全球截图；如“Global screenshots”残留中文截图，其他语言用户仍可能在后面看到中文图片。检查并清理非中立的全球图片；不可通过上传每种语言截图自动移除旧全局图片。Small/Marquee 宣传图不能按语言本地化，应使用无中文文字的中立素材。
-- **旧图片与当前界面不一致：** 已目视抽查 `v0.2.68` 日文和 `v0.2.70` 越南文首张商店截图，里面仍展示“英文网站”的旧入口；v0.2.75 的这些隐私页已改为对应当地语言官网。上架前必须重做或逐张修正旧版截图，不能将旧图通过尺寸检查视为最新版功能验收。
+- **本轮全球宣传图已改成无文字：** 由于 Chrome 的 440×280 和 1400×560 宣传图不能按语言分别配置，已将七种外语原素材、简体及繁体原素材中的对应图片统一替换为同一份无文字、无语言的插件图形设计；后台仍须检查是否有之前已上传的中文／英文 Global screenshots。
+- **本轮已重制七种外语商店截图：** 日语、韩语、法语、西班牙语、马来语、越南语、印尼语各 5 张图片，均已用 v0.2.75 的真实插件界面重拍并覆盖原 Chrome／Edge／Firefox 素材（共 105 份截图文件）。旧图片中的英文品牌和“英文网站”提示不再沿用；文件夹虽然保留 v0.2.68／v0.2.70 的历史目录名，里面的五张截图是新内容。经尺寸、逐语一致性及部分视觉抽样核验；简体／繁体／英文旧图尚未在本轮整体重制。
 - **安装后的语言例外：** 插件初次运行按浏览器 UI 语言选择界面；如果用户曾手动选语言并保存，`quguangouUILanguageV1` 优先于浏览器语言。Chrome 商店并不知道搜索框所用语言，插件也无法在安装时读取用户的商店搜索关键词，因此不能保证“在英文商店输入中文关键词后，插件自动成为中文”。
 - **线上发布差异（2026-11-04 核查）**：当前 Chrome 商店插件 `ahpjikfghfgekmjcomhcmknlkicloblf` 仍为 **v0.2.63**，而本地当前唯一安装包是 **v0.2.75**。修改本地 ZIP 或 GitHub 不会直接更新线上商店；必须在已有商品中提交新版本，审核发布后重新做线上逐语言验证，不能提前声称线上修复。
 - **香港繁体兼容说明：** Chrome 官方扩展 locale 列表有 `zh_CN`、`zh_TW`，没有独立的 `zh_HK`。当前项目仍保留 `zh_HK` 地区文案与资源供兼容及核对，但香港用户的界面使用 `zh-TW` 繁体；Chrome 商店上传请使用 `zh_TW` 的繁体 Listing，不要将 `zh_HK` 作为第 11 个可独立选择的 Chrome 商店语言。Edge 和 Firefox 以各自开发者后台实际可选语言为准。
@@ -59,13 +60,13 @@
 | `zh_TW` | 24 | 61 | 346 | 7 | 9 |
 | `zh_HK` | 24 | 61 | 346 | 7 | 9 |
 | `en` | 44 | 123 | 1040 | 7 | 16 |
-| `ja` | 33 | 67 | 465 | 7 | 9 |
-| `ko` | 35 | 69 | 545 | 7 | 15 |
+| `ja` | 21 | 67 | 465 | 7 | 9 |
+| `ko` | 20 | 69 | 545 | 7 | 15 |
 | `fr` | 42 | 128 | 1234 | 7 | 21 |
-| `es` | 39 | 115 | 1159 | 7 | 21 |
-| `ms` | 43 | 125 | 1200 | 7 | 18 |
-| `vi` | 42 | 118 | 1104 | 7 | 21 |
-| `id` | 44 | 118 | 1197 | 7 | 16 |
+| `es` | 42 | 115 | 1162 | 7 | 21 |
+| `ms` | 44 | 125 | 1197 | 7 | 18 |
+| `vi` | 38 | 118 | 1100 | 7 | 21 |
+| `id` | 43 | 118 | 1194 | 7 | 16 |
 
 这些是**本地源码的静态校验结果**。Firefox `zh_HK` 是兼容地区资料，Chrome/Edge 实际上传包没有独立 `zh_HK`，由 `zh_TW` 承担繁体。
 本地字数、关键词合规不代表审核已通过或搜索排名有保障；需上传新版、在各商店完成对应语言 Listing 和实际截图验收。
@@ -181,7 +182,7 @@ not following back；X non followers；Twitter followback；following checker；
 
 **Chrome / Edge / Firefox 标题**
 
-Xの片思いフォロー確認 | Followback Watchdog
+フォローバック番犬｜Xの片思いフォロー確認
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -207,7 +208,7 @@ X（旧Twitter）で、フォローバックされていない「片思いフォ
 
 **Chrome / Edge / Firefox 标题**
 
-X 맞팔 아닌 계정 찾기 | Followback Watchdog
+맞팔 지킴이｜X 맞팔 아닌 계정 찾기
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -233,7 +234,7 @@ X(옛 트위터)에서 내가 팔로우하지만 나를 팔로우하지 않는 �
 
 **Chrome / Edge / Firefox 标题**
 
-Qui ne me suit pas ? | Followback Watchdog
+Qui ne me suit pas ? | Gardien des abonnés
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -241,7 +242,7 @@ Qui ne vous suit pas sur X (Twitter) ? Comparez abonnements et abonnés, protég
 
 **Chrome、Edge、Firefox 完整介绍（手动填入商店后台）**
 
-Qui ne me suit pas sur X (anciennement Twitter) ? Followback Watchdog vous aide à repérer les abonnements non réciproques en comparant les comptes que vous suivez avec vos abonnés actuels.
+Qui ne me suit pas sur X (anciennement Twitter) ? Gardien des abonnés vous aide à repérer les abonnements non réciproques en comparant les comptes que vous suivez avec vos abonnés actuels.
 
 Analyse du compte personnel : consultez les comptes qui ne vous suivent pas en retour. Suivez l’avancement de l’analyse, mettez-la en pause et reprenez depuis les données enregistrées si X interrompt le chargement. Ajoutez les comptes importants à une liste de protection conservée dans votre navigateur pour les exclure des actions groupées.
 
@@ -259,7 +260,7 @@ qui ne me suit pas；abonnements non réciproques；abonnés X；se désabonner 
 
 **Chrome / Edge / Firefox 标题**
 
-No me siguen en X | Followback Watchdog
+Guardián de seguidores | No me siguen en X
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -267,7 +268,7 @@ No me siguen en X | Followback Watchdog
 
 **Chrome、Edge、Firefox 完整介绍（手动填入商店后台）**
 
-¿Quién no me sigue en X (antes Twitter)? Followback Watchdog te ayuda a detectar cuentas que sigues pero que no te siguen de vuelta, comparando las listas actuales de seguidos y seguidores.
+¿Quién no me sigue en X (antes Twitter)? Guardián de seguidores te ayuda a detectar cuentas que sigues pero que no te siguen de vuelta, comparando las listas actuales de seguidos y seguidores.
 
 Análisis de cuenta personal: revisa tus seguidores y encuentra cuentas sin seguimiento recíproco. Puedes ver el avance, pausar el análisis y retomarlo desde los datos guardados si X deja de cargar la lista. Añade cuentas importantes a una lista protegida que se guarda en tu navegador y las excluye de las acciones masivas.
 
@@ -285,7 +286,7 @@ quién no me sigue；no me siguen en X；seguidores Twitter；dejar de seguir；
 
 **Chrome / Edge / Firefox 标题**
 
-Tak Follow Balik di X | Followback Watchdog
+Penjaga Pengikut | Siapa tak ikut balik di X
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -293,7 +294,7 @@ Semak siapa yang tidak follow balik di X (Twitter). Bandingkan pengikut dan akau
 
 **Chrome、Edge、Firefox 完整介绍（手动填入商店后台）**
 
-Siapa yang tidak follow balik anda di X (dahulu Twitter)? Followback Watchdog membantu anda menyemak akaun yang anda ikuti tetapi tidak mengikuti anda kembali berdasarkan hubungan semasa.
+Siapa yang tidak follow balik anda di X (dahulu Twitter)? Penjaga Pengikut membantu anda menyemak akaun yang anda ikuti tetapi tidak mengikuti anda kembali berdasarkan hubungan semasa.
 
 Mod Akaun Peribadi: bandingkan senarai akaun yang anda ikuti dengan pengikut anda untuk mencari akaun yang tidak mengikuti balik. Pantau kemajuan imbasan, jeda dan sambung dari data yang disimpan jika X berhenti memuatkan senarai. Simpan akaun penting dalam senarai perlindungan pada penyemak imbas anda supaya ia tidak termasuk dalam tindakan pukal.
 
@@ -311,7 +312,7 @@ tak follow balik；semak pengikut X；unfollow Twitter；senarai sekatan；akaun
 
 **Chrome / Edge / Firefox 标题**
 
-Ai chưa theo dõi lại | Followback Watchdog
+Trợ lý theo dõi | Ai chưa theo dõi lại
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -319,7 +320,7 @@ Kiểm tra ai không theo dõi lại trên X (Twitter). So sánh người theo d
 
 **Chrome、Edge、Firefox 完整介绍（手动填入商店后台）**
 
-Ai không theo dõi lại bạn trên X (trước đây là Twitter)? Followback Watchdog giúp kiểm tra các tài khoản bạn đang theo dõi nhưng họ không theo dõi lại bạn, dựa trên quan hệ theo dõi hiện tại.
+Ai không theo dõi lại bạn trên X (trước đây là Twitter)? Trợ lý theo dõi giúp kiểm tra các tài khoản bạn đang theo dõi nhưng họ không theo dõi lại bạn, dựa trên quan hệ theo dõi hiện tại.
 
 Chế độ tài khoản cá nhân: so sánh danh sách bạn đang theo dõi với danh sách người theo dõi bạn để tìm những tài khoản không follow lại. Bạn có thể xem tiến độ quét, tạm dừng và tiếp tục từ dữ liệu đã lưu nếu X ngừng tải danh sách. Thêm các tài khoản quan trọng vào danh sách bảo vệ lưu trong trình duyệt để tránh bị xử lý hàng loạt.
 
@@ -337,7 +338,7 @@ không follow lại；không theo dõi lại；người theo dõi；bỏ theo d�
 
 **Chrome / Edge / Firefox 标题**
 
-Tidak Follow Back di X | Followback Watchdog
+Penjaga Pengikut | Akun tak mengikuti balik
 
 **Chrome 简介／Edge 简短介绍／Firefox 摘要**
 
@@ -345,7 +346,7 @@ Cek siapa yang tidak follow back di X (Twitter). Bandingkan daftar mengikuti dan
 
 **Chrome、Edge、Firefox 完整介绍（手动填入商店后台）**
 
-Siapa yang tidak follow back di X (dulu Twitter)? Followback Watchdog membantu Anda menemukan akun yang Anda ikuti tetapi tidak mengikuti Anda balik, berdasarkan hubungan mengikuti saat ini.
+Siapa yang tidak follow back di X (dulu Twitter)? Penjaga Pengikut membantu Anda menemukan akun yang Anda ikuti tetapi tidak mengikuti Anda balik, berdasarkan hubungan mengikuti saat ini.
 
 Mode Akun Pribadi: bandingkan daftar akun yang Anda ikuti dengan daftar pengikut untuk mengecek siapa yang tidak follow balik. Pantau proses pemindaian, jeda, dan lanjutkan dari data tersimpan jika X berhenti memuat daftar. Tambahkan akun penting ke daftar terlindungi yang disimpan di browser agar tidak masuk tindakan massal.
 

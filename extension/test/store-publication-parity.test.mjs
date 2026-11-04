@@ -18,7 +18,13 @@ test('published-store report distinguishes 10 supported languages from 11 projec
   assert.ok(report.includes(`\`${lang}\``),lang);
  }
  assert.match(report,/zh_HK.*zh_TW/);
- assert.match(report,/待逐张对照最新版/);
+ // Seven international screenshots were regenerated from real v0.2.75
+ // extension UI, while the older Chinese, Traditional and English sets still
+ // require an individual visual review. Never reclassify regenerated images as
+ // legacy just to satisfy an outdated string assertion.
+ assert.match(report,/七种非英语语言的 35 张已按 v0\.2\.75 真实插件界面重新拍摄/);
+ assert.match(report,/中文、繁体及英文沿用原图/);
+ assert.match(report,/仍需逐张对照 v0\.2\.75 的旧截图/);
  assert.match(report,/8 种语言|八种语言/);
  assert.match(report,/搜索.*语言/);
 });

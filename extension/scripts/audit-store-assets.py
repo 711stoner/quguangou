@@ -61,7 +61,7 @@ if '--report' in __import__('sys').argv:
  start='<!-- LOCALIZED_CHROME_IMAGE_REVIEW_START -->'
  end='<!-- LOCALIZED_CHROME_IMAGE_REVIEW_END -->'
  rows=[start,'','## 逐语言 Chrome 截图上传核对（本地素材，不代表已上线）','',
-       '10 种界面语言各有 5 张 1280 × 800 的 Chrome 图片，来源目录如下。**这只是原有历史素材，并非 v0.2.75 的最新截图审核通过**。',
+       '10 种界面语言各有 5 张 1280 × 800 的 Chrome 图片。七种非英语语言的 35 张已按 v0.2.75 真实插件界面重新拍摄并覆盖原素材；中文、繁体及英文沿用原图，仍须检查新版本视觉一致性。',
        '', '| Chrome 上架语言 | 素材文件夹（发布盘 `取关狗/` 下） | 截图数量 | 内容审核 |',
        '|---|---|---:|---|']
  for lang in ('zh_CN','zh_TW','en','ja','ko','fr','es','ms','vi','id'):
@@ -69,9 +69,11 @@ if '--report' in __import__('sys').argv:
   found=sorted((f for f in folder.glob('*.png') if not f.name.startswith('._') and png_size(f)==(1280,800)),key=lambda f:f.name)
   assert len(found)==5,(lang,len(found))
   names=', '.join(f'`{f.name}`' for f in found)
-  rows.append(f'| `{lang}` | `{assets[lang]["Chrome"]}` | 5 | **待逐张对照最新版**：{names} |')
+  status=('**v0.2.75 真实插件界面重新生成，尺寸／三端一致性通过；抽样视觉检查通过**' if lang in ('ja','ko','fr','es','ms','vi','id')
+          else '**仍需逐张对照 v0.2.75 的旧截图**')
+  rows.append(f'| `{lang}` | `{assets[lang]["Chrome"]}` | 5 | {status}：{names} |')
  rows.extend(['','`zh_HK` 为项目地区兼容配置；Chrome 上架使用 `zh_TW` 的繁体截图，不单独创建 `zh_HK` 商品语言。',
-             '', '图片没有跨语言逐字审定；通过尺寸及 SHA-256 不等于完成母语翻译/现行 UI 检查。',
+             '', '七种外语图片通过真实浏览器生成、PNG 尺寸及三端 SHA-256 对照，并抽查了日、韩、越截图；仍建议用户上传前逐张人工审阅排版。中英繁体三种仍需另行视觉检查。',
              '', end])
  text='\n'.join(rows)
  current=report.read_text()

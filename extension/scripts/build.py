@@ -9,6 +9,7 @@ destinations=[src/'dist']
 # zh_CN and zh_TW as Chinese extension locales: zh_HK is not recognized.
 # Hong Kong's UI uses the already supported zh_TW Traditional resources.
 languages=('zh_CN','zh_TW','zh_HK','en','ja','ko','fr','es','ms','vi','id')
+native_brands=json.loads((src/'本地化产品名称.json').read_text())
 chromium_locales=tuple(lang for lang in languages if lang!='zh_HK')
 m=json.loads((src/'manifest.json').read_text())
 assert re.fullmatch(r'\d+\.\d+\.\d+', m['version']), 'Invalid manifest version'
@@ -39,6 +40,9 @@ for loc in languages:
  # Keep localized names compatible with the stricter Edge/AMO 45-char cap;
  # Chrome Web Store itself supports up to 75. Descriptions cap at 132.
  assert len(msgs['extensionName']['message'])<=45, (loc,'extensionName over Edge/AMO 45-character limit')
+ if loc in native_brands:
+  assert native_brands[loc]['title']==msgs['extensionName']['message'],(loc,'native language title does not match')
+  assert 'Followback Watchdog' not in msgs['extensionName']['message'],(loc,'English brand leaked into localized release')
  assert len(msgs['extensionDescription']['message'])<=132, (loc,'extensionDescription over 132-character limit')
 for locale in ['ja','ko','fr','es','ms','vi','id']:
  for name in ['popup.html','ui-runtime.js','ui-error-hook.js','privacy.html']:

@@ -99,3 +99,8 @@
 - 批量操作最短间隔提升至 16 秒、20 个账号后 30 分钟冷却，其他限制依照原来策略执行。
 - X 请求观察代码不再保存请求认证头，也不再提供 synthetic GraphQL cursor 重放。实际 X 的原始请求不受影响。
 - 10 种语言隐私说明已同步更新。完整上传前检查详见 `维护说明.md`；大号 X 的全程实际扫描及新版截图母语验收尚未完成。
+
+
+## 七种非英语产品名称完全本地化（2026-11-04）
+
+日语、韩语、法语、西班牙语、马来语、越南语、印尼语商店标题与安装界面不再使用英文 `Followback Watchdog`，各自的地道本地名称统一维护于 `本地化产品名称.json`、商店完整 SEO 文字于 `商店SEO文案.json`。`npm run build` 会检查名称一致性及商店长度，阻止英文品牌混入七种外语 ZIP。七种语言各五张 v0.2.75 真实截图，已覆盖原移动硬盘 Chrome、Edge、Firefox 上传素材；脚本 `scripts/build-native-store-screenshots.mjs` 可复建。无文字的多语通用宣传图由 `scripts/build-language-neutral-store-promos.mjs` 生成。**未修改插件 ID，没有生成独立语言 ZIP；仍按一个商品十种 Listing 上架。**

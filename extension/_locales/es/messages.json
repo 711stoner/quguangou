@@ -1,12 +1,12 @@
 {
   "extensionName": {
-    "message": "No me siguen en X | Followback Watchdog"
+    "message": "Guardián de seguidores | No me siguen en X"
   },
   "extensionNameChrome": {
-    "message": "No me siguen en X | Followback Watchdog"
+    "message": "Guardián de seguidores | No me siguen en X"
   },
   "extensionNameEdge": {
-    "message": "No me siguen en X | Followback Watchdog"
+    "message": "Guardián de seguidores | No me siguen en X"
   },
   "extensionShortName": {
     "message": "Seguidores X"
